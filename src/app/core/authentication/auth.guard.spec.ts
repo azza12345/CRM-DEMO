@@ -45,7 +45,7 @@ describe('authGuard function unit test', () => {
 
   it('should be authenticated', () => {
     inject([AuthService, Router], () => {
-      tokenService.set({ access_token: 'token', token_type: 'bearer' });
+      tokenService.set({ token: 'token', token_type: 'bearer' });
 
       expect(authGuard(route, state)).toBeTrue();
     });
