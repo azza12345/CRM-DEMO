@@ -10,9 +10,13 @@ import { Token, User } from './interface';
 })
 export class LoginService {
   constructor(protected http: HttpClient) {}
-
-  login(username: string, password: string, rememberMe = false) {
-    return this.http.post<Token>('/auth/login', { username, password, rememberMe });
+  login(username: string, password: string) {
+    return this.http
+      .post<Token>('https://localhost:7147/api/auth/login', {
+        email: username,
+        password,
+      })
+      .pipe(map((response: any) => response.token));
   }
 
   refresh(params: Record<string, any>) {

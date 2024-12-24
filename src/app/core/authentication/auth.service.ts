@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, iif, merge, of } from 'rxjs';
 import { catchError, map, share, switchMap, tap } from 'rxjs/operators';
 import { filterObject, isEmptyObject } from './helpers';
-import { User } from './interface';
+import { Token, User } from './interface';
 import { LoginService } from './login.service';
 import { TokenService } from './token.service';
 
@@ -36,9 +36,14 @@ export class AuthService {
     return this.tokenService.valid();
   }
 
-  login(username: string, password: string, rememberMe = false) {
-    return this.loginService.login(username, password, rememberMe).pipe(
-      tap(token => this.tokenService.set(token)),
+  login(email: string, password: string) {
+    return this.loginService.login(email, password).pipe(
+      tap(token => {
+        const baseToken: Token = {
+          token,
+        };
+        this.tokenService.set(baseToken);
+      }),
       map(() => this.check())
     );
   }

@@ -1,0 +1,10 @@
+@use 'variables' as *;
+.center-elem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bg-primary {
+  background-color: $primary-color !important;
+  color: #fff;
+}

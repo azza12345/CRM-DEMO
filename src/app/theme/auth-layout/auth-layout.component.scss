@@ -3,24 +3,31 @@
   display: flex;
   justify-content: center;
   min-height: 100%;
-  padding: 16px;
-  background-color: #212121;
-  background-image:
-    linear-gradient(
-      45deg,
-      rgba(255, 255, 255, .05) 25%,
-      transparent 25%,
-      transparent 75%,
-      rgba(255, 255, 255, .05) 75%,
-      rgba(255, 255, 255, .05)
-    ),
-    linear-gradient(
-      -45deg,
-      rgba(255, 255, 255, .05) 25%,
-      transparent 25%,
-      transparent 75%,
-      rgba(255, 255, 255, .05) 75%,
-      rgba(255, 255, 255, .05)
-    );
-  background-size: 60px 60px;
+  background-image: url('assets/images/svgs/auth-bg.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    background-image: url('assets/images/svgs/Gear 1.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    z-index: -1;
+  }
+  &::before {
+    width: 160px;
+    height: 160px;
+    top: 25%;
+    right: 30%;
+  }
+
+  &::after {
+    width: 94px;
+    height: 94px;
+    top: 48%;
+    right: 32.5%;
+  }
 }

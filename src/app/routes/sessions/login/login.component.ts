@@ -12,6 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 
 import { AuthService } from '@core/authentication';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
@@ -29,15 +30,15 @@ import { AuthService } from '@core/authentication';
     MatInputModule,
     MtxButtonModule,
     TranslateModule,
+    MatIconModule,
   ],
 })
 export class LoginComponent {
   isSubmitting = false;
 
   loginForm = this.fb.nonNullable.group({
-    username: ['ng-matero', [Validators.required]],
-    password: ['ng-matero', [Validators.required]],
-    rememberMe: [false],
+    username: ['eng.mhd.ahmed@gmail.com', [Validators.required]],
+    password: ['P@$$w0rd', [Validators.required]],
   });
 
   constructor(
@@ -54,15 +55,11 @@ export class LoginComponent {
     return this.loginForm.get('password')!;
   }
 
-  get rememberMe() {
-    return this.loginForm.get('rememberMe')!;
-  }
-
   login() {
     this.isSubmitting = true;
 
     this.auth
-      .login(this.username.value, this.password.value, this.rememberMe.value)
+      .login(this.username.value, this.password.value)
       .pipe(filter(authenticated => authenticated))
       .subscribe({
         next: () => {
