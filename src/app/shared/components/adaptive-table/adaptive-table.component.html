@@ -1,0 +1,20 @@
+<mtx-grid
+  #grid
+  [data]="data"
+  [columns]="columns"
+  [loading]="isLoading"
+  [columnResizable]="true"
+  [rowHover]="true"
+  [columnHideable]="true"
+  [columnSortable]="true"
+  [expandable]="true"
+  [showPaginator]="true"
+  [showToolbar]="true"
+  [pageSizeOptions]="pageSizeOptions"
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  [pageOnFront]="false"
+  [length]="totalRecords"
+  (page)="onPageChange($event)"
+>
+</mtx-grid>
