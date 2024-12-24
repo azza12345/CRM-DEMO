@@ -2430,6 +2430,19 @@
   resolved "https://registry.npmjs.org/@ngtools/webpack/-/webpack-17.1.0.tgz"
   integrity sha512-FAp5Vh4Y4DFDnrxEitggEkeDwHCml7m6hZUgohvA6n6mwrMT0ZZXnk3MIrKRnT6A9cr1wcnxMW+jIXx/cJZGlw==
 
+"@ngx-formly/core@^6.2.0":
+  version "6.3.12"
+  resolved "https://registry.npmjs.org/@ngx-formly/core/-/core-6.3.12.tgz"
+  integrity sha512-88MOfn9dM1B33t04jl8x0Glh0Ed0lUKMkhYajicRH7ZHTmwIdla1SQjiblp2C+EcCFvsY7XAU2/JUZQdl56aUw==
+  dependencies:
+    tslib "^2.0.0"
+
+"@ngx-formly/material@^6.2.0":
+  version "6.3.12"
+  resolved "https://registry.npmjs.org/@ngx-formly/material/-/material-6.3.12.tgz"
+  integrity sha512-0WYikqtoUR/4DuiuGDT8LOOrBvhrGwh5yX+SkB4YJYNUnl8pBPar9BmaFl3DJt95R30fQk66zu0PlR6XG0mq7w==
+  dependencies:
+    tslib "^2.0.0"
 
 "@ngx-translate/core@^15.0.0":
   version "15.0.0"
@@ -3882,6 +3895,11 @@ boolbase@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/boolbase/-/boolbase-1.0.0.tgz"
   integrity sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
+
+bootstrap@^5.3.3:
+  version "5.3.3"
+  resolved "https://registry.npmjs.org/bootstrap/-/bootstrap-5.3.3.tgz"
+  integrity sha512-8HLCdWgyoMguSO9o+aH+iuZ+aht+mzW0u3HIMzVu7Srrpv7EBBxTnrFlSCskwdY1+EOFQSm7uMJhNQHkdPcmjg==
 
 brace-expansion@^1.1.7:
   version "1.1.11"

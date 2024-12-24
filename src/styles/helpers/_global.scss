@@ -1,0 +1,10 @@
+$bg-primary: #e41e26;
+.center-elem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bg-primary {
+  background-color: $bg-primary !important;
+  color: #fff;
+}
