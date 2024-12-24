@@ -11,7 +11,7 @@ import { AppSettings, AppTheme, defaults } from '../settings';
   providedIn: 'root',
 })
 export class SettingsService {
-  private key = 'ng-matero-settings';
+  private key = 'app-settings';
 
   private readonly notify$ = new BehaviorSubject<Partial<AppSettings>>({});
 
@@ -33,7 +33,7 @@ export class SettingsService {
   ) {
     const storedOptions = this.store.get(this.key);
     this.options = Object.assign(defaults, storedOptions);
-    this.themeColor = this.getThemeColor();
+    //this.themeColor = this.getThemeColor();
     this.htmlElement = this.document.querySelector('html')!;
   }
 
@@ -73,7 +73,7 @@ export class SettingsService {
   }
 
   setTheme() {
-    this.themeColor = this.getThemeColor();
+    //this.themeColor = this.getThemeColor();
 
     if (this.themeColor === 'dark') {
       this.htmlElement.classList.add('theme-dark');
