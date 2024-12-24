@@ -1,7 +1,10 @@
+@use '../../../../styles/helpers/variables' as *;
 .login-container {
   flex-direction: column;
   justify-content: center;
   .login-box {
+    border: 1px solid $primary-color;
+    border-radius: 0;
     width: 426px;
     mat-card-header {
       padding: 16px 0;

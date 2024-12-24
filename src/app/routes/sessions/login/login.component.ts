@@ -39,7 +39,6 @@ export class LoginComponent {
   loginForm = this.fb.nonNullable.group({
     username: ['Rabie Mohamed', [Validators.required]],
     password: ['12345678', [Validators.required]],
-    rememberMe: [false],
   });
 
   constructor(
@@ -56,15 +55,11 @@ export class LoginComponent {
     return this.loginForm.get('password')!;
   }
 
-  get rememberMe() {
-    return this.loginForm.get('rememberMe')!;
-  }
-
   login() {
     this.isSubmitting = true;
 
     this.auth
-      .login(this.username.value, this.password.value, this.rememberMe.value)
+      .login(this.username.value, this.password.value)
       .pipe(filter(authenticated => authenticated))
       .subscribe({
         next: () => {
