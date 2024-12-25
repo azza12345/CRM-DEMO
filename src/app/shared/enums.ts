@@ -6,4 +6,6 @@ export enum HttpVerb {
   PATCH = 'PATCH',
 }
 
-export enum EndPoint {}
+export enum EndPoint {
+  MOCK_CONTRACTORS = 'mock/contractors.mock.json',
+}
