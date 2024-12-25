@@ -2,9 +2,9 @@ import { User } from './interface';
 
 export const admin: User = {
   id: 1,
-  name: 'Zongbin',
+  name: 'Noah',
   email: 'nzb329@163.com',
-  avatar: './assets/images/avatar.jpg',
+  avatar: './assets/images/avatar.png',
 };
 
 export const guest: User = {
