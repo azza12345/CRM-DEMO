@@ -78,9 +78,10 @@ export class AdaptiveTableComponent implements OnChanges {
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: any) => {
-          this.data = response.data;
+          this.data = response;
           this.totalRecords = response.recordsTotal;
           this.isLoading = false;
+          console.log(this.data);
         },
         error: () => {
           this.isLoading = false;

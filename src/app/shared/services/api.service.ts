@@ -18,12 +18,15 @@ export class ApiService {
   ): Observable<T> {
     const url = `${environment.ApiUrl}/${endpoint}`;
 
+    const isMockEndpoint = endpoint.includes('mock');
     const httpMethods: Record<HttpVerb, () => Observable<T>> = {
-      [HttpVerb.GET]: () => this.httpClient.get<T>(url, { params, ...options }),
+      [HttpVerb.GET]: () =>
+        this.httpClient.get<T>(url, isMockEndpoint ? options : { params, ...options }),
       [HttpVerb.POST]: () => this.httpClient.post<T>(url, body, { ...options }),
       [HttpVerb.PUT]: () => this.httpClient.put<T>(url, body, { ...options }),
       [HttpVerb.PATCH]: () => this.httpClient.patch<T>(url, body, { ...options }),
-      [HttpVerb.DELETE]: () => this.httpClient.delete<T>(url, { params, ...options }),
+      [HttpVerb.DELETE]: () =>
+        this.httpClient.delete<T>(url, isMockEndpoint ? options : { params, ...options }),
     };
 
     const request = httpMethods[method];

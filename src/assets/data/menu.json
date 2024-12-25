@@ -19,8 +19,8 @@
       "icon": "dashboard"
     },
     {
-      "route": "contractor",
-      "name": "contractor",
+      "route": "contractors",
+      "name": "contractors",
       "type": "link",
       "icon": "dashboard"
     }

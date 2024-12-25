@@ -2,7 +2,7 @@
   "menu": {
     "dashboard": "Dashboard",
     "installation": "Installation",
-    "contractor": "Contractor",
+    "contractors": "Contractors",
     "retired-meters": "Retired Meters",
     "profile": "Profile",
     "profile.overview": "Overview",

@@ -1,0 +1,9 @@
+<app-filter [controls]="filterControls" (filterChanged)="onFilterChanged($event)"></app-filter>
+
+<app-adaptive-table
+  [apiUrl]="endpoint"
+  [httpMethod]="httpVerb"
+  [filters]="filters"
+  [columns]="columns"
+  [isLoading]="false"
+></app-adaptive-table>
