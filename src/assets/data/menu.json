@@ -1,3 +1,28 @@
 {
-  "menu": []
+  "menu": [
+    {
+      "route": "dashboard",
+      "name": "dashboard",
+      "type": "link",
+      "icon": "dashboard"
+    },
+    {
+      "route": "installation",
+      "name": "installation",
+      "type": "link",
+      "icon": "dashboard"
+    },
+    {
+      "route": "retired meters",
+      "name": "retired-meters",
+      "type": "link",
+      "icon": "dashboard"
+    },
+    {
+      "route": "contractor",
+      "name": "contractor",
+      "type": "link",
+      "icon": "dashboard"
+    }
+  ]
 }

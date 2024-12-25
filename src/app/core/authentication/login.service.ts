@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 
-import { Menu } from '@core';
-import { Token, User } from './interface';
+import { admin, Menu } from '@core';
+import { Token } from './interface';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -28,10 +29,12 @@ export class LoginService {
   }
 
   me() {
-    return this.http.get<User>('/me');
+    return of(admin);
   }
 
   menu() {
-    return this.http.get<{ menu: Menu[] }>('/me/menu').pipe(map(res => res.menu));
+    return this.http
+      .get<{ menu: Menu[] }>('assets/data/menu.json?_t=' + Date.now())
+      .pipe(map(res => res.menu));
   }
 }
