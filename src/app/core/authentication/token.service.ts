@@ -66,7 +66,7 @@ export class TokenService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.clearRefresh();
+    // this.clearRefresh();
   }
 
   private save(token?: Token): void {
