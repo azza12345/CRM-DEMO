@@ -1,3 +1,10 @@
-.mat-mdc-button-base {
-  margin: 4px;
+.cards-section {
+  margin-top: 23px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  app-meter-stats-card {
+    flex: 1 1 calc(50% - 16px);
+  }
 }

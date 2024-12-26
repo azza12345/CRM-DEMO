@@ -1,7 +1,12 @@
+@use '../../../../styles/helpers/variables' as *;
+
 .buttons {
-  margin-bottom: 20px;
   display: flex;
   gap: 10px;
+  button:first-child {
+    width: 108px;
+    height: 32px;
+  }
 }
 
 form {
@@ -9,4 +14,22 @@ form {
   flex-wrap: wrap;
   gap: 15px;
   align-items: center;
+}
+
+::ng-deep mat-form-field {
+  font-size: $body-large-font;
+  height: 32px;
+  .mat-mdc-form-field-infix {
+    padding: 4px 0 !important;
+    min-height: 32px;
+    width: fit-content;
+  }
+  .mat-mdc-select-value-text {
+    margin-right: 16px;
+    min-width: 95px;
+  }
+}
+
+::ng-deep .mat-mdc-option {
+  padding: 0 8px !important;
 }

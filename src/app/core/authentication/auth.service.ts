@@ -12,8 +12,8 @@ import { TokenService } from './token.service';
 export class AuthService {
   private user$ = new BehaviorSubject<User>({});
   private change$ = merge(
-    this.tokenService.change(),
-    this.tokenService.refresh().pipe(switchMap(() => this.refresh()))
+    this.tokenService.change()
+    // this.tokenService.refresh().pipe(switchMap(() => this.refresh()))
   ).pipe(
     switchMap(() => this.assignUser()),
     share()

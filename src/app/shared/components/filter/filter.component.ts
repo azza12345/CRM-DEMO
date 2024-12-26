@@ -29,6 +29,8 @@ import { ApiService } from '@shared/services/api.service';
 })
 export class FilterComponent implements OnInit {
   @Input() controls: FilterControl[] = [];
+  @Input() resetBtn: boolean = false;
+  @Input() isPrimary: boolean = true;
   @Output() filterChanged: EventEmitter<any> = new EventEmitter<any>();
 
   filterForm!: FormGroup;
