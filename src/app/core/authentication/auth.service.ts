@@ -38,9 +38,9 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.loginService.login(email, password).pipe(
-      tap(token => {
+      tap(accessToken => {
         const baseToken: Token = {
-          token,
+          accessToken,
         };
         this.tokenService.set(baseToken);
       }),

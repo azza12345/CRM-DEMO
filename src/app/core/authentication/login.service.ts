@@ -5,19 +5,21 @@ import { map } from 'rxjs/operators';
 import { admin, Menu } from '@core';
 import { Token } from './interface';
 import { of } from 'rxjs';
+import { environment } from '@env/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
   constructor(protected http: HttpClient) {}
-  login(username: string, password: string) {
+
+  login(userName: string, password: string) {
     return this.http
-      .post<Token>('https://localhost:7147/api/auth/login', {
-        email: username,
+      .post<Token>(`${environment.ApiUrl}/dashboard/login`, {
+        userName,
         password,
       })
-      .pipe(map((response: any) => response.token));
+      .pipe(map((response: any) => response.data.accessToken));
   }
 
   refresh(params: Record<string, any>) {

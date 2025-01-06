@@ -7,11 +7,11 @@ import { SimpleToken, JwtToken, BaseToken } from './token';
 })
 export class TokenFactory {
   create(attributes: Token): BaseToken | undefined {
-    if (!attributes.token) {
+    if (!attributes.accessToken) {
       return undefined;
     }
 
-    if (JwtToken.is(attributes.token)) {
+    if (JwtToken.is(attributes.accessToken)) {
       return new JwtToken(attributes);
     }
 
