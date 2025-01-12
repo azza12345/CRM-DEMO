@@ -7,7 +7,9 @@
   display: block;
   padding: 8px;
   background-color: var(--topmenu-background-color);
-
+  .menu-icon {
+    margin-right: 0.5rem;
+  }
   @include mat.elevation(2);
 
   .mat-mdc-button {

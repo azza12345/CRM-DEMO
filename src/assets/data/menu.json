@@ -10,19 +10,37 @@
       "route": "installation",
       "name": "installation",
       "type": "link",
-      "icon": "dashboard"
+      "customIcon": "assets/images/svgs/menu/installations.svg"
     },
     {
       "route": "retired meters",
       "name": "retired-meters",
       "type": "link",
-      "icon": "dashboard"
+      "customIcon": "assets/images/svgs/menu/retired-meters.svg"
     },
     {
       "route": "contractors",
       "name": "contractors",
       "type": "link",
-      "icon": "dashboard"
+      "customIcon": "assets/images/svgs/menu/contractor.svg"
+    },
+    {
+      "route": "settings",
+      "name": "settings",
+      "type": "sub",
+      "customIcon": "assets/images/svgs/menu/menu-gear.svg",
+      "children": [
+        {
+          "route": "user-management",
+          "name": "user-management",
+          "type": "link"
+        },
+        {
+          "route": "roles",
+          "name": "roles",
+          "type": "link"
+        }
+      ]
     }
   ]
 }
