@@ -4,8 +4,8 @@ import { Token } from './interface';
 export abstract class BaseToken {
   constructor(protected attributes: Token) {}
 
-  get token(): string {
-    return this.attributes.token;
+  get accessToken(): string {
+    return this.attributes.accessToken;
   }
 
   get refresh_token(): string | void {
@@ -25,7 +25,7 @@ export abstract class BaseToken {
   }
 
   getBearerToken(): string {
-    return this.token ? [capitalize(this.token_type), this.token].join(' ').trim() : '';
+    return this.accessToken ? [capitalize(this.token_type), this.accessToken].join(' ').trim() : '';
   }
 
   needRefresh(): boolean {
@@ -37,7 +37,7 @@ export abstract class BaseToken {
   }
 
   private hasAccessToken(): boolean {
-    return !!this.token;
+    return !!this.accessToken;
   }
 
   private isExpired(): boolean {
@@ -66,7 +66,7 @@ export class JwtToken extends SimpleToken {
   }
 
   private get payload(): { exp?: number | void } {
-    if (!this.token) {
+    if (!this.accessToken) {
       return {};
     }
 
@@ -74,7 +74,7 @@ export class JwtToken extends SimpleToken {
       return this._payload;
     }
 
-    const [, payload] = this.token.split('.');
+    const [, payload] = this.accessToken.split('.');
     const data = JSON.parse(base64.decode(payload));
     if (!data.exp) {
       data.exp = this.attributes.exp;

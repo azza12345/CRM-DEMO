@@ -12,7 +12,7 @@ export interface User {
 export interface Token {
   [prop: string]: any;
 
-  token: string;
+  accessToken: string;
   token_type?: string;
   expires_in?: number;
   exp?: number;
