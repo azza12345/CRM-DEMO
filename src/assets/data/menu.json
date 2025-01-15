@@ -13,7 +13,7 @@
       "customIcon": "assets/images/svgs/menu/installations.svg"
     },
     {
-      "route": "retired meters",
+      "route": "retired-meters",
       "name": "retired-meters",
       "type": "link",
       "customIcon": "assets/images/svgs/menu/retired-meters.svg"

@@ -88,7 +88,7 @@ $theme: mat.define-light-theme(
       accent: $accent,
     ),
     typography: mat.define-typography-config(),
-    density: 0,
+    density: -1,
   )
 );
 
@@ -121,7 +121,7 @@ $theme: mat.define-light-theme(
         accent: $accent,
       ),
       typography: null,
-      density: null,
+      density: -1,
     )
   );
 

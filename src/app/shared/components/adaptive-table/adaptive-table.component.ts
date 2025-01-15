@@ -5,6 +5,7 @@ import {
   inject,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -13,17 +14,18 @@ import { PageEvent } from '@angular/material/paginator';
 import { MtxGridColumn, MtxGridModule } from '@ng-matero/extensions/grid';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime } from 'rxjs';
+import { debounceTime, BehaviorSubject, Observable, switchMap } from 'rxjs';
 import { ApiService } from '@shared/services/api.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-adaptive-table',
   standalone: true,
-  imports: [MtxGridModule, MatFormFieldModule],
+  imports: [MtxGridModule, MatFormFieldModule, AsyncPipe],
   templateUrl: './adaptive-table.component.html',
   styleUrl: './adaptive-table.component.scss',
 })
-export class AdaptiveTableComponent implements OnChanges {
+export class AdaptiveTableComponent implements OnInit, OnChanges {
   @Input() apiUrl!: EndPoint;
   @Input() filters: any = {};
   @Input() columns: MtxGridColumn[] = [];
@@ -41,14 +43,19 @@ export class AdaptiveTableComponent implements OnChanges {
   pageIndex = 0;
   pageSize = 5;
   totalRecords = 0;
-  data: any[] = [];
+  data$!: Observable<any[]>;
+  private fetchSubject = new BehaviorSubject<void>(undefined);
 
   constructor(private apiService: ApiService) {}
+
+  ngOnInit(): void {
+    this.data$ = this.fetchSubject.pipe(switchMap(() => this.fetchData()));
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.filters || changes.apiUrl || changes.additionalParams) {
       this.resetPagination();
-      this.fetchData();
+      this.fetchSubject.next();
     }
   }
 
@@ -59,39 +66,32 @@ export class AdaptiveTableComponent implements OnChanges {
   }
 
   buildRequestParams() {
-    const requestParams: any = {
-      sortColumn: '',
-      sortColumnDirection: '',
-      pageSize: this.pageSize,
-      startIndex: this.pageIndex * this.pageSize,
+    return {
+      limit: this.pageSize,
+      skip: this.pageIndex * this.pageSize,
       ...this.additionalParams,
       ...this.filters,
     };
-
-    return requestParams;
   }
 
-  fetchData(): void {
+  fetchData(): Observable<any[]> {
     this.isLoading = true;
-    this.apiService
+    return this.apiService
       .triggerApiRequest(this.apiUrl, this.httpMethod, this.buildRequestParams())
-      .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (response: any) => {
-          this.data = response;
-          this.totalRecords = response.recordsTotal;
+      .pipe(
+        debounceTime(300),
+        takeUntilDestroyed(this.destroyRef),
+        switchMap((response: any) => {
+          this.totalRecords = response.total;
           this.isLoading = false;
-          console.log(this.data);
-        },
-        error: () => {
-          this.isLoading = false;
-        },
-      });
+          return [response];
+        })
+      );
   }
 
   onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.fetchData();
+    this.fetchSubject.next();
   }
 }

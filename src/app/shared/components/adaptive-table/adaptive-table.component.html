@@ -1,6 +1,6 @@
 <mtx-grid
   #grid
-  [data]="data"
+  [data]="(data$ | async) || []"
   [columns]="columns"
   [loading]="isLoading"
   [columnResizable]="true"
@@ -9,7 +9,6 @@
   [columnSortable]="true"
   [expandable]="true"
   [showPaginator]="true"
-  [showToolbar]="true"
   [pageSizeOptions]="pageSizeOptions"
   [pageIndex]="pageIndex"
   [pageSize]="pageSize"
