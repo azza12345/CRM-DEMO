@@ -18,6 +18,10 @@ table {
   border: 1px solid #dddddd;
   margin-top: 22px;
 
+  tr td:first-child {
+    text-align: start;
+  }
+
   th,
   td {
     text-align: center;
@@ -25,8 +29,12 @@ table {
     font-weight: 400;
   }
 
+  thead th:first-child {
+    text-align: start;
+  }
+
   th {
-    &.header-group {
+    &.header-group:not(.mat-column-blank-space) {
       text-align: start;
       font-weight: 600;
       border-bottom: 1px solid #000;
