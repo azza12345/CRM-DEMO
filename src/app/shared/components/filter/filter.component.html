@@ -1,11 +1,11 @@
-<form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="filter">
   @for (control of controls; track control.label) {
     <div>
       <ng-container>
         @switch (control.type) {
           @case ('text') {
             <div>
-              <mat-form-field appearance="fill">
+              <mat-form-field class="input-text" appearance="outline">
                 <mat-label>{{ control.label }}</mat-label>
                 <input matInput [formControlName]="control.formControlName" />
               </mat-form-field>
@@ -14,7 +14,11 @@
 
           @case ('select') {
             <div>
-              <mat-form-field appearance="outline" [color]="isPrimary ? 'primary' : 'accent'">
+              <mat-form-field
+                appearance="outline"
+                class="select"
+                [color]="isPrimary ? 'primary' : 'accent'"
+              >
                 <mat-label>{{ control.label }}</mat-label>
                 <mat-select [formControlName]="control.formControlName">
                   @for (option of control.options; track option.value) {
@@ -29,7 +33,7 @@
 
           @case ('autocomplete') {
             <div>
-              <mat-form-field appearance="fill">
+              <mat-form-field appearance="outline">
                 <mat-label>{{ control.label }}</mat-label>
                 <input
                   type="text"
@@ -50,7 +54,7 @@
 
           @case ('date') {
             <div>
-              <mat-form-field appearance="fill">
+              <mat-form-field appearance="outline">
                 <mat-label>{{ control.label }}</mat-label>
                 <input
                   matInput

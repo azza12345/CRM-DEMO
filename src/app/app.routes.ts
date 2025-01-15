@@ -8,7 +8,6 @@ import { Error404Component } from './routes/sessions/404.component';
 import { Error500Component } from './routes/sessions/500.component';
 import { LoginComponent } from './routes/sessions/login/login.component';
 import { RegisterComponent } from './routes/sessions/register/register.component';
-import { ContractorsComponent } from './routes/contractors/contractors.component';
 
 export const routes: Routes = [
   {
@@ -24,7 +23,22 @@ export const routes: Routes = [
       { path: '500', component: Error500Component },
       {
         path: 'contractors',
-        component: ContractorsComponent,
+        loadComponent: () =>
+          import('./routes/contractors/contractors.component').then(c => c.ContractorsComponent),
+      },
+      {
+        path: 'retired-meters',
+        loadComponent: () =>
+          import('./routes/retired-meters/retired-meters.component').then(
+            c => c.RetiredMetersComponent
+          ),
+      },
+      {
+        path: 'installation',
+        loadComponent: () =>
+          import('./routes/installations/installations.component').then(
+            c => c.InstallationsComponent
+          ),
       },
     ],
   },

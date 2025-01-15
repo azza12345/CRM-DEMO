@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,6 +26,7 @@ import { ApiService } from '@shared/services/api.service';
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss',
+  encapsulation: ViewEncapsulation.Emulated,
 })
 export class FilterComponent implements OnInit {
   @Input() controls: FilterControl[] = [];
