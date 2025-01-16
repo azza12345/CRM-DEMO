@@ -86,7 +86,7 @@ export class AdaptiveTableComponent implements OnInit, OnChanges {
           this.isLoading = false;
           return [response];
         }),
-        catchError(error => {
+        catchError(() => {
           this.isLoading = false;
           return [];
         })
