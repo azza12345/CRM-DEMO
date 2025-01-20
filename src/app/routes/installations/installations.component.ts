@@ -21,7 +21,7 @@ export class InstallationsComponent implements OnInit {
   columns: MtxGridColumn[] = [
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
     { header: 'Status', field: 'status', sortable: true },
-    { header: 'Assigned To', field: 'assignedTo', sortable: true },
+    { header: 'Assigned To', field: 'agentId', sortable: true },
     {
       header: 'Actions',
       field: 'action',
@@ -53,8 +53,8 @@ export class InstallationsComponent implements OnInit {
       label: 'District',
       type: 'select',
       options: [
-        { value: 'District 1', label: 'District 1' },
-        { value: 'District 2', label: 'District 2' },
+        { value: '1', label: 'District 1' },
+        { value: '2', label: 'District 2' },
       ],
     },
     {

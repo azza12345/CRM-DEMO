@@ -51,16 +51,23 @@ export class FilterComponent implements OnInit {
       if (control.apiEndpoint) {
         this.apiService.triggerApiRequest(control.apiEndpoint, HttpVerb.GET).subscribe({
           next: (response: any) => {
+            console.log(response);
+
             if (typeof response[0] === 'string' && Array.isArray(response)) {
+              console.log('type1');
+
               control.options = response.map(item => ({
                 value: item,
                 label: item,
               }));
             } else {
-              control.options = response.map((item: any) => ({
-                value: item[control.key || 'value'],
-                label: item[control.key || 'label'],
+              console.log(control.key);
+              const responseData = response.data;
+              control.options = responseData.map((item: any) => ({
+                value: item[control.optionVal || 'value'],
+                label: item[control.optionLabel || 'label'],
               }));
+              console.log(control.options);
             }
           },
           error: () => {

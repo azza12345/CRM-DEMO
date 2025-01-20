@@ -84,11 +84,13 @@ export class AdaptiveTableComponent implements OnInit, OnChanges {
         switchMap((response: any) => {
           this.totalRecords = response.totalItemsCount;
           this.isLoading = false;
-          console.log(response.data);
+          console.log(response);
           return [response.data];
         }),
-        catchError(() => {
+        catchError(err => {
           this.isLoading = false;
+          console.log(err);
+
           return [];
         })
       );

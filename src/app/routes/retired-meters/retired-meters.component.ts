@@ -26,10 +26,9 @@ export class RetiredMetersComponent {
       formControlName: 'districtID',
       label: 'District',
       type: 'select',
-      options: [
-        { value: 1, label: 'District 1' },
-        { value: 2, label: 'District 2' },
-      ],
+      apiEndpoint: EndPoint.GET_DISTRICTS,
+      optionLabel: 'name',
+      optionVal: 'id',
     },
   ];
   endpoint: EndPoint = EndPoint.RETIRED_METERS;

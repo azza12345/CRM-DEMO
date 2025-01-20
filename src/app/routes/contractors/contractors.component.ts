@@ -30,10 +30,9 @@ export class ContractorsComponent implements OnInit {
       formControlName: 'district',
       label: 'District',
       type: 'select',
-      options: [
-        { value: 'District 1', label: 'District 1' },
-        { value: 'District 2', label: 'District 2' },
-      ],
+      apiEndpoint: EndPoint.GET_DISTRICTS,
+      optionLabel: 'name',
+      optionVal: 'id',
     },
     {
       formControlName: 'search',
@@ -41,7 +40,7 @@ export class ContractorsComponent implements OnInit {
       type: 'text',
     },
   ];
-  endpoint: EndPoint = EndPoint.CONTRACTORS;
+  endpoint: EndPoint = EndPoint.GET_CONTRACTORS_BY_DISTRICT_ID;
   httpVerb: HttpVerb = HttpVerb.GET;
 
   constructor() {}
