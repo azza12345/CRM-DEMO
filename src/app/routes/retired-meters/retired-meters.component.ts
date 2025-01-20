@@ -4,6 +4,7 @@ import { AdaptiveTableComponent } from '../../shared/components/adaptive-table/a
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-retired-meters',
@@ -17,24 +18,24 @@ export class RetiredMetersComponent {
   columns: MtxGridColumn[] = [
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
     { header: 'Status', field: 'status', sortable: true },
-    { header: 'Retired By', field: 'retiredBy', sortable: true },
-    { header: 'old Meter Serial', field: 'oldMeterSerial', sortable: true },
+    { header: 'Retired By', field: 'agentId', sortable: true },
+    // { header: 'old Meter Serial', field: 'oldMeterSerial', sortable: true },
   ];
   filterControls: FilterControl[] = [
     {
-      formControlName: 'district',
+      formControlName: 'districtID',
       label: 'District',
       type: 'select',
       options: [
-        { value: 'District 1', label: 'District 1' },
-        { value: 'District 2', label: 'District 2' },
+        { value: 1, label: 'District 1' },
+        { value: 2, label: 'District 2' },
       ],
     },
   ];
-  endpoint: EndPoint = EndPoint.MOCK_RETIRED_METERS;
+  endpoint: EndPoint = EndPoint.RETIRED_METERS;
   httpVerb: HttpVerb = HttpVerb.GET;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {}
 

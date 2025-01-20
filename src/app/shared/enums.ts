@@ -7,6 +7,9 @@ export enum HttpVerb {
 }
 
 export enum EndPoint {
+  CONTRACTORS = 'Lockups/agents',
+  RETIRED_METERS = 'Meters/retired',
+  INSTALLATIONS = 'Dashboard/InstalledMeters',
   MOCK_CONTRACTORS = 'mock/contractors.mock.json',
   MOCK_RETIRED_METERS = 'mock/retired-meters.mock.json',
   MOCK_INSTALLATIONS = 'mock/installations.mock.json',

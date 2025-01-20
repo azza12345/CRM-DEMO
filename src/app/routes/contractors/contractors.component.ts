@@ -16,13 +16,14 @@ import { FilterComponent } from '../../shared/components/filter/filter.component
 export class ContractorsComponent implements OnInit {
   filters: any = {};
   columns: MtxGridColumn[] = [
-    { header: 'Code', field: 'code', sortable: true },
-    { header: 'Name', field: 'name', sortable: true },
+    // { header: 'Code', field: 'code', sortable: true },
+    { header: 'FullName', field: 'fullName', sortable: true },
+    { header: 'NationalId', field: 'nationalID', sortable: true },
     { header: 'Office Address', field: 'officeAddress' },
-    { header: 'Post Address', field: 'postAddress' },
-    { header: 'Contact Person', field: 'contactPerson' },
-    { header: 'Phone', field: 'phone' },
-    { header: 'District', field: 'district', sortable: true },
+    { header: 'Postl Address', field: 'postalAddress' },
+    { header: 'Email', field: 'email' },
+    { header: 'Mobile', field: 'mobile' },
+    //{ header: 'District', field: 'district', sortable: true },
   ];
   filterControls: FilterControl[] = [
     {
@@ -40,7 +41,7 @@ export class ContractorsComponent implements OnInit {
       type: 'text',
     },
   ];
-  endpoint: EndPoint = EndPoint.MOCK_CONTRACTORS;
+  endpoint: EndPoint = EndPoint.CONTRACTORS;
   httpVerb: HttpVerb = HttpVerb.GET;
 
   constructor() {}

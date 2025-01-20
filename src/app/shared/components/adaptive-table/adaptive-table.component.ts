@@ -82,9 +82,10 @@ export class AdaptiveTableComponent implements OnInit, OnChanges {
         debounceTime(300),
         takeUntilDestroyed(this.destroyRef),
         switchMap((response: any) => {
-          this.totalRecords = response.total;
+          this.totalRecords = response.totalItemsCount;
           this.isLoading = false;
-          return [response];
+          console.log(response.data);
+          return [response.data];
         }),
         catchError(() => {
           this.isLoading = false;

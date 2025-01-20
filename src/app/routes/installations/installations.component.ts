@@ -63,7 +63,7 @@ export class InstallationsComponent implements OnInit {
       type: 'text',
     },
   ];
-  endpoint: EndPoint = EndPoint.MOCK_INSTALLATIONS;
+  endpoint: EndPoint = EndPoint.INSTALLATIONS;
   httpVerb: HttpVerb = HttpVerb.GET;
   contractors: any[] = [];
 
@@ -77,7 +77,7 @@ export class InstallationsComponent implements OnInit {
   }
 
   loadContractors(): void {
-    this.apiService.triggerApiRequest<any[]>(EndPoint.MOCK_CONTRACTORS, HttpVerb.GET).subscribe({
+    this.apiService.triggerApiRequest<any[]>(EndPoint.CONTRACTORS, HttpVerb.GET).subscribe({
       next: data => {
         this.contractors = data;
       },
