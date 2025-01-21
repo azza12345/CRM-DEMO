@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit {
     total: 0,
     stats: [],
     values: {},
-    chartId: '',
+    chartId: 'metersChart',
     chartOptions: {},
   };
 
@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit {
     total: 0,
     stats: [],
     values: {},
-    chartId: '',
+    chartId: 'retiredMetersChart',
     chartOptions: {},
   };
 
@@ -83,7 +83,7 @@ export class DashboardComponent implements OnInit {
       response => {
         const dynamicMetersData = response.data;
 
-        this.isloadingMeters = true;
+        if (dynamicMetersData) this.isloadingMeters = true;
         this.meters = {
           ...meterStructure,
           total:
@@ -133,8 +133,12 @@ export class DashboardComponent implements OnInit {
 
     this.dashboardService.getRetiredMeterStatistics(this.selectDistrict).subscribe(
       response => {
-        this.isloadingMaterial = true;
         const dynamicRetiredMetersData = response.data;
+
+        if (dynamicRetiredMetersData) this.isloadingMaterial = true;
+
+        console.log('load materials')
+
         this.retiredMeters = {
           ...retiredMeterStructure,
           total: dynamicRetiredMetersData.totalCount,

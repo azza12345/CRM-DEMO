@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-dynamic-chart',
@@ -14,7 +14,18 @@ export class DynamicChartComponent implements AfterViewInit, OnDestroy {
 
   private chart!: any;
 
+
   ngAfterViewInit(): void {
+    this.renderCharts();
+  }
+
+  ngOnDestroy(): void {
+    if (this.chart) {
+      this.chart.destroy();
+    }
+  }
+
+  renderCharts(){
     if (this.chartOptions && this.chartId) {
       // Validate that chartOptions contains required properties
       if (!this.chartOptions.chart || !this.chartOptions.chart.type) {
@@ -34,12 +45,6 @@ export class DynamicChartComponent implements AfterViewInit, OnDestroy {
           console.error('An unknown error occurred:', error);
         }
       }
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.chart) {
-      this.chart.destroy();
     }
   }
 }
