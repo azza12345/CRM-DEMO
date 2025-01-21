@@ -81,9 +81,7 @@ export class InstallationsComponent implements OnInit {
       next: data => {
         this.contractors = data;
       },
-      error: err => {
-        console.error('Failed to load contractors:', err);
-      },
+      error: err => {},
     });
   }
   onFilterChanged(filterValues: any): void {
@@ -112,7 +110,5 @@ export class InstallationsComponent implements OnInit {
     });
   }
 
-  assignToContractor(rowData: any, contractorId: number): void {
-    console.log(`Assigning contractor ${contractorId} to row ${JSON.stringify(rowData)}`);
-  }
+  assignToContractor(rowData: any, contractorId: number): void {}
 }

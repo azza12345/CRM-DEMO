@@ -30,6 +30,5 @@ export class DashboardHeaderComponent {
 
   onFilterChanged(filterValues: any): void {
     const selectedDistrict = filterValues.district;
-    console.log(`Selected District is .... : ${selectedDistrict}`);
   }
 }
