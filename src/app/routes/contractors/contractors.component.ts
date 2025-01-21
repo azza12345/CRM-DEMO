@@ -17,12 +17,12 @@ export class ContractorsComponent implements OnInit {
   filters: any = {};
   columns: MtxGridColumn[] = [
     // { header: 'Code', field: 'code', sortable: true },
-    { header: 'FullName', field: 'fullName', sortable: true },
+    { header: 'Name', field: 'fullName', sortable: true },
     { header: 'NationalId', field: 'nationalID', sortable: true },
     { header: 'Office Address', field: 'officeAddress' },
-    { header: 'Postl Address', field: 'postalAddress' },
-    { header: 'Email', field: 'email' },
-    { header: 'Mobile', field: 'mobile' },
+    { header: 'Ghana Post Address', field: 'postalAddress' },
+    { header: 'Contact Person', field: 'email' },
+    { header: 'Phone', field: 'mobile' },
     //{ header: 'District', field: 'district', sortable: true },
   ];
   filterControls: FilterControl[] = [
