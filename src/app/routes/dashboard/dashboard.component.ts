@@ -137,8 +137,6 @@ export class DashboardComponent implements OnInit {
 
         if (dynamicRetiredMetersData) this.isloadingMaterial = true;
 
-        console.log('load materials')
-
         this.retiredMeters = {
           ...retiredMeterStructure,
           total: dynamicRetiredMetersData.totalCount,

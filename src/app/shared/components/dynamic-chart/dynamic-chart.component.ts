@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy,  SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-dynamic-chart',

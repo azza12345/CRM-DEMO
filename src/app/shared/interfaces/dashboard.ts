@@ -9,3 +9,14 @@ export interface MeterStatusDto {
   onStock: number;
   onAgent: number;
 }
+
+export interface AgentOperationData {
+  agentId: number;
+  agentName: string;
+  onAssignCount: number;
+  onAgentCount: number;
+  onCustomerCount: number;
+  totalRetireReceived: number;
+  totalRetireNotReceived: number;
+  totalCustomerReplacement: number;
+}
