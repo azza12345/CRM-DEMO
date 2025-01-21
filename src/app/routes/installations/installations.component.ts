@@ -21,7 +21,7 @@ export class InstallationsComponent implements OnInit {
   columns: MtxGridColumn[] = [
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
     { header: 'Status', field: 'status', sortable: true },
-    { header: 'Assigned To', field: 'assignedTo', sortable: true },
+    { header: 'Assigned To', field: 'agentName', sortable: true },
     {
       header: 'Actions',
       field: 'action',
@@ -52,10 +52,9 @@ export class InstallationsComponent implements OnInit {
       formControlName: 'district',
       label: 'District',
       type: 'select',
-      options: [
-        { value: 'District 1', label: 'District 1' },
-        { value: 'District 2', label: 'District 2' },
-      ],
+      apiEndpoint: EndPoint.DISTRICTS_LIST,
+      optionLabel: 'name',
+      optionVal: 'id',
     },
     {
       formControlName: 'search',
@@ -63,7 +62,7 @@ export class InstallationsComponent implements OnInit {
       type: 'text',
     },
   ];
-  endpoint: EndPoint = EndPoint.MOCK_INSTALLATIONS;
+  endpoint: EndPoint = EndPoint.INSTALLATIONS;
   httpVerb: HttpVerb = HttpVerb.GET;
   contractors: any[] = [];
 
@@ -77,13 +76,11 @@ export class InstallationsComponent implements OnInit {
   }
 
   loadContractors(): void {
-    this.apiService.triggerApiRequest<any[]>(EndPoint.MOCK_CONTRACTORS, HttpVerb.GET).subscribe({
+    this.apiService.triggerApiRequest<any[]>(EndPoint.AGENTS_LIST, HttpVerb.GET).subscribe({
       next: data => {
         this.contractors = data;
       },
-      error: err => {
-        console.error('Failed to load contractors:', err);
-      },
+      error: err => {},
     });
   }
   onFilterChanged(filterValues: any): void {
@@ -112,7 +109,5 @@ export class InstallationsComponent implements OnInit {
     });
   }
 
-  assignToContractor(rowData: any, contractorId: number): void {
-    console.log(`Assigning contractor ${contractorId} to row ${JSON.stringify(rowData)}`);
-  }
+  assignToContractor(rowData: any, contractorId: number): void {}
 }

@@ -14,7 +14,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MtxGridColumn, MtxGridModule } from '@ng-matero/extensions/grid';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, BehaviorSubject, Observable, switchMap } from 'rxjs';
+import { debounceTime, BehaviorSubject, Observable, switchMap, catchError } from 'rxjs';
 import { ApiService } from '@shared/services/api.service';
 import { AsyncPipe } from '@angular/common';
 
@@ -82,9 +82,15 @@ export class AdaptiveTableComponent implements OnInit, OnChanges {
         debounceTime(300),
         takeUntilDestroyed(this.destroyRef),
         switchMap((response: any) => {
-          this.totalRecords = response.total;
+          this.totalRecords = response.totalItemsCount;
           this.isLoading = false;
-          return [response];
+
+          return [response.data];
+        }),
+        catchError(err => {
+          this.isLoading = false;
+
+          return [];
         })
       );
   }

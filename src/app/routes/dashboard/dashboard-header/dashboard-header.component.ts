@@ -20,7 +20,7 @@ export class DashboardHeaderComponent implements OnInit {
       label: 'District',
       type: 'select',
       options: [],
-      apiEndpoint: EndPoint.DISTRICTS,
+      apiEndpoint: EndPoint.DISTRICTS_LIST,
       isFirstValueDynamic: true,
     },
   ];

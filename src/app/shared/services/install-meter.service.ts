@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class InstallMeterService {
-  // private apiUrl = `${environment.ApiUrl}/Meters/install`; // Replace with your actual endpoint
-  private apiUrl = `${environment.ApiUrl}/Meters/replace`; // Replace with your actual endpoint
+  private apiUrl = `${environment.ApiUrl}/Meters/install`; // Replace with your actual endpoint
+  // private apiUrl = `${environment.ApiUrl}/Meters/replace`; // Replace with your actual endpoint
 
   constructor(private http: HttpClient) {}
 

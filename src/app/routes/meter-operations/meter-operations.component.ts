@@ -128,7 +128,7 @@ export class MeterOperationsComponent implements OnInit {
       return;
     }
 
-    /*const installMeterRequest: InstallMeterRequest = {
+    const installMeterRequest: InstallMeterRequest = {
       customerId: this.installMeterForm.value.customerId,
       customerName: this.installMeterForm.value.customerName,
       meters: {
@@ -149,9 +149,9 @@ export class MeterOperationsComponent implements OnInit {
         notes: material.notes,
         image: material.image, // Handle file input for image
       })),
-    };*/
+    };
 
-    const replaceMeterRequest: ReplaceMeterRequest = {
+    /*const replaceMeterRequest: ReplaceMeterRequest = {
       customerId: this.installMeterForm.value.customerId,
       customerName: this.installMeterForm.value.customerName,
       meters: [
@@ -175,9 +175,9 @@ export class MeterOperationsComponent implements OnInit {
         notes: material.notes,
         image: material.image, // Handle file input for image
       })),
-    };
+    };*/
 
-    this.installMeterService.submitReplaceMeterRequest(replaceMeterRequest).subscribe(
+    this.installMeterService.submitInstallMeterRequest(installMeterRequest).subscribe(
       response => {
         console.log('Request successful', response);
       },
