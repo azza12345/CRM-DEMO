@@ -21,7 +21,7 @@ export class InstallationsComponent implements OnInit {
   columns: MtxGridColumn[] = [
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
     { header: 'Status', field: 'status', sortable: true },
-    { header: 'Assigned To', field: 'agent', sortable: true },
+    { header: 'Assigned To', field: 'agentName', sortable: true },
     {
       header: 'Actions',
       field: 'action',
