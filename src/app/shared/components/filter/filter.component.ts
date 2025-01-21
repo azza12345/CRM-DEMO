@@ -56,11 +56,18 @@ export class FilterComponent implements OnInit {
                 value: item,
                 label: item,
               }));
-            } else {
-              control.options = response.map((item: any) => ({
-                value: item[control.key || 'value'],
-                label: item[control.key || 'label'],
+            } else if (response?.data && Array.isArray(response.data)) {
+              control.options = response.data.map((item: any) => ({
+                value: item.id,
+                label: item.name,
               }));
+            }
+            if (control.isFirstValueDynamic) {
+              if (control.options && control.options.length > 0) {
+                const initialValue = control.options[0].value;
+                this.filterForm.get(control.formControlName)?.setValue(initialValue);
+                this.filterChanged.emit(this.filterForm.value);
+              }
             }
           },
           error: () => {

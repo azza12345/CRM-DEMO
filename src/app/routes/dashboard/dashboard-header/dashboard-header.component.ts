@@ -3,6 +3,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FilterComponent } from '../../../shared/components/filter/filter.component';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
 import { LookupService } from '@shared/services/lookup.service';
+import { EndPoint } from '@shared/enums';
 
 @Component({
   selector: 'app-dashboard-header',
@@ -19,6 +20,8 @@ export class DashboardHeaderComponent implements OnInit {
       label: 'District',
       type: 'select',
       options: [],
+      apiEndpoint: EndPoint.DISTRICTS,
+      isFirstValueDynamic: true,
     },
   ];
 
@@ -26,20 +29,7 @@ export class DashboardHeaderComponent implements OnInit {
 
   constructor(private lookupService: LookupService) {}
 
-  ngOnInit(): void {
-    this.lookupService.getDistricts().subscribe(
-      response => {
-        this.filterControls[0].options = [];
-        this.filterControls[0].initialValue = response.data[0]?.id?.toString();
-        response.data.forEach(district =>
-          this.filterControls[0].options?.push({ label: district.name, value: district.id })
-        );
-
-        console.log(this.filterControls[0]);
-      },
-      err => {}
-    );
-  }
+  ngOnInit(): void {}
 
   onFilterChanged(filterValues: any): void {
     const selectedDistrict = filterValues.district;
