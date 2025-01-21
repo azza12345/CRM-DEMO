@@ -52,10 +52,9 @@ export class InstallationsComponent implements OnInit {
       formControlName: 'district',
       label: 'District',
       type: 'select',
-      options: [
-        { value: '1', label: 'District 1' },
-        { value: '2', label: 'District 2' },
-      ],
+      apiEndpoint: EndPoint.GET_DISTRICTS,
+      optionLabel: 'name',
+      optionVal: 'id',
     },
     {
       formControlName: 'search',
