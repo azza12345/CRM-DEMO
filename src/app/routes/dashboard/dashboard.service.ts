@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '@env/environment';
+import { Observable } from 'rxjs';
+import { MeterStatusDto, RetiredMeterStatusDto } from '@shared/interfaces/dashboard';
+import { BaseResponse } from '@shared/interfaces/base-response';
 
 export interface PeriodicElement {
   name: string;
@@ -56,15 +60,22 @@ const MESSAGES = [
 
 @Injectable()
 export class DashboardService {
+  constructor(private http: HttpClient) {}
   getDynamicMetersData() {
     return {
       total: 1516545987,
       values: {
         onCustomer: 1000549987,
         onAgent: 400000126,
-        inStock: 100156156,
+        onStock: 100156156,
       },
     };
+  }
+
+  getMeterStatusStatistics(districtID: number): Observable<BaseResponse<MeterStatusDto>> {
+    return this.http.get<BaseResponse<MeterStatusDto>>(
+      `${environment.ApiUrl}/meters/statistics/district/${districtID}`
+    );
   }
 
   getDynamicRetiredMetersData() {
@@ -75,5 +86,11 @@ export class DashboardService {
         notReceived: 150215151,
       },
     };
+  }
+
+  getRetiredMeterStatistics(districtID: number): Observable<BaseResponse<RetiredMeterStatusDto>> {
+    return this.http.get<BaseResponse<RetiredMeterStatusDto>>(
+      `${environment.ApiUrl}/meters/retired/status/district/${districtID}`
+    );
   }
 }

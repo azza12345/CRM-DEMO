@@ -18,9 +18,6 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
-      { path: '403', component: Error403Component },
-      { path: '404', component: Error404Component },
-      { path: '500', component: Error500Component },
       {
         path: 'contractors',
         loadComponent: () =>
@@ -40,6 +37,16 @@ export const routes: Routes = [
             c => c.InstallationsComponent
           ),
       },
+      {
+        path: 'meter-operations',
+        loadComponent: () =>
+          import('./routes/meter-operations/meter-operations.component').then(
+            c => c.MeterOperationsComponent
+          ),
+      },
+      { path: '403', component: Error403Component },
+      { path: '404', component: Error404Component },
+      { path: '500', component: Error500Component },
     ],
   },
   {

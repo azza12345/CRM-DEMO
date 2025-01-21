@@ -1,9 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-dynamic-chart',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './dynamic-chart.component.html',
   styleUrl: './dynamic-chart.component.scss',
 })
@@ -15,8 +16,24 @@ export class DynamicChartComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (this.chartOptions && this.chartId) {
+      // Validate that chartOptions contains required properties
+      if (!this.chartOptions.chart || !this.chartOptions.chart.type) {
+        console.error('Invalid chart options: Missing "chart.type"');
+        return;
+      }
+
       this.chart = new ApexCharts(document.querySelector(`#${this.chartId}`), this.chartOptions);
-      this.chart?.render();
+
+      try {
+        this.chart?.render();
+        // Code that might throw an error
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error('An error occurred:', error.message);
+        } else {
+          console.error('An unknown error occurred:', error);
+        }
+      }
     }
   }
 

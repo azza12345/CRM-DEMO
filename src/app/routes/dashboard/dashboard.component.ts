@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   NgZone,
   OnDestroy,
@@ -14,23 +15,23 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MtxProgressModule } from '@ng-matero/extensions/progress';
-import { Subscription } from 'rxjs';
-import { SettingsService } from '@core';
 import { DashboardService } from './dashboard.service';
 import { DashboardHeaderComponent } from './dashboard-header/dashboard-header.component';
 import { MeterStatsCardComponent } from './meter-stats-card/meter-stats-card.component';
 import { DashboardTableComponent } from './dashboard-table/dashboard-table.component';
+import { CommonModule } from '@angular/common';
+import { LookupService } from '@shared/services/lookup.service';
 type RetiredMeterKeys = 'received' | 'notReceived';
-type MeterKeys = 'onCustomer' | 'onAgent' | 'inStock';
+type MeterKeys = 'onCustomer' | 'onAgent' | 'onStock';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DashboardService],
   standalone: true,
   imports: [
+    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
@@ -45,44 +46,84 @@ type MeterKeys = 'onCustomer' | 'onAgent' | 'inStock';
   ],
 })
 export class DashboardComponent implements OnInit {
-  meters: any;
-  retiredMeters: any;
+  meters: any = {
+    total: 0,
+    stats: [],
+    values: {},
+    chartId: '',
+    chartOptions: {},
+  };
 
+  retiredMeters: any = {
+    total: 0,
+    stats: [],
+    values: {},
+    chartId: '',
+    chartOptions: {},
+  };
+
+  selectDistrict: number = 0;
+
+  isloadingMaterial: boolean = false;
+  isloadingMeters: boolean = false;
   constructor(private dashboardService: DashboardService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  getMeterStatusStatistics() {
     const meterStructure = {
       stats: [
         { key: 'onCustomer' as MeterKeys, label: 'On Customer', color: '#A84E4E' },
         { key: 'onAgent' as MeterKeys, label: 'On Agent', color: '#C7A6A6' },
-        { key: 'inStock' as MeterKeys, label: 'In Stock', color: '#6C1414' },
+        { key: 'onStock' as MeterKeys, label: 'On Stock', color: '#6C1414' },
       ],
     };
 
-    const dynamicMetersData = this.dashboardService.getDynamicMetersData();
-    this.meters = {
-      ...meterStructure,
-      total: dynamicMetersData.total,
-      values: dynamicMetersData.values as Record<MeterKeys, number>,
-      chartId: 'metersChart',
-      chartOptions: {
-        chart: {
-          type: 'pie',
-          height: 180,
-          width: 150,
-        },
-        labels: meterStructure.stats.map(stat => stat.label),
-        series: meterStructure.stats.map(stat => dynamicMetersData.values[stat.key]),
-        colors: meterStructure.stats.map(stat => stat.color),
-        legend: {
-          show: false,
-        },
-        stroke: {
-          width: 0,
-        },
-      },
-    };
+    this.dashboardService.getMeterStatusStatistics(this.selectDistrict).subscribe(
+      response => {
+        const dynamicMetersData = response.data;
 
+        this.isloadingMeters = true;
+        this.meters = {
+          ...meterStructure,
+          total:
+            dynamicMetersData?.onStock + dynamicMetersData?.onAgent + dynamicMetersData?.onCustomer,
+          values: {
+            onCustomer: dynamicMetersData?.onCustomer,
+            onAgent: dynamicMetersData?.onAgent,
+            onStock: dynamicMetersData?.onStock,
+          } as Record<MeterKeys, number>,
+          chartId: 'metersChart',
+          chartOptions: {
+            chart: {
+              type: 'pie',
+              height: 180,
+              width: 150,
+            },
+            labels: meterStructure.stats.map(stat => stat.label),
+            series: meterStructure.stats.map(
+              stat =>
+                ({
+                  onStock: dynamicMetersData.onStock,
+                  onAgent: dynamicMetersData.onAgent,
+                  onCustomer: dynamicMetersData.onCustomer,
+                })[stat.key]
+            ),
+            colors: meterStructure.stats.map(stat => stat.color),
+            legend: {
+              show: false,
+            },
+            stroke: {
+              width: 0,
+            },
+          },
+        };
+      },
+      err => {}
+    );
+  }
+
+  getRetiredMeterStatistics() {
     const retiredMeterStructure = {
       stats: [
         { key: 'received' as RetiredMeterKeys, label: 'Received', color: '#303f9f' },
@@ -90,28 +131,53 @@ export class DashboardComponent implements OnInit {
       ],
     };
 
-    const dynamicRetiredMetersData = this.dashboardService.getDynamicRetiredMetersData();
-    this.retiredMeters = {
-      ...retiredMeterStructure,
-      total: dynamicRetiredMetersData.total,
-      values: dynamicRetiredMetersData.values as Record<RetiredMeterKeys, number>,
-      chartId: 'retiredMetersChart',
-      chartOptions: {
-        chart: {
-          type: 'pie',
-          height: 180,
-          width: 150,
-        },
-        labels: retiredMeterStructure.stats.map(stat => stat.label),
-        series: retiredMeterStructure.stats.map(stat => dynamicRetiredMetersData.values[stat.key]),
-        colors: retiredMeterStructure.stats.map(stat => stat.color),
-        legend: {
-          show: false,
-        },
-        stroke: {
-          width: 0,
-        },
+    this.dashboardService.getRetiredMeterStatistics(this.selectDistrict).subscribe(
+      response => {
+        this.isloadingMaterial = true;
+        const dynamicRetiredMetersData = response.data;
+        this.retiredMeters = {
+          ...retiredMeterStructure,
+          total: dynamicRetiredMetersData.totalCount,
+          values: {
+            received: dynamicRetiredMetersData.receivedCount,
+            notReceived: dynamicRetiredMetersData.notReceivedCount,
+          } as Record<RetiredMeterKeys, number>,
+          chartId: 'retiredMetersChart',
+          chartOptions: {
+            chart: {
+              type: 'pie',
+              height: 180,
+              width: 150,
+            },
+            labels: retiredMeterStructure.stats.map(stat => stat.label),
+            series: retiredMeterStructure.stats.map(
+              stat =>
+                ({
+                  received: dynamicRetiredMetersData.receivedCount,
+                  notReceived: dynamicRetiredMetersData.notReceivedCount,
+                })[stat.key]
+            ),
+            colors: retiredMeterStructure.stats.map(stat => stat.color),
+            legend: {
+              show: false,
+            },
+            stroke: {
+              width: 0,
+            },
+          },
+        };
       },
-    };
+      err => {}
+    );
+  }
+
+  handleFilterChange(filterValues: any): void {
+    console.log('Filter values received in parent:', filterValues);
+
+    this.selectDistrict = filterValues.district;
+
+    this.getMeterStatusStatistics();
+
+    this.getRetiredMeterStatistics();
   }
 }
