@@ -10,4 +10,7 @@ export enum EndPoint {
   MOCK_CONTRACTORS = 'mock/contractors.mock.json',
   MOCK_RETIRED_METERS = 'mock/retired-meters.mock.json',
   MOCK_INSTALLATIONS = 'mock/installations.mock.json',
+  DISTRICTS = 'districts/all',
+  METERS_STATISTICS = 'meters/statistics/district',
+  RETIRED_METER_STATISTICS = 'meters/retired/status/district',
 }

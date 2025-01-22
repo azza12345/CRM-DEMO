@@ -10,4 +10,5 @@ export interface FilterControl {
   apiEndpoint?: EndPoint;
   key?: string; //if the data for example not coming as an array of string like array of objects , we have to know each value then
   initialValue?: any;
+  isFirstValueDynamic?: boolean;
 }
