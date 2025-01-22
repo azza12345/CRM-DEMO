@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '@env/environment';
+import { Observable } from 'rxjs';
+import { AgentOperationData, MeterStatusDto, RetiredMeterStatusDto } from '@shared/interfaces/dashboard';
+import { BaseResponse } from '@shared/interfaces/base-response';
 
 export interface PeriodicElement {
   name: string;
@@ -56,24 +60,23 @@ const MESSAGES = [
 
 @Injectable()
 export class DashboardService {
-  getDynamicMetersData() {
-    return {
-      total: 1516545987,
-      values: {
-        onCustomer: 1000549987,
-        onAgent: 400000126,
-        inStock: 100156156,
-      },
-    };
+  constructor(private http: HttpClient) {}
+
+  getMeterStatusStatistics(districtID: number): Observable<BaseResponse<MeterStatusDto>> {
+    return this.http.get<BaseResponse<MeterStatusDto>>(
+      `${environment.ApiUrl}/meters/statistics/district/${districtID}`
+    );
   }
 
-  getDynamicRetiredMetersData() {
-    return {
-      total: 350545987,
-      values: {
-        received: 200206156,
-        notReceived: 150215151,
-      },
-    };
+  getRetiredMeterStatistics(districtID: number): Observable<BaseResponse<RetiredMeterStatusDto>> {
+    return this.http.get<BaseResponse<RetiredMeterStatusDto>>(
+      `${environment.ApiUrl}/meters/retired/status/district/${districtID}`
+    );
+  }
+
+  getAgentsOperations(agentId: string = ''): Observable<BaseResponse<AgentOperationData[]>> {
+    return this.http.get<BaseResponse<AgentOperationData[]>>(
+      `${environment.ApiUrl}/agents/operations/statistics/?agentId=${agentId}`
+    );
   }
 }

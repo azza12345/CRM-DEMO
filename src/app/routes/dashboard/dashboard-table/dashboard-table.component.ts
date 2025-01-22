@@ -4,48 +4,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
 import { FilterComponent } from '../../../shared/components/filter/filter.component';
-
-export interface ContractorData {
-  contractorName: string;
-  installation: {
-    assign: number;
-    onAgent: number;
-    onCustomer: number;
-  };
-  replacement: {
-    total: number;
-    received: number;
-    notReceived: number;
-  };
-}
-
-const MOCK_DATA: ContractorData[] = [
-  {
-    contractorName: 'Contractor1',
-    installation: { assign: 25, onAgent: 25, onCustomer: 25 },
-    replacement: { total: 25, received: 25, notReceived: 25 },
-  },
-  {
-    contractorName: 'Contractor2',
-    installation: { assign: 26, onAgent: 26, onCustomer: 26 },
-    replacement: { total: 26, received: 26, notReceived: 26 },
-  },
-  {
-    contractorName: 'Contractor3',
-    installation: { assign: 29, onAgent: 29, onCustomer: 29 },
-    replacement: { total: 29, received: 29, notReceived: 29 },
-  },
-  {
-    contractorName: 'Contractor4',
-    installation: { assign: 54, onAgent: 54, onCustomer: 54 },
-    replacement: { total: 54, received: 54, notReceived: 54 },
-  },
-  {
-    contractorName: 'Contractor5',
-    installation: { assign: 98, onAgent: 98, onCustomer: 98 },
-    replacement: { total: 98, received: 98, notReceived: 98 },
-  },
-];
+import { AgentOperationData } from '@shared/interfaces/dashboard';
+import { EndPoint } from '@shared/enums';
+import { DashboardService } from '../dashboard.service';
 
 @Component({
   selector: 'app-dashboard-table',
@@ -54,27 +15,26 @@ const MOCK_DATA: ContractorData[] = [
   templateUrl: './dashboard-table.component.html',
   styleUrl: './dashboard-table.component.scss',
 })
-export class DashboardTableComponent implements AfterViewInit {
-  dataSource = new MatTableDataSource<ContractorData>(MOCK_DATA);
+export class DashboardTableComponent implements OnInit, AfterViewInit {
+
+  dataSource = new MatTableDataSource<AgentOperationData>();
   displayedColumns: string[] = [
-    'contractorName',
-    'assign',
-    'onAgent',
-    'onCustomer',
-    'total',
-    'received',
-    'notReceived',
+    'agentName',
+    'onAssignCount',
+    'onAgentCount',
+    'onCustomerCount',
+    'totalCustomerReplacement',
+    'totalRetireReceived',
+    'totalRetireNotReceived',
   ];
 
   filterControls: FilterControl[] = [
     {
-      formControlName: 'contractor',
-      label: 'Contractor',
+      formControlName: 'agent',
+      label: 'Agent',
       type: 'select',
-      options: MOCK_DATA.map(item => ({
-        value: item.contractorName,
-        label: item.contractorName,
-      })),
+      options: [],
+      apiEndpoint: EndPoint.AGENTS_LIST,
       initialValue: 'Contractor1',
     },
   ];
@@ -82,13 +42,28 @@ export class DashboardTableComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  constructor(private dashboardService: DashboardService){
+  }
+
+  ngOnInit(): void {
+    this.dashboardService.getAgentsOperations().subscribe(
+      response => {
+        this.dataSource.data = response.data
+      },
+      err => {
+
+      }
+    )
+
+  }
+
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
   applyFilter(filterValue: any) {
-    const filteredData = MOCK_DATA.filter(item => item.contractorName === filterValue.contractor);
-    this.dataSource.data = filteredData.length ? filteredData : MOCK_DATA;
+    const filteredData = this.dataSource.data.filter(item => item.agentId === Number.parseInt(filterValue.agent));
+    this.dataSource.data = filteredData.length ? filteredData : this.dataSource.data;
   }
 }
