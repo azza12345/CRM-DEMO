@@ -20,6 +20,7 @@ import { BASE_URL, appInitializerProviders, httpInterceptorProviders } from '@co
 import { environment } from '@env/environment';
 import { PaginatorI18nService } from '@shared';
 import { routes } from './app.routes';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 // Required for AOT compilation
 export function TranslateHttpLoaderFactory(http: HttpClient) {
@@ -48,6 +49,10 @@ export const appConfig: ApplicationConfig = {
         },
       })
     ),
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy,
+    },
     { provide: BASE_URL, useValue: environment.baseUrl },
     httpInterceptorProviders,
     appInitializerProviders,
@@ -58,7 +63,7 @@ export const appConfig: ApplicationConfig = {
     },
     {
       provide: MAT_DATE_LOCALE,
-      useFactory: () => navigator.language, // <= This will be overrided by runtime setting
+      useFactory: () => navigator.language, // <= This will be overrided by runtime settingx
     },
     {
       provide: MAT_CARD_CONFIG,
