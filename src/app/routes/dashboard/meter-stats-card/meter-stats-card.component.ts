@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { DynamicChartComponent } from '../../../shared/components/dynamic-chart/dynamic-chart.component';
 import { DecimalPipe, NgClass } from '@angular/common';
+import { MeterStatusDto, RetiredMeterStatusDto } from '@shared/interfaces/dashboard';
 
 interface Stat {
   key: string;
@@ -19,7 +20,7 @@ export class MeterStatsCardComponent {
   @Input() type: string = '';
   @Input() total: number = 0;
   @Input() stats: Stat[] = [];
-  @Input() values!: Record<string, number>;
+  @Input() values!: any;
   @Input() chartId: string = '';
   @Input() chartOptions: any;
 }

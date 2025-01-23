@@ -12,4 +12,7 @@ export enum EndPoint {
   INSTALLATIONS = 'Dashboard/InstallationPage',
   GET_CONTRACTORS_BY_DISTRICT_ID = 'Districts/Contractors',
   RETIRED_METERS = 'Meters/retired',
+  DISTRICTS = 'districts/all',
+  METERS_STATISTICS = 'meters/statistics/district',
+  RETIRED_METER_STATISTICS = 'meters/retired/status/district',
 }

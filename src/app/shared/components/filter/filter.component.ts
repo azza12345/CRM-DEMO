@@ -45,7 +45,6 @@ export class FilterComponent implements OnInit {
     this.buildForm();
     this.fetchDynamicOptions();
   }
-
   fetchDynamicOptions(): void {
     this.controls.forEach(control => {
       if (control.apiEndpoint) {
