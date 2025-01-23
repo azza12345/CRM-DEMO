@@ -11,11 +11,8 @@ import { DashboardService } from './dashboard.service';
 import { DashboardHeaderComponent } from './dashboard-header/dashboard-header.component';
 import { MeterStatsCardComponent } from './meter-stats-card/meter-stats-card.component';
 import { DashboardTableComponent } from './dashboard-table/dashboard-table.component';
-import {
-  RetiredMeterKey,
-  RetiredMeterStatResponse,
-} from '@shared/interfaces/RetiredMeterStatsResponse.model';
-import { MeterKey, MeterStatResponse } from '@shared/interfaces/MeterStatsResponse.model';
+import { MeterStatusDto, RetiredMeterStatusDto } from '@shared/interfaces/dashboard';
+import { BaseResponse } from '@shared/interfaces/base-response';
 
 @Component({
   selector: 'app-dashboard',
@@ -38,8 +35,21 @@ import { MeterKey, MeterStatResponse } from '@shared/interfaces/MeterStatsRespon
   ],
 })
 export class DashboardComponent implements OnInit {
-  meters: any;
-  retiredMeters: any;
+  meters!: {
+    stats: { key: keyof MeterStatusDto; label: string; color: string }[];
+    total: number;
+    values?: MeterStatusDto;
+    chartId: string;
+    chartOptions: any;
+  };
+
+  retiredMeters!: {
+    stats: { key: keyof RetiredMeterStatusDto; label: string; color: string }[];
+    total: number;
+    values: Omit<RetiredMeterStatusDto, 'totalCount'>;
+    chartId: string;
+    chartOptions: any;
+  };
   selectedDistrict: number = 1;
 
   constructor(private dashboardService: DashboardService) {}
@@ -54,49 +64,48 @@ export class DashboardComponent implements OnInit {
   }
 
   private fetchData(districtId: number): void {
-    this.dashboardService.getMetersData(districtId).subscribe((response: MeterStatResponse) => {
-      const meterStructure = {
-        stats: [
-          { key: 'onCustomer' as MeterKey, label: 'On Customer', color: '#A84E4E' },
-          { key: 'onAgent' as MeterKey, label: 'On Agent', color: '#C7A6A6' },
-          { key: 'onStock' as MeterKey, label: 'In Stock', color: '#6C1414' },
-        ],
-      };
+    this.dashboardService
+      .getMetersData(districtId)
+      .subscribe((response: BaseResponse<MeterStatusDto>) => {
+        const meterStructure = {
+          stats: [
+            { key: 'onCustomer' as const, label: 'On Customer', color: '#A84E4E' },
+            { key: 'onAgent' as const, label: 'On Agent', color: '#C7A6A6' },
+            { key: 'onStock' as const, label: 'In Stock', color: '#6C1414' },
+          ],
+        };
 
-      this.meters = {
-        ...meterStructure,
-        total: Object.keys(response.data).reduce(
-          (sum, key) => sum + response.data[key as MeterKey],
-          0
-        ),
-        values: response.data,
-        chartId: 'metersChart',
-        chartOptions: {
-          chart: {
-            type: 'pie',
-            height: 180,
-            width: 150,
+        this.meters = {
+          ...meterStructure,
+          total: Object.values(response.data).reduce((sum, value) => sum + value, 0),
+          values: response.data,
+          chartId: 'metersChart',
+          chartOptions: {
+            chart: {
+              type: 'pie',
+              height: 180,
+              width: 150,
+            },
+            labels: meterStructure.stats.map(stat => stat.label),
+            series: meterStructure.stats.map(stat => response.data[stat.key] || 0),
+            colors: meterStructure.stats.map(stat => stat.color),
+            legend: {
+              show: false,
+            },
+            stroke: {
+              width: 0,
+            },
           },
-          labels: meterStructure.stats.map(stat => stat.label),
-          series: meterStructure.stats.map(stat => response.data[stat.key] || 0),
-          colors: meterStructure.stats.map(stat => stat.color),
-          legend: {
-            show: false,
-          },
-          stroke: {
-            width: 0,
-          },
-        },
-      };
-    });
+        };
+      });
 
     this.dashboardService
       .getRetiredMetersData(districtId)
-      .subscribe((response: RetiredMeterStatResponse) => {
+      .subscribe((response: BaseResponse<RetiredMeterStatusDto>) => {
         const retiredMeterStructure = {
           stats: [
-            { key: 'receivedCount' as RetiredMeterKey, label: 'Received', color: '#303f9f' },
-            { key: 'notReceivedCount' as RetiredMeterKey, label: 'Not Received', color: '#7986cb' },
+            { key: 'receivedCount' as const, label: 'Received', color: '#303f9f' },
+            { key: 'notReceivedCount' as const, label: 'Not Received', color: '#7986cb' },
           ],
         };
 

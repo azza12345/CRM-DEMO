@@ -16,23 +16,23 @@ import { FilterComponent } from '../../shared/components/filter/filter.component
 export class ContractorsComponent implements OnInit {
   filters: any = {};
   columns: MtxGridColumn[] = [
-    { header: 'Code', field: 'code', sortable: true },
-    { header: 'Name', field: 'name', sortable: true },
+    // { header: 'Code', field: 'code', sortable: true },
+    { header: 'Name', field: 'fullName', sortable: true },
+    { header: 'NationalId', field: 'nationalID', sortable: true },
     { header: 'Office Address', field: 'officeAddress' },
-    { header: 'Post Address', field: 'postAddress' },
-    { header: 'Contact Person', field: 'contactPerson' },
-    { header: 'Phone', field: 'phone' },
-    { header: 'District', field: 'district', sortable: true },
+    { header: 'Ghana Post Address', field: 'postalAddress' },
+    { header: 'Contact Person', field: 'email' },
+    { header: 'Phone', field: 'mobile' },
+    //{ header: 'District', field: 'district', sortable: true },
   ];
   filterControls: FilterControl[] = [
     {
       formControlName: 'district',
       label: 'District',
       type: 'select',
-      options: [
-        { value: 'District 1', label: 'District 1' },
-        { value: 'District 2', label: 'District 2' },
-      ],
+      apiEndpoint: EndPoint.DISTRICTS_LIST,
+      optionLabel: 'name',
+      optionVal: 'id',
     },
     {
       formControlName: 'search',
@@ -40,7 +40,7 @@ export class ContractorsComponent implements OnInit {
       type: 'text',
     },
   ];
-  endpoint: EndPoint = EndPoint.MOCK_CONTRACTORS;
+  endpoint: EndPoint = EndPoint.GET_CONTRACTORS_BY_DISTRICT_ID;
   httpVerb: HttpVerb = HttpVerb.GET;
 
   constructor() {}

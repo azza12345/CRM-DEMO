@@ -8,10 +8,10 @@
     ></app-filter>
   </div>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 shadow-none">
-    <ng-container matColumnDef="contractorName">
+    <ng-container matColumnDef="agentName">
       <th mat-header-cell *matHeaderCellDef colspan="1" class="header-group">Contractor Name</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.contractorName }}
+        {{ element.agentName }}
       </td>
     </ng-container>
 
@@ -27,52 +27,52 @@
       <th mat-header-cell *matHeaderCellDef rowspan="1" colspan="1" class="header-group"></th>
     </ng-container>
 
-    <ng-container matColumnDef="assign">
+    <ng-container matColumnDef="onAssignCount">
       <th mat-header-cell *matHeaderCellDef>Assign</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.installation.assign }}
+        {{ element.onAssignCount }}
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="onAgent">
+    <ng-container matColumnDef="onAgentCount">
       <th mat-header-cell *matHeaderCellDef>On Agent</th>
-      <td mat-cell *matCellDef="let element">{{ element.installation.onAgent }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.onAgentCount }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="onCustomer">
+    <ng-container matColumnDef="onCustomerCount">
       <th mat-header-cell *matHeaderCellDef>On Customer</th>
-      <td mat-cell *matCellDef="let element">{{ element.installation.onCustomer }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.onCustomerCount }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="total">
+    <ng-container matColumnDef="totalCustomerReplacement">
       <th mat-header-cell *matHeaderCellDef>Total</th>
-      <td mat-cell *matCellDef="let element">{{ element.replacement.total }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.totalCustomerReplacement }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="received">
+    <ng-container matColumnDef="totalRetireReceived">
       <th mat-header-cell *matHeaderCellDef>Received</th>
-      <td mat-cell *matCellDef="let element">{{ element.replacement.received }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.totalRetireReceived }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="notReceived">
+    <ng-container matColumnDef="totalRetireNotReceived">
       <th mat-header-cell *matHeaderCellDef>Not Received</th>
-      <td mat-cell *matCellDef="let element">{{ element.replacement.notReceived }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.totalRetireNotReceived }}</td>
     </ng-container>
 
     <tr
       mat-header-row
-      *matHeaderRowDef="['contractorName', 'header-row-installation', 'header-row-replacement']"
+      *matHeaderRowDef="['agentName', 'header-row-installation', 'header-row-replacement']"
     ></tr>
     <tr
       mat-header-row
       *matHeaderRowDef="[
         'blank-space',
-        'assign',
-        'onAgent',
-        'onCustomer',
-        'total',
-        'received',
-        'notReceived'
+        'onAssignCount',
+        'onAgentCount',
+        'onCustomerCount',
+        'totalCustomerReplacement',
+        'totalRetireReceived',
+        'totalRetireNotReceived'
       ]"
     ></tr>
 
