@@ -6,22 +6,22 @@
       <app-meter-stats-card
         title="Meters"
         type="primary"
-        [total]="meters?.total"
-        [stats]="meters?.stats"
-        [values]="meters?.values"
+        [total]="meters.total"
+        [stats]="meters.stats"
+        [values]="meters.values"
         [chartId]="meters.chartId"
-        [chartOptions]="meters?.chartOptions"
+        [chartOptions]="meters.chartOptions"
       ></app-meter-stats-card>
     }
     @if (retiredMeters) {
       <app-meter-stats-card
         title="Retired Meters"
         type="secondary"
-        [total]="retiredMeters?.total"
-        [stats]="retiredMeters?.stats"
-        [values]="retiredMeters?.values"
+        [total]="retiredMeters.total"
+        [stats]="retiredMeters.stats"
+        [values]="retiredMeters.values"
         [chartId]="retiredMeters.chartId"
-        [chartOptions]="retiredMeters?.chartOptions"
+        [chartOptions]="retiredMeters.chartOptions"
       ></app-meter-stats-card>
     }
   </div>

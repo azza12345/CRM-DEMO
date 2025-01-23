@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
   meters!: {
     stats: { key: keyof MeterStatusDto; label: string; color: string }[];
     total: number;
-    values?: MeterStatusDto;
+    values: MeterStatusDto;
     chartId: string;
     chartOptions: any;
   };

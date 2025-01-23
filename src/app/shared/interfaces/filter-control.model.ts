@@ -13,5 +13,4 @@ export interface FilterControl {
   optionVal?: string;
   optionLabel?: string;
   initialValue?: any;
-  isFirstValueDynamic?: boolean;
 }
