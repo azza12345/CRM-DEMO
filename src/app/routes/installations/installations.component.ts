@@ -64,7 +64,7 @@ export class InstallationsComponent implements OnInit {
   ];
   endpoint: EndPoint = EndPoint.INSTALLATIONS;
   httpVerb: HttpVerb = HttpVerb.GET;
-  contractors: any[] = [];
+  agents: any[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -72,13 +72,13 @@ export class InstallationsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadContractors();
+    this.loadAgents();
   }
 
-  loadContractors(): void {
+  loadAgents(): void {
     this.apiService.triggerApiRequest<any[]>(EndPoint.AGENTS_LIST, HttpVerb.GET).subscribe({
       next: data => {
-        this.contractors = data;
+        this.agents = data;
       },
       error: err => {},
     });
@@ -96,7 +96,7 @@ export class InstallationsComponent implements OnInit {
             label: 'Contractor',
             formControlName: 'contractor',
             type: 'select',
-            options: this.contractors,
+            options: this.agents,
           },
         ],
       },

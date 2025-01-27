@@ -13,7 +13,7 @@ import { FilterComponent } from '../../shared/components/filter/filter.component
   templateUrl: './contractors.component.html',
   styleUrl: './contractors.component.scss',
 })
-export class ContractorsComponent implements OnInit {
+export class AgentsComponent implements OnInit {
   filters: any = {};
   columns: MtxGridColumn[] = [
     // { header: 'Code', field: 'code', sortable: true },
@@ -40,7 +40,7 @@ export class ContractorsComponent implements OnInit {
       type: 'text',
     },
   ];
-  endpoint: EndPoint = EndPoint.GET_CONTRACTORS_BY_DISTRICT_ID;
+  endpoint: EndPoint = EndPoint.GET_AGENTS_BY_DISTRICT_ID;
   httpVerb: HttpVerb = HttpVerb.GET;
 
   constructor() {}
