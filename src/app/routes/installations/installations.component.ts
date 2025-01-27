@@ -57,8 +57,8 @@ export class InstallationsComponent implements OnInit {
       optionVal: 'id',
     },
     {
-      formControlName: 'search',
-      label: 'Search',
+      formControlName: 'MeterSerial',
+      label: 'MeterSerial',
       type: 'text',
     },
   ];
