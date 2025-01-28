@@ -30,6 +30,13 @@ export class RetiredMetersComponent {
       optionLabel: 'name',
       optionVal: 'id',
     },
+    {
+      formControlName: 'MeterSerial',
+      label: 'MeterSerial',
+      type: 'text',
+      optionLabel: 'meterSerial',
+      optionVal: 'MeterSerial',
+    },
   ];
   endpoint: EndPoint = EndPoint.RETIRED_METERS;
   httpVerb: HttpVerb = HttpVerb.GET;
