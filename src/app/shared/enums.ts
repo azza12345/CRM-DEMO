@@ -8,11 +8,11 @@ export enum HttpVerb {
 
 export enum EndPoint {
   AGENTS_LIST = 'agents/list',
-  DISTRICTS_LIST = 'Districts/list',
+  DISTRICTS_LIST = 'ِDistricts/ActiveDistrics/list',
   INSTALLATIONS = 'Dashboard/InstallationPage',
   GET_AGENTS_BY_DISTRICT_ID = 'Districts/Contractors',
   RETIRED_METERS = 'Meters/retired',
-  DISTRICTS = 'districts/all',
+  DISTRICTS = 'Districts/all',
   METERS_STATISTICS = 'meters/statistics/district',
   RETIRED_METER_STATISTICS = 'meters/retired/status/district',
 }
