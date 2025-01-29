@@ -16,7 +16,6 @@ import { DashboardService } from '../dashboard.service';
   styleUrl: './dashboard-table.component.scss',
 })
 export class DashboardTableComponent implements OnInit, AfterViewInit {
-
   dataSource = new MatTableDataSource<AgentOperationData>();
   displayedColumns: string[] = [
     'agentName',
@@ -33,28 +32,26 @@ export class DashboardTableComponent implements OnInit, AfterViewInit {
       formControlName: 'agent',
       label: 'Agent',
       type: 'select',
-      options: [],
       apiEndpoint: EndPoint.AGENTS_LIST,
-      initialValue: 'Contractor1',
+      optionLabel: 'name',
+      optionVal: 'id',
+      //initialValue: 'Contractor1',
+      isFirstValueDynamic: true,
     },
   ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private dashboardService: DashboardService){
-  }
+  constructor(private dashboardService: DashboardService) {}
 
   ngOnInit(): void {
     this.dashboardService.getAgentsOperations().subscribe(
       response => {
-        this.dataSource.data = response.data
+        this.dataSource.data = response.data;
       },
-      err => {
-
-      }
-    )
-
+      err => {}
+    );
   }
 
   ngAfterViewInit(): void {
@@ -63,7 +60,9 @@ export class DashboardTableComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter(filterValue: any) {
-    const filteredData = this.dataSource.data.filter(item => item.agentId === Number.parseInt(filterValue.agent));
+    const filteredData = this.dataSource.data.filter(
+      item => item.agentId === Number.parseInt(filterValue.agent)
+    );
     this.dataSource.data = filteredData.length ? filteredData : this.dataSource.data;
   }
 }

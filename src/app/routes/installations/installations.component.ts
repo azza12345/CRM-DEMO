@@ -53,6 +53,7 @@ export class InstallationsComponent implements OnInit {
       label: 'District',
       type: 'select',
       apiEndpoint: EndPoint.DISTRICTS_LIST,
+      isFirstValueDynamic: true,
       optionLabel: 'name',
       optionVal: 'id',
     },
