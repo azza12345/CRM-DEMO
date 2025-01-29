@@ -60,6 +60,8 @@ export class InstallationsComponent implements OnInit {
       formControlName: 'MeterSerial',
       label: 'MeterSerial',
       type: 'text',
+      optionLabel: 'MeterSerial',
+      optionVal: 'meterSerial',
     },
   ];
   endpoint: EndPoint = EndPoint.INSTALLATIONS;
