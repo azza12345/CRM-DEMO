@@ -59,10 +59,13 @@ export class DashboardTableComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  applyFilter(filterValue: any) {
-    const filteredData = this.dataSource.data.filter(
-      item => item.agentId === Number.parseInt(filterValue.agent)
+  applyFilter(filterValue: any): void {
+    const agentId = filterValue.agent || '';
+    this.dashboardService.getAgentsOperations(agentId).subscribe(
+      response => {
+        this.dataSource.data = response.data;
+      },
+      err => {}
     );
-    this.dataSource.data = filteredData.length ? filteredData : this.dataSource.data;
   }
 }
