@@ -19,6 +19,7 @@ export class RetiredMetersComponent {
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
     { header: 'Status', field: 'status', sortable: true },
     { header: 'Retired By', field: 'agentName', sortable: true },
+    { header: 'Is Received', field: 'isReceived', sortable: true },
     // { header: 'old Meter Serial', field: 'oldMeterSerial', sortable: true },
   ];
   filterControls: FilterControl[] = [
