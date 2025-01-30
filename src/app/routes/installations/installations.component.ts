@@ -53,6 +53,7 @@ export class InstallationsComponent implements OnInit {
       label: 'District',
       type: 'select',
       apiEndpoint: EndPoint.DISTRICTS_LIST,
+      isFirstValueDynamic: true,
       optionLabel: 'name',
       optionVal: 'id',
     },
@@ -60,6 +61,8 @@ export class InstallationsComponent implements OnInit {
       formControlName: 'MeterSerial',
       label: 'MeterSerial',
       type: 'text',
+      optionLabel: 'MeterSerial',
+      optionVal: 'meterSerial',
     },
   ];
   endpoint: EndPoint = EndPoint.INSTALLATIONS;
