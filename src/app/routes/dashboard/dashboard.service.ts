@@ -18,9 +18,9 @@ export class DashboardService {
     private http: HttpClient
   ) {}
 
-  // getAgentsOperations(agentId: string = ''): Observable<BaseResponse<AgentOperationData[]>> {
-  //   return this.http.get<BaseResponse<AgentOperationData[]>>(
-  //     `${environment.ApiUrl}/agents/operations/statistics/?agentId=${agentId}`
-  //   );
-  // }
+  getAgentsOperations(agentId: string = ''): Observable<BaseResponse<AgentOperationData[]>> {
+    return this.http.get<BaseResponse<AgentOperationData[]>>(
+      `${environment.ApiUrl}/agents/operations/statistics/?agentId=${agentId}`
+    );
+  }
 }
