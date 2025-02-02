@@ -8,7 +8,7 @@
           <mat-select [formControlName]="field.formControlName">
             @for (option of field.options; track option) {
               <!-- don't forget to make the value to option id when API is ready .... -->
-              <mat-option [value]="option.name">
+              <mat-option [value]="option.id">
                 {{ option.name }}
               </mat-option>
             }

@@ -15,4 +15,5 @@ export enum EndPoint {
   DISTRICTS = 'Districts/all',
   METERS_STATISTICS = 'meters/statistics/district',
   RETIRED_METER_STATISTICS = 'meters/retired/status/district',
+  AGENTS_OPERATIONS_STATISTICS = 'agents/operations/statistics',
 }

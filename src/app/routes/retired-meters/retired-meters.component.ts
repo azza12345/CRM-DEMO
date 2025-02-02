@@ -4,7 +4,7 @@ import { AdaptiveTableComponent } from '../../shared/components/adaptive-table/a
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
-import { HttpClient } from '@angular/common/http';
+import { RetiredMeter } from '@shared/interfaces/retired-meter.model';
 
 @Component({
   selector: 'app-retired-meters',
@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class RetiredMetersComponent {
   filters: any = {};
-  columns: MtxGridColumn[] = [
+  columns: MtxGridColumn<RetiredMeter>[] = [
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
     { header: 'Status', field: 'status', sortable: true },
     { header: 'Retired By', field: 'agentName', sortable: true },
@@ -41,10 +41,6 @@ export class RetiredMetersComponent {
   ];
   endpoint: EndPoint = EndPoint.RETIRED_METERS;
   httpVerb: HttpVerb = HttpVerb.GET;
-
-  constructor(private http: HttpClient) {}
-
-  ngOnInit(): void {}
 
   onFilterChanged(filterValues: any): void {
     this.filters = filterValues;
