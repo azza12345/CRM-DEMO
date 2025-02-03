@@ -2,18 +2,28 @@ import { Component, OnInit } from '@angular/core';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
-import { ApiService } from '@shared/services/api.service';
 import { AdaptiveTableComponent } from '../../shared/components/adaptive-table/adaptive-table.component';
 import { FilterComponent } from '../../shared/components/filter/filter.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-contractors',
   standalone: true,
-  imports: [AdaptiveTableComponent, FilterComponent],
+  imports: [
+    AdaptiveTableComponent,
+    FilterComponent,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    RouterLink,
+  ],
   templateUrl: './contractors.component.html',
   styleUrl: './contractors.component.scss',
 })
-export class AgentsComponent implements OnInit {
+export class ContractorsComponent {
   filters: any = {};
   columns: MtxGridColumn[] = [
     // { header: 'Code', field: 'code', sortable: true },
@@ -23,6 +33,23 @@ export class AgentsComponent implements OnInit {
     { header: 'Ghana Post Address', field: 'postalAddress' },
     { header: 'Contact Person', field: 'email' },
     { header: 'Phone', field: 'mobile' },
+    {
+      header: 'Actions',
+      field: 'action',
+      width: '100px',
+      pinned: 'right',
+      right: '0px',
+      type: 'button',
+      buttons: [
+        {
+          type: 'icon',
+          text: 'View',
+          icon: 'visibility',
+          tooltip: 'Show Agents',
+        },
+      ],
+    },
+
     //{ header: 'District', field: 'district', sortable: true },
   ];
   filterControls: FilterControl[] = [
@@ -44,8 +71,6 @@ export class AgentsComponent implements OnInit {
   httpVerb: HttpVerb = HttpVerb.GET;
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   onFilterChanged(filterValues: any): void {
     this.filters = filterValues;

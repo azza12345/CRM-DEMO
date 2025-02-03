@@ -9,7 +9,7 @@ import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adap
 import { ApiService } from '@shared/services/api.service';
 import { Subscription } from 'rxjs';
 import { BaseResponse } from '@shared/interfaces/base-response';
-import { Agent } from '@shared/interfaces/agent.model';
+import { Contractor } from '@shared/interfaces/contractor.model';
 import { Installment } from '@shared/interfaces/installment.model';
 
 @Component({
@@ -70,8 +70,8 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   ];
   endpoint: EndPoint = EndPoint.INSTALLATIONS;
   httpVerb: HttpVerb = HttpVerb.GET;
-  agents: Agent[] = [];
-  private agentsSubscription!: Subscription;
+  contractors: Contractor[] = [];
+  private contractorsSubscription!: Subscription;
 
   constructor(
     private dialog: MatDialog,
@@ -79,21 +79,21 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadAgents();
+    this.loadContractors();
   }
 
   ngOnDestroy(): void {
-    if (this.agentsSubscription) {
-      this.agentsSubscription.unsubscribe();
+    if (this.contractorsSubscription) {
+      this.contractorsSubscription.unsubscribe();
     }
   }
 
-  private loadAgents(): void {
-    this.agentsSubscription = this.apiService
-      .triggerApiRequest<BaseResponse<Agent[]>>(EndPoint.AGENTS_LIST, HttpVerb.GET)
+  private loadContractors(): void {
+    this.contractorsSubscription = this.apiService
+      .triggerApiRequest<BaseResponse<Contractor[]>>(EndPoint.AGENTS_LIST, HttpVerb.GET)
       .subscribe({
         next: res => {
-          this.agents = res.data;
+          this.contractors = res.data;
         },
       });
   }
@@ -110,7 +110,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
             label: 'Contractor',
             formControlName: 'contractor',
             type: 'select',
-            options: this.agents,
+            options: this.contractors,
           },
         ],
       },

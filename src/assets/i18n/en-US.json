@@ -2,7 +2,7 @@
   "menu": {
     "dashboard": "Dashboard",
     "installation": "Installation",
-    "agents": "Agents",
+    "contractors": "Contractors",
     "retired-meters": "Retired Meters",
     "settings": "Settings",
     "settings.user-management": "User Management",

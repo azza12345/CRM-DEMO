@@ -1,4 +1,4 @@
-export interface Agent {
+export interface Contractor {
   id: number;
   name: string;
 }

@@ -19,8 +19,8 @@
       "customIcon": "assets/images/svgs/menu/retired-meters.svg"
     },
     {
-      "route": "agents",
-      "name": "agents",
+      "route": "contractors",
+      "name": "contractors",
       "type": "link",
       "customIcon": "assets/images/svgs/menu/contractor.svg"
     },
