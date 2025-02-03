@@ -23,9 +23,9 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       {
-        path: 'agents',
+        path: 'contractors',
         loadComponent: () =>
-          import('./routes/contractors/contractors.component').then(c => c.AgentsComponent),
+          import('./routes/contractors/contractors.component').then(c => c.ContractorsComponent),
       },
       {
         path: 'retired-meters',

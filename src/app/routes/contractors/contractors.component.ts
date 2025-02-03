@@ -13,7 +13,7 @@ import { FilterComponent } from '../../shared/components/filter/filter.component
   templateUrl: './contractors.component.html',
   styleUrl: './contractors.component.scss',
 })
-export class AgentsComponent implements OnInit {
+export class ContractorsComponent implements OnInit {
   filters: any = {};
   columns: MtxGridColumn[] = [
     // { header: 'Code', field: 'code', sortable: true },
