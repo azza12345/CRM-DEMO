@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "code": "AGT001",
+      "amcUsername": "john_doe",
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "ghanaCard": "GHA-123456789",
+      "phone": "+233123456789"
+    },
+    {
+      "id": "2",
+      "code": "AGT002",
+      "amcUsername": "jane_smith",
+      "name": "Jane Smith",
+      "email": "janesmith@example.com",
+      "ghanaCard": "GHA-987654321",
+      "phone": "+233987654321"
+    }
+  ]
+}

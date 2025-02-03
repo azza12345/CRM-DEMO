@@ -17,5 +17,5 @@ export enum EndPoint {
   RETIRED_METER_STATISTICS = 'meters/retired/status/district',
   AGENTS_OPERATIONS_STATISTICS = 'agents/operations/statistics',
   //FIXME: gonna be changed when API is Ready
-  MOCK_AGENTS = 'assets/mock/agents.mock.json',
+  MOCK_AGENTS = './mock/agents.mock.json',
 }
