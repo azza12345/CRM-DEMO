@@ -1,0 +1,28 @@
+<div class="d-flex justify-content-between mb-4">
+  <div class="d-flex align-items-center">
+    <h1 class="title">Agents</h1>
+    <a
+      mat-mini-fab
+      color="primary"
+      [routerLink]="['/add-agent']"
+      class="add-icon ms-3"
+      matTooltip="Add Contractor"
+      matTooltipPosition="below"
+    >
+      <mat-icon>add</mat-icon>
+    </a>
+  </div>
+  <app-filter
+    [isPrimary]="true"
+    [controls]="filterControls"
+    (filterChanged)="onFilterChanged($event)"
+  ></app-filter>
+</div>
+
+<app-adaptive-table
+  [apiUrl]="endpoint"
+  [httpMethod]="httpVerb"
+  [filters]="filters"
+  [columns]="columns"
+  [isLoading]="false"
+></app-adaptive-table>
