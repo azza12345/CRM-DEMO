@@ -24,8 +24,6 @@ export class DashboardHeaderComponent {
     },
   ];
 
-  ngOnInit(): void {}
-
   onFilterChanged(filterValues: any): void {
     const selectedDistrict = filterValues.district;
     this.districtChanged.emit(selectedDistrict);

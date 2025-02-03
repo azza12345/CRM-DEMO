@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FilterComponent } from '../../shared/components/filter/filter.component';
 import { AdaptiveTableComponent } from '../../shared/components/adaptive-table/adaptive-table.component';
 import { EndPoint, HttpVerb } from '@shared/enums';
@@ -6,8 +6,11 @@ import { FilterControl } from '@shared/interfaces/filter-control.model';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
-import { HttpClient } from '@angular/common/http';
 import { ApiService } from '@shared/services/api.service';
+import { Subscription } from 'rxjs';
+import { BaseResponse } from '@shared/interfaces/base-response';
+import { Agent } from '@shared/interfaces/agent.model';
+import { Installment } from '@shared/interfaces/installment.model';
 
 @Component({
   selector: 'app-installations',
@@ -16,15 +19,15 @@ import { ApiService } from '@shared/services/api.service';
   templateUrl: './installations.component.html',
   styleUrl: './installations.component.scss',
 })
-export class InstallationsComponent implements OnInit {
+export class InstallationsComponent implements OnInit, OnDestroy {
   filters: any = {};
-  columns: MtxGridColumn[] = [
+  columns: MtxGridColumn<Installment>[] = [
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
     { header: 'Status', field: 'status', sortable: true },
     { header: 'Assigned To', field: 'agentName', sortable: true },
     {
       header: 'Actions',
-      field: 'action',
+      field: 'action' as keyof Installment,
       width: '180px',
       pinned: 'right',
       right: '0px',
@@ -42,7 +45,7 @@ export class InstallationsComponent implements OnInit {
           text: 'Assign to a Contractor',
           icon: 'person_add',
           tooltip: 'Assign to a Contractor',
-          click: rowData => this.openAssignDialog(rowData),
+          click: (rowData: Installment) => this.openAssignDialog(rowData),
         },
       ],
     },
@@ -53,7 +56,7 @@ export class InstallationsComponent implements OnInit {
       label: 'District',
       type: 'select',
       apiEndpoint: EndPoint.DISTRICTS_LIST,
-      isFirstValueDynamic: true,
+      // isFirstValueDynamic: true,
       optionLabel: 'name',
       optionVal: 'id',
     },
@@ -67,7 +70,8 @@ export class InstallationsComponent implements OnInit {
   ];
   endpoint: EndPoint = EndPoint.INSTALLATIONS;
   httpVerb: HttpVerb = HttpVerb.GET;
-  agents: any[] = [];
+  agents: Agent[] = [];
+  private agentsSubscription!: Subscription;
 
   constructor(
     private dialog: MatDialog,
@@ -78,13 +82,20 @@ export class InstallationsComponent implements OnInit {
     this.loadAgents();
   }
 
-  loadAgents(): void {
-    this.apiService.triggerApiRequest<any[]>(EndPoint.AGENTS_LIST, HttpVerb.GET).subscribe({
-      next: data => {
-        this.agents = data;
-      },
-      error: err => {},
-    });
+  ngOnDestroy(): void {
+    if (this.agentsSubscription) {
+      this.agentsSubscription.unsubscribe();
+    }
+  }
+
+  private loadAgents(): void {
+    this.agentsSubscription = this.apiService
+      .triggerApiRequest<BaseResponse<Agent[]>>(EndPoint.AGENTS_LIST, HttpVerb.GET)
+      .subscribe({
+        next: res => {
+          this.agents = res.data;
+        },
+      });
   }
   onFilterChanged(filterValues: any): void {
     this.filters = filterValues;
@@ -112,5 +123,6 @@ export class InstallationsComponent implements OnInit {
     });
   }
 
+  // TODO
   assignToContractor(rowData: any, contractorId: number): void {}
 }

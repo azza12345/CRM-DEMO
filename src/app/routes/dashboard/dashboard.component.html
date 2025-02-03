@@ -2,25 +2,26 @@
   <app-dashboard-header (districtChanged)="onDistrictChanged($event)"></app-dashboard-header>
 
   <div class="cards-section">
-    @if (meters) {
+    @if (meters$ | async; as meters) {
       <app-meter-stats-card
         title="Meters"
         type="primary"
-        [total]="meters.total"
-        [stats]="meters.stats"
-        [values]="meters.values"
-        [chartId]="meters.chartId"
+        [total]="meters.total || 0"
+        [stats]="meters.stats || []"
+        [values]="meters.values || []"
+        [chartId]="meters.chartId || ''"
         [chartOptions]="meters.chartOptions"
       ></app-meter-stats-card>
     }
-    @if (retiredMeters) {
+
+    @if (retiredMeters$ | async; as retiredMeters) {
       <app-meter-stats-card
         title="Retired Meters"
         type="secondary"
-        [total]="retiredMeters.total"
-        [stats]="retiredMeters.stats"
+        [total]="retiredMeters.total || 0"
+        [stats]="retiredMeters.stats || []"
         [values]="retiredMeters.values"
-        [chartId]="retiredMeters.chartId"
+        [chartId]="retiredMeters.chartId || ''"
         [chartOptions]="retiredMeters.chartOptions"
       ></app-meter-stats-card>
     }
