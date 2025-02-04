@@ -7,4 +7,7 @@ export interface Agent {
   email: string;
   ghanaCard: string;
   phone: string;
+  state: 'enabled' | 'disabled';
+  actionIcon?: string;
+  actionTooltip?: string;
 }

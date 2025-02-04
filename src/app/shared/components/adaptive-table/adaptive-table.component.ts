@@ -1,5 +1,7 @@
 import {
+  AfterViewInit,
   Component,
+  ContentChild,
   DestroyRef,
   EventEmitter,
   inject,
@@ -8,13 +10,14 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  TemplateRef,
 } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PageEvent } from '@angular/material/paginator';
-import { MtxGridColumn, MtxGridModule } from '@ng-matero/extensions/grid';
+import { MtxGridColumn, MtxGridModule, MtxGridRowClassFormatter } from '@ng-matero/extensions/grid';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, BehaviorSubject, Observable, switchMap, catchError } from 'rxjs';
+import { debounceTime, BehaviorSubject, Observable, switchMap, catchError, map } from 'rxjs';
 import { ApiService } from '@shared/services/api.service';
 import { AsyncPipe } from '@angular/common';
 
@@ -25,7 +28,8 @@ import { AsyncPipe } from '@angular/common';
   templateUrl: './adaptive-table.component.html',
   styleUrl: './adaptive-table.component.scss',
 })
-export class AdaptiveTableComponent implements OnInit, OnChanges {
+export class AdaptiveTableComponent implements OnInit, OnChanges, AfterViewInit {
+  @ContentChild('actionBtns') actionBtns!: TemplateRef<any>;
   @Input() apiUrl!: EndPoint;
   @Input() filters: any = {};
   @Input() columns: MtxGridColumn[] = [];
@@ -33,6 +37,7 @@ export class AdaptiveTableComponent implements OnInit, OnChanges {
   @Input() pageSizeOptions: number[] = [5, 10, 50, 100];
   @Input() additionalParams: any = {};
   @Input() httpMethod: HttpVerb = HttpVerb.GET;
+  @Input() rowClassFormatter: MtxGridRowClassFormatter = {};
   destroyRef = inject(DestroyRef);
 
   @Output() actionTriggered: EventEmitter<{ action: string; rowData: any }> = new EventEmitter<{
@@ -52,6 +57,9 @@ export class AdaptiveTableComponent implements OnInit, OnChanges {
     this.data$ = this.fetchSubject.pipe(switchMap(() => this.fetchData()));
   }
 
+  ngAfterViewInit(): void {
+    this.assignTemplatesToColumns();
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.filters || changes.apiUrl || changes.additionalParams) {
       this.resetPagination();
@@ -84,7 +92,6 @@ export class AdaptiveTableComponent implements OnInit, OnChanges {
         switchMap((response: any) => {
           this.totalRecords = response.totalItemsCount;
           this.isLoading = false;
-
           return [response.data];
         }),
         catchError(err => {
@@ -99,5 +106,14 @@ export class AdaptiveTableComponent implements OnInit, OnChanges {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.fetchSubject.next();
+  }
+
+  private assignTemplatesToColumns() {
+    if (this.actionBtns) {
+      const actionsColumn = this.columns.find(col => col.header === 'Actions');
+      if (actionsColumn) {
+        actionsColumn.cellTemplate = this.actionBtns;
+      }
+    }
   }
 }
