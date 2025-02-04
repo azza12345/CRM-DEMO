@@ -17,6 +17,9 @@ import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { CustomValidators } from '@shared/utils/custom-validators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-change-password',
@@ -29,6 +32,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatCardModule,
     MatIconModule,
+    MatButtonModule,
   ],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.scss',
@@ -39,6 +43,7 @@ export class ChangePasswordComponent implements OnInit {
   private apiService = inject(ApiService);
   private toastr = inject(ToastrService);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
 
   constructor() {}
 
@@ -47,20 +52,11 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   private initializeForm(): void {
-    this.changePasswordForm = this.fb.group(
-      {
-        oldPassword: ['', Validators.required],
-        newPassword: ['', [Validators.required, Validators.minLength(6)]],
-        confirmPassword: ['', Validators.required],
-      },
-      { validators: this.passwordsMatch }
-    );
-  }
-
-  private passwordsMatch(control: AbstractControl): ValidationErrors | null {
-    const newPassword = control.get('newPassword')?.value;
-    const confirmPassword = control.get('confirmPassword')?.value;
-    return newPassword === confirmPassword ? null : { passwordMismatch: true };
+    this.changePasswordForm = this.fb.group({
+      oldPassword: ['', Validators.required],
+      newPassword: ['', Validators.required],
+      confirmPassword: ['', [Validators.required, CustomValidators.confirmPassword('newPassword')]],
+    });
   }
 
   onSubmit(): void {
@@ -83,10 +79,7 @@ export class ChangePasswordComponent implements OnInit {
       .subscribe({
         next: () => {
           this.toastr.success('Password changed successfully');
-          this.changePasswordForm.reset();
-        },
-        error: error => {
-          this.toastr.error(error?.error?.message || 'Failed to change password');
+          this.router.navigate(['/dashboard']);
         },
       });
   }

@@ -16,5 +16,5 @@ export enum EndPoint {
   METERS_STATISTICS = 'meters/statistics/district',
   RETIRED_METER_STATISTICS = 'meters/retired/status/district',
   AGENTS_OPERATIONS_STATISTICS = 'agents/operations/statistics',
-  CHANGE_PASSWORD = 'account/ChangPpassword',
+  CHANGE_PASSWORD = 'account/ChangePassword',
 }
