@@ -110,8 +110,6 @@ export class TokenService implements OnDestroy {
 
   getUsername(): string | null {
     const decodedToken = this.getDecodedToken() as JwtPayload;
-    console.log(decodedToken);
-
     if (!decodedToken) return null;
     return decodedToken.UserName || null;
   }
