@@ -10,6 +10,8 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Agent } from '@shared/interfaces/agent.model';
 import { Subscription } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-agents',
@@ -27,6 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class AgentsComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
+  private dialog = inject(MatDialog);
   contractorId!: string;
   filters: any = {};
 
@@ -91,17 +94,20 @@ export class AgentsComponent implements OnInit, OnDestroy {
     alert(`Viewing details for ${agent.name}`);
   }
   toggleAgentState(agent: Agent): void {
-    if (agent.state === 'enabled') {
-      if (confirm(`Are you sure you want to disable ${agent.name}?`)) {
-        agent.state = 'disabled';
-        alert(`${agent.name} has been disabled.`);
+    const dialogRef = this.dialog.open<AdaptiveDialogComponent>(AdaptiveDialogComponent, {
+      width: '400px',
+      data: {
+        title: agent.state === 'enabled' ? 'Disable Agent' : 'Enable Agent',
+        message: `Are you sure you want to ${agent.state === 'enabled' ? 'disable' : 'enable'} ${agent.name}?`,
+        mode: 'confirmation',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed?: boolean) => {
+      if (confirmed === true) {
+        agent.state = agent.state === 'enabled' ? 'disabled' : 'enabled';
       }
-    } else {
-      if (confirm(`Are you sure you want to enable ${agent.name}?`)) {
-        agent.state = 'enabled';
-        alert(`${agent.name} has been enabled.`);
-      }
-    }
+    });
   }
 
   editAgent(agent: Agent): void {
