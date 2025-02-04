@@ -87,5 +87,14 @@
   "register_title": "It only takes a few seconds to create your account",
   "read_and_agree": "I have read and agree to the terms of service",
   "have_an_account": "Already have an account",
-  "restore_defaults": "Restore defaults"
+  "restore_defaults": "Restore defaults",
+  "change_password": "Change Password",
+  "old_password": "Old Password",
+  "new_password": "New Password",
+  "old_password_required": "Old password is required.",
+  "new_password_required": "New password is required.",
+  "new_password_min_length": "New password must be at least 6 characters long.",
+  "confirm_password_required": "Confirm password is required.",
+  "passwords_do_not_match": "Passwords do not match.",
+  "submit": "Submit"
 }

@@ -28,6 +28,13 @@ export const routes: Routes = [
           import('./routes/contractors/contractors.component').then(c => c.ContractorsComponent),
       },
       {
+        path: 'profile',
+        loadChildren: () =>
+          import('./routes/profile/change-password/change-password.component').then(
+            c => c.ChangePasswordComponent
+          ),
+      },
+      {
         path: 'retired-meters',
         loadComponent: () =>
           import('./routes/retired-meters/retired-meters.component').then(
