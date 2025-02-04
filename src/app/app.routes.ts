@@ -29,10 +29,7 @@ export const routes: Routes = [
       },
       {
         path: 'profile',
-        loadChildren: () =>
-          import('./routes/profile/change-password/change-password.component').then(
-            c => c.ChangePasswordComponent
-          ),
+        loadChildren: () => import('./routes/profile/profile.routes').then(c => c.routes),
       },
       {
         path: 'retired-meters',
