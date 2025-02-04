@@ -27,6 +27,10 @@ export const routes: Routes = [
         loadChildren: () => import('./routes/contractors/contractors.routes').then(m => m.routes),
       },
       {
+        path: 'profile',
+        loadChildren: () => import('./routes/profile/profile.routes').then(c => c.routes),
+      },
+      {
         path: 'retired-meters',
         loadComponent: () =>
           import('./routes/retired-meters/retired-meters.component').then(

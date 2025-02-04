@@ -7,7 +7,8 @@ import { currentTimestamp, filterObject } from './helpers';
 import { Token } from './interface';
 import { BaseToken } from './token';
 import { TokenFactory } from './token-factory.service';
-
+import { jwtDecode } from 'jwt-decode';
+import { JwtPayload } from '@shared/interfaces/jwt-payload.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -99,5 +100,17 @@ export class TokenService implements OnDestroy {
     if (this.timer$ && !this.timer$.closed) {
       this.timer$.unsubscribe();
     }
+  }
+
+  getDecodedToken() {
+    const accessToken = this.getBearerToken();
+    if (!accessToken) return null;
+    return jwtDecode(accessToken);
+  }
+
+  getUsername(): string | null {
+    const decodedToken = this.getDecodedToken() as JwtPayload;
+    if (!decodedToken) return null;
+    return decodedToken.UserName || null;
   }
 }
