@@ -24,8 +24,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       {
         path: 'contractors',
-        loadComponent: () =>
-          import('./routes/contractors/contractors.component').then(c => c.ContractorsComponent),
+        loadChildren: () => import('./routes/contractors/contractors.routes').then(m => m.routes),
       },
       {
         path: 'profile',
