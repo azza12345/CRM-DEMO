@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { Contractor } from '@shared/interfaces/contractor.model';
 import { Installment } from '@shared/interfaces/installment.model';
+import { FormDialogData } from '@shared/interfaces/dialog-data.model';
 
 @Component({
   selector: 'app-installations',
@@ -101,9 +102,10 @@ export class InstallationsComponent implements OnInit, OnDestroy {
     this.filters = filterValues;
   }
   openAssignDialog(rowData: any): void {
-    const dialogRef = this.dialog.open(AdaptiveDialogComponent, {
+    const dialogRef = this.dialog.open<AdaptiveDialogComponent>(AdaptiveDialogComponent, {
       width: '400px',
       data: {
+        mode: 'form',
         title: 'Assign Contractor',
         fields: [
           {

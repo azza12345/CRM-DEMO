@@ -4,7 +4,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { DialogData } from '@shared/interfaces/dialog-data.model';
+import {
+  BaseDialogData,
+  ConfirmationDialogData,
+  FormDialogData,
+} from '@shared/interfaces/dialog-data.model';
 
 @Component({
   selector: 'app-adaptive-dialog',
@@ -24,15 +28,21 @@ export class AdaptiveDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<AdaptiveDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    @Inject(MAT_DIALOG_DATA) public data: FormDialogData | ConfirmationDialogData,
     private fb: FormBuilder
   ) {
     this.form = this.fb.group({});
-    this.initForm();
+    if (this.isFormDialog(data)) {
+      this.initForm(data);
+    }
   }
 
-  private initForm(): void {
-    this.data.fields.forEach(field => {
+  private isFormDialog(data: BaseDialogData): data is FormDialogData {
+    return data.mode === 'form';
+  }
+
+  private initForm(data: FormDialogData): void {
+    data.fields.forEach(field => {
       this.form.addControl(field.formControlName, this.fb.control(null, Validators.required));
     });
   }
@@ -42,8 +52,12 @@ export class AdaptiveDialogComponent {
   }
 
   onConfirm(): void {
-    if (this.form.valid) {
-      this.dialogRef.close(this.form.value);
+    if (this.isFormDialog(this.data)) {
+      if (this.form.valid) {
+        this.dialogRef.close(this.form.value);
+      }
+    } else {
+      this.dialogRef.close(true);
     }
   }
 }

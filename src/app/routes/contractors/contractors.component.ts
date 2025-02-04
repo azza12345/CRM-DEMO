@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
@@ -7,7 +7,8 @@ import { FilterComponent } from '../../shared/components/filter/filter.component
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { Contractor } from '@shared/interfaces/contractor.model';
 
 @Component({
   selector: 'app-contractors',
@@ -24,6 +25,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './contractors.component.scss',
 })
 export class ContractorsComponent {
+  private router = inject(Router);
   filters: any = {};
   columns: MtxGridColumn[] = [
     // { header: 'Code', field: 'code', sortable: true },
@@ -46,6 +48,7 @@ export class ContractorsComponent {
           text: 'View',
           icon: 'visibility',
           tooltip: 'Show Agents',
+          click: (rowData: Contractor) => this.viewAgents(rowData.id),
         },
       ],
     },
@@ -74,5 +77,8 @@ export class ContractorsComponent {
 
   onFilterChanged(filterValues: any): void {
     this.filters = filterValues;
+  }
+  viewAgents(contractorId: number): void {
+    this.router.navigate([`contractors/agents/${contractorId}`]);
   }
 }
