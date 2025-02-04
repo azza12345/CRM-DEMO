@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit {
         this.apiService
           .triggerApiRequest<
             BaseResponse<MeterStatusDto>
-          >(`${EndPoint.METERS_STATISTICS}/${districtId}` as EndPoint, HttpVerb.GET, { districtId })
+          >(`${EndPoint.METERS_STATISTICS}` as EndPoint, HttpVerb.GET, { districtId })
           .pipe(
             map(response => {
               const meterStructure = {
@@ -87,7 +87,10 @@ export class DashboardComponent implements OnInit {
 
               return {
                 ...meterStructure,
-                total: Object.values(response.data).reduce((sum, value) => sum + value, 0),
+                total:
+                  (response.data.onCustomer ?? 0) +
+                  (response.data.onStock ?? 0) +
+                  (response.data.onAgent ?? 0),
                 values: response.data,
                 chartId: 'metersChart',
                 chartOptions: {
@@ -113,11 +116,11 @@ export class DashboardComponent implements OnInit {
     );
 
     this.retiredMeters$ = this.districtSubject.pipe(
-      switchMap(districtId =>
+      switchMap(district =>
         this.apiService
           .triggerApiRequest<
             BaseResponse<RetiredMeterStatusDto>
-          >(`${EndPoint.RETIRED_METER_STATISTICS}/${districtId}` as EndPoint, HttpVerb.GET, { districtId })
+          >(`${EndPoint.RETIRED_METER_STATISTICS}/${district}` as EndPoint, HttpVerb.GET)
           .pipe(
             map(response => {
               const retiredMeterStructure = {
