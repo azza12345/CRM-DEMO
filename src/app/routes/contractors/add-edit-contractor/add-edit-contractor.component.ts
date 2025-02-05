@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-edit-contractor',
@@ -27,7 +28,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './add-edit-contractor.component.html',
   styleUrl: './add-edit-contractor.component.scss',
 })
-export class AddEditContractorComponent implements OnInit {
+export class AddEditContractorComponent implements OnInit, OnDestroy {
   contractorForm!: FormGroup;
   isEditMode = false;
   private apiService = inject(ApiService);
@@ -37,8 +38,12 @@ export class AddEditContractorComponent implements OnInit {
   private route = inject(ActivatedRoute);
   contractorId: string | null = null;
 
+  private routeSub!: Subscription;
+  private contractorsSub!: Subscription;
+  private formSub!: Subscription;
+
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.routeSub = this.route.paramMap.subscribe(params => {
       this.contractorId = params.get('id');
       this.isEditMode = !!this.contractorId;
       this.initializeForm();
@@ -46,6 +51,17 @@ export class AddEditContractorComponent implements OnInit {
         this.loadContractorData(this.contractorId!);
       }
     });
+  }
+  ngOnDestroy(): void {
+    if (this.routeSub) {
+      this.routeSub.unsubscribe();
+    }
+    if (this.contractorsSub) {
+      this.contractorsSub.unsubscribe();
+    }
+    if (this.formSub) {
+      this.formSub.unsubscribe();
+    }
   }
 
   private initializeForm(): void {
@@ -63,14 +79,11 @@ export class AddEditContractorComponent implements OnInit {
 
   //FIXME: Will be changed based on api response
   private loadContractorData(id: string): void {
-    // this.apiService
+    // this.contractorsSub = this.apiService
     //   .triggerApiRequest(EndPoint.GET_CONTRACTOR_BY_ID, HttpVerb.GET, { id })
     //   .subscribe({
     //     next: contractor => {
     //       // this.contractorForm.patchValue(contractor);
-    //     },
-    //     error: () => {
-    //       this.toastr.error('Failed to load contractor data');
     //     },
     //   });
   }
@@ -81,7 +94,7 @@ export class AddEditContractorComponent implements OnInit {
     const formData = this.contractorForm.value;
 
     if (this.isEditMode) {
-      this.apiService
+      this.formSub = this.apiService
         .triggerApiRequest(EndPoint.UPDATE_CONTRACTOR, HttpVerb.PUT, null, formData)
         .subscribe({
           next: () => {
@@ -90,7 +103,7 @@ export class AddEditContractorComponent implements OnInit {
           },
         });
     } else {
-      this.apiService
+      this.formSub = this.apiService
         .triggerApiRequest(EndPoint.ADD_CONTRACTOR, HttpVerb.POST, null, formData)
         .subscribe({
           next: () => {
