@@ -1,0 +1,116 @@
+<form [formGroup]="agentForm" (ngSubmit)="onSubmit()" class="custom-form">
+  <mat-card class="card-border">
+    <mat-card-title class="secondary-title">
+      {{ isEditMode ? ('edit_agent' | translate) : ('add_agent' | translate) }}
+    </mat-card-title>
+    <mat-card-content>
+      <div class="row gx-5 justify-content-between">
+        <div class="col-md-8">
+          <div class="row row-cols row-cols-1 row-cols-md-2">
+            @if (isEditMode) {
+              <div class="col">
+                <mat-form-field color="accent" appearance="outline">
+                  <mat-label>{{ 'code' | translate }}</mat-label>
+                  <input matInput formControlName="code" />
+                  @if (agentForm.controls.code.errors?.required) {
+                    <mat-error>{{ 'code_required' | translate }}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            }
+            <div class="col">
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>{{ 'name' | translate }}</mat-label>
+                <input matInput formControlName="name" />
+                @if (agentForm.controls.name.errors?.required) {
+                  <mat-error>{{ 'name_required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>{{ 'username' | translate }}</mat-label>
+                <input matInput formControlName="username" />
+                @if (agentForm.controls.username.errors?.required) {
+                  <mat-error>{{ 'username_required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="col">
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>{{ 'ghana_card' | translate }}</mat-label>
+                <input matInput formControlName="ghanaCard" />
+                @if (agentForm.controls.ghanaCard.errors?.required) {
+                  <mat-error>{{ 'ghana_card_required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="col">
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>{{ 'phone' | translate }}</mat-label>
+                <input matInput formControlName="phone" />
+                @if (agentForm.controls.phone.errors?.required) {
+                  <mat-error>{{ 'phone_required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>{{ 'email' | translate }}</mat-label>
+                <input matInput formControlName="email" type="email" />
+                @if (agentForm.controls.email.errors?.email) {
+                  <mat-error>{{ 'invalid_email' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="col">
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>{{ 'status' | translate }}</mat-label>
+                <mat-select formControlName="status">
+                  <mat-option [value]="true">{{ 'active' | translate }}</mat-option>
+                  <mat-option [value]="false">{{ 'inactive' | translate }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col">
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>{{ 'selected_districts' | translate }}</mat-label>
+                <mat-select formControlName="selectedDistricts" multiple>
+                  @for (district of availableDistricts$ | async; track district.id) {
+                    <mat-option [value]="district.id">
+                      {{ district.name }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 vstack align-items-center">
+          <div class="image-preview-container">
+            <img [src]="imagePreview" alt="Agent Image" class="image-preview" />
+          </div>
+          <div class="upload-button-container">
+            <input type="file" #fileInput (change)="onImageUpload($event)" hidden />
+            <button mat-raised-button color="accent" type="button" (click)="fileInput.click()">
+              {{ 'upload_image' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <button
+        class="mt-0"
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="agentForm.invalid"
+      >
+        {{ 'submit' | translate }}
+      </button>
+    </mat-card-content>
+  </mat-card>
+</form>
