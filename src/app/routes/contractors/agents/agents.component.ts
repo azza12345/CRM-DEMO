@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { HelperService } from '@shared/services/helper.service';
 
 @Component({
   selector: 'app-agents',
@@ -39,7 +40,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
   columns: MtxGridColumn<Agent>[] = [
     { header: 'Code', field: 'code', sortable: true },
     { header: 'AMC Username', field: 'amcUsername', sortable: true },
-    { header: 'Name', field: 'name', sortable: true },
+    { header: 'Name', field: 'fullName', sortable: true },
     { header: 'Email', field: 'email', sortable: true },
     { header: 'Ghana Card', field: 'ghanaCard' },
     { header: 'Phone', field: 'phone' },
@@ -65,18 +66,23 @@ export class AgentsComponent implements OnInit, OnDestroy {
 
   //FIXME: gonna be changed when API is Ready
   endpoint!: EndPoint;
+  url!: string;
   httpVerb: HttpVerb = HttpVerb.GET;
 
   constructor() {}
 
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.subscribe(params => {
-      this.contractorId = params.get('id')!;
+      this.contractorId = params.get('contractorId')!;
       if (this.contractorId) {
-        //this sould be like this
-        // this.endpoint = `${EndPoint.MOCK_AGENTS}/${this.contractorId}` as EndPoint;
-        // but deleted for demo purposes
-        this.endpoint = `${EndPoint.MOCK_AGENTS}` as EndPoint;
+        console.log(this.contractorId);
+        const url = HelperService.formatEndpoint(EndPoint.GET_AGENTS_BY_CONTRACTOR_ID, {
+          contractorId: this.contractorId,
+        });
+
+        this.endpoint = url as EndPoint;
+
+        console.log(this.endpoint);
       }
     });
   }

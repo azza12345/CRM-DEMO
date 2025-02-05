@@ -11,6 +11,7 @@ export enum EndPoint {
   DISTRICTS_LIST = 'Districts/ActiveDistrics/list',
   INSTALLATIONS = 'Dashboard/InstallationPage',
   GET_AGENTS_BY_DISTRICT_ID = 'Districts/Contractors',
+  GET_CONTRACTORS = 'contractors/all',
   RETIRED_METERS = 'Meters/retired',
   DISTRICTS = 'Districts/all',
   METERS_STATISTICS = 'meters/statistics',
@@ -18,5 +19,13 @@ export enum EndPoint {
   AGENTS_OPERATIONS_STATISTICS = 'agents/operations/statistics',
   CHANGE_PASSWORD = 'account/ChangePassword',
   //FIXME: gonna be changed when API is Ready
-  MOCK_AGENTS = './mock/agents.mock.json',
+  GET_AGENTS_BY_CONTRACTOR_ID = 'contractors/{contractorId}/agents',
+}
+
+function formatEndpoint(endpoint: string, params: { [key: string]: string | number }): string {
+  let formattedEndpoint = endpoint;
+  for (const key in params) {
+    formattedEndpoint = formattedEndpoint.replace(`{${key}}`, params[key].toString());
+  }
+  return formattedEndpoint;
 }

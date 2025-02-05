@@ -29,12 +29,12 @@ export class ContractorsComponent {
   filters: any = {};
   columns: MtxGridColumn[] = [
     // { header: 'Code', field: 'code', sortable: true },
-    { header: 'Name', field: 'fullName', sortable: true },
-    { header: 'NationalId', field: 'nationalID', sortable: true },
+    { header: 'Name', field: 'name', sortable: true },
+    //{ header: 'NationalId', field: 'nationalID', sortable: true },
     { header: 'Office Address', field: 'officeAddress' },
     { header: 'Ghana Post Address', field: 'postalAddress' },
-    { header: 'Contact Person', field: 'email' },
-    { header: 'Phone', field: 'mobile' },
+    { header: 'Contact Person', field: 'contactPerson' },
+    { header: 'Phone', field: 'phone' },
     {
       header: 'Actions',
       field: 'action',
@@ -70,7 +70,7 @@ export class ContractorsComponent {
       type: 'text',
     },
   ];
-  endpoint: EndPoint = EndPoint.GET_AGENTS_BY_DISTRICT_ID;
+  endpoint: EndPoint = EndPoint.GET_CONTRACTORS;
   httpVerb: HttpVerb = HttpVerb.GET;
 
   constructor() {}
@@ -78,7 +78,8 @@ export class ContractorsComponent {
   onFilterChanged(filterValues: any): void {
     this.filters = filterValues;
   }
+
   viewAgents(contractorId: number): void {
-    this.router.navigate([`contractors/agents/${contractorId}`]);
+    this.router.navigate([`contractors/${contractorId}/agents`]);
   }
 }
