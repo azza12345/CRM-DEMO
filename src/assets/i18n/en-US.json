@@ -97,6 +97,9 @@
   "confirm_password_required": "Confirm password is required.",
   "passwords_do_not_match": "Passwords do not match.",
   "submit": "Submit",
+  "add_agent": "Add Agent",
+  "edit_agent": "Edit Agent",
+  "code": "Code",
   "add_contractor": "Add Contractor",
   "edit_contractor": "Edit Contractor",
   "contractor_code": "Contractor Code",
@@ -107,5 +110,13 @@
   "phone": "Phone",
   "phone_required": "Phone number is required",
   "ghana_post_address": "Ghana Post Address",
-  "office_address": "Office Address"
+  "office_address": "Office Address",
+  "upload_image": "Upload Image",
+  "ghana_card": "Ghana Card",
+  "ghana_card_required": "Ghana card is required",
+  "email": "Email",
+  "email_invalid": "Email is Invalid",
+  "selected_districts": "Selected Districts",
+  "active": "Active",
+  "inactive": "Inactive"
 }
