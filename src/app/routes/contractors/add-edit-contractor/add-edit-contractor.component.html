@@ -9,7 +9,7 @@
           @if (isEditMode) {
             <mat-form-field color="accent" appearance="outline">
               <mat-label>{{ 'contractor_code' | translate }}</mat-label>
-              <input matInput formControlName="code" />
+              <input matInput formControlName="code" [disabled]="true" />
             </mat-form-field>
           }
           <mat-form-field color="accent" appearance="outline">

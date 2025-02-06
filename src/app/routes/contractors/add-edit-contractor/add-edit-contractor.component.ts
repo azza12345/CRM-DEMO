@@ -73,7 +73,10 @@ export class AddEditContractorComponent implements OnInit, OnDestroy {
       officeAddress: ['', Validators.maxLength(250)],
     });
     if (this.isEditMode) {
-      this.contractorForm.addControl('code', this.fb.control('', Validators.required));
+      this.contractorForm.addControl(
+        'code',
+        this.fb.control({ value: '', disabled: true }, Validators.required)
+      );
     }
   }
 
