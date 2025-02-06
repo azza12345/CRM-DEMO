@@ -1,6 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
 import { InstalledMeterInfo, MeterItem, OldMeterInfo } from '@shared/interfaces/meter-info.model';
+import { MeterInfoComponent } from './meter-info/meter-info.component';
+import { SparePartsTableComponent } from './spare-parts-table/spare-parts-table.component';
 
 interface MeterDetail {
   label: string;
@@ -10,13 +13,15 @@ interface MeterDetail {
 @Component({
   selector: 'app-meter-details-dialog',
   standalone: true,
-  imports: [],
+  imports: [MatTabsModule, MeterInfoComponent, SparePartsTableComponent],
   templateUrl: './meter-details-dialog.component.html',
   styleUrl: './meter-details-dialog.component.scss',
 })
 export class MeterDetailsDialogComponent implements OnInit {
   oldMeterDetails: MeterDetail[] = [];
   newMeterDetails: MeterDetail[] = [];
+  oldMeterSpareParts: MeterItem[] = [];
+  newMeterSpareParts: MeterItem[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<MeterDetailsDialogComponent>,
@@ -43,6 +48,7 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Final Balance', value: this.data.oldMeter.finalBalance },
         { label: 'Meter Display', value: this.data.oldMeter.meterDisplay },
       ];
+      this.oldMeterSpareParts = this.data.oldMeter.items || [];
     }
 
     this.newMeterDetails = [
@@ -52,5 +58,6 @@ export class MeterDetailsDialogComponent implements OnInit {
       { label: 'Location', value: this.data.newMeter.location },
       { label: 'Meter Make', value: this.data.newMeter.meterMake },
     ];
+    this.newMeterSpareParts = this.data.newMeter.items || [];
   }
 }
