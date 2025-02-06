@@ -1,41 +1,43 @@
 <h2 class="title">{{ data.title }}</h2>
+<hr class="top-separator" />
+<div class="meter-details-container">
+  @if (data.showTabs) {
+    <mat-tab-group color="accent">
+      <mat-tab label="Old Meter">
+        <div class="tab-container border px-3">
+          <div>
+            <app-meter-info [details]="oldMeterDetails"></app-meter-info>
+            <app-spare-parts-table [spareParts]="oldMeterSpareParts"> </app-spare-parts-table>
+          </div>
+          <div class="meter-image">
+            <img [src]="data.oldMeter?.meterImage" alt="old meter image" />
+          </div>
+        </div>
+      </mat-tab>
 
-@if (data.showTabs) {
-  <mat-tab-group>
-    <mat-tab label="Old Meter">
-      <div class="d-flex justify-content-between">
-        <div>
-          <app-meter-info [details]="oldMeterDetails"></app-meter-info>
-          <app-spare-parts-table [spareParts]="oldMeterSpareParts"> </app-spare-parts-table>
+      <mat-tab label="New Meter">
+        <div class="tab-container border px-3">
+          <div>
+            <app-meter-info [details]="newMeterDetails"></app-meter-info>
+            <app-spare-parts-table [spareParts]="newMeterSpareParts"> </app-spare-parts-table>
+          </div>
+          <div class="meter-image">
+            <img [src]="data.newMeter.meterImage" alt="new meter image" />
+          </div>
         </div>
-        <div class="meter-image">
-          <img [src]="data.oldMeter?.meterImage" alt="old meter image" />
-        </div>
+      </mat-tab>
+    </mat-tab-group>
+  }
+
+  @if (!data.showTabs) {
+    <div class="tab-container border px-3">
+      <div>
+        <app-meter-info [details]="newMeterDetails"></app-meter-info>
+        <app-spare-parts-table [spareParts]="newMeterSpareParts"> </app-spare-parts-table>
       </div>
-    </mat-tab>
-
-    <mat-tab label="New Meter">
-      <div class="d-flex justify-content-between">
-        <div>
-          <app-meter-info [details]="newMeterDetails"></app-meter-info>
-          <app-spare-parts-table [spareParts]="newMeterSpareParts"> </app-spare-parts-table>
-        </div>
-        <div class="meter-image">
-          <img [src]="data.newMeter.meterImage" alt="new meter image" />
-        </div>
+      <div class="meter-image">
+        <img [src]="data.newMeter.meterImage" alt="new meter image" />
       </div>
-    </mat-tab>
-  </mat-tab-group>
-}
-
-@if (!data.showTabs) {
-  <div class="d-flex justify-content-between">
-    <div>
-      <app-meter-info [details]="newMeterDetails"></app-meter-info>
-      <app-spare-parts-table [spareParts]="newMeterSpareParts"> </app-spare-parts-table>
     </div>
-    <div class="meter-image">
-      <img [src]="data.newMeter.meterImage" alt="new meter image" />
-    </div>
-  </div>
-}
+  }
+</div>

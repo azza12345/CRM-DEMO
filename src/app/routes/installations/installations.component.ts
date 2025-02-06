@@ -7,11 +7,13 @@ import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
 import { ApiService } from '@shared/services/api.service';
-import { Subscription } from 'rxjs';
+import { delay, of, Subscription, switchMap } from 'rxjs';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { Contractor } from '@shared/interfaces/contractor.model';
 import { Installment } from '@shared/interfaces/installment.model';
-import { FormDialogData } from '@shared/interfaces/dialog-data.model';
+import { InstalledMeterInfo, OldMeterInfo } from '@shared/interfaces/meter-info.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MeterDetailsDialogComponent } from './meter-details-dialog/meter-details-dialog.component';
 
 @Component({
   selector: 'app-installations',
@@ -39,7 +41,8 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           text: 'View',
           icon: 'visibility',
           tooltip: 'View Details',
-          click: () => alert('Not Implemented yet ..'),
+          //FIXME: gonna be changed based on API
+          click: (rowData: Installment) => this.openViewDetailsDialog(1),
         },
         {
           type: 'icon',
@@ -73,6 +76,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   httpVerb: HttpVerb = HttpVerb.GET;
   contractors: Contractor[] = [];
   private contractorsSubscription!: Subscription;
+  private meterDetailsSub!: Subscription;
 
   constructor(
     private dialog: MatDialog,
@@ -86,6 +90,9 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.contractorsSubscription) {
       this.contractorsSubscription.unsubscribe();
+    }
+    if (this.meterDetailsSub) {
+      this.meterDetailsSub.unsubscribe();
     }
   }
 
@@ -123,6 +130,75 @@ export class InstallationsComponent implements OnInit, OnDestroy {
         this.assignToContractor(rowData, result.contractor);
       }
     });
+  }
+
+  //FIXME: gonna be changed based on API
+  openViewDetailsDialog(meterId: number): void {
+    this.meterDetailsSub = this.apiService
+      .triggerApiRequest<{
+        status: string;
+        oldMeter: OldMeterInfo | null;
+        newMeter: InstalledMeterInfo;
+      }>(EndPoint.INSTALLED_METERS_DETAILS, HttpVerb.GET, { id: meterId })
+      .pipe(
+        switchMap(response => {
+          //mock puproses
+          if (!response.newMeter) {
+            return of(this.getMockMeterData(meterId)).pipe(delay(500));
+          }
+          return of(response);
+        })
+      )
+      .subscribe({
+        next: response => {
+          const showTabs = response.status === 'old' && response.oldMeter !== null;
+
+          this.dialog.open<MeterDetailsDialogComponent>(MeterDetailsDialogComponent, {
+            width: '744px',
+            data: {
+              title: 'Meter Information',
+              showTabs,
+              oldMeter: response.oldMeter,
+              newMeter: response.newMeter,
+            },
+          });
+        },
+      });
+  }
+
+  private getMockMeterData(meterId: number) {
+    return {
+      // mock data from ai
+      status: 'old',
+      oldMeter: {
+        meterSerial: `OM-${meterId}`,
+        finalReading: 12345.67,
+        replacementReason: 'Faulty display',
+        manufactureYear: 2015,
+        finalBalance: 50.75,
+        meterDisplay: 'LCD',
+        meterType: '3.5 Inch Meter Type 1',
+        meterMake: 'Sewedy Meters',
+        meterImage: 'assets/mock/old-meter.png',
+        items: [
+          { name: 'Cable', quantity: 15 },
+          { name: 'Key Switch', quantity: 10 },
+        ],
+      },
+      newMeter: {
+        installationType: 'Replace Meter',
+        installationDate: '24-12-2024',
+        meterModel: '11516sasdsA',
+        location: 'Accra, Ghana',
+        meterType: '3.5 Inch Meter Type 2',
+        meterMake: 'Sewedy Meters',
+        meterImage: 'assets/mock/new-meter.jpg',
+        items: [
+          { name: 'Screw', quantity: 20 },
+          { name: 'Hard Cable', quantity: 12 },
+        ],
+      },
+    };
   }
 
   // TODO

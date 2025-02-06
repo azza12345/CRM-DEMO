@@ -12,12 +12,15 @@ import { MeterItem } from '@shared/interfaces/meter-info.model';
 export class SparePartsTableComponent implements OnChanges {
   @Input() spareParts: MeterItem[] = [];
 
-  displayedColumns: string[] = ['name', 'quantity'];
+  displayedColumns: string[] = ['index', 'name', 'quantity'];
   dataSource = new MatTableDataSource<MeterItem>();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.spareParts) {
-      this.dataSource.data = this.spareParts || [];
+      this.dataSource.data = this.spareParts.map((item, index) => ({
+        ...item,
+        index: index + 1,
+      }));
     }
   }
 }

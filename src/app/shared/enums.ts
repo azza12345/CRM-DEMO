@@ -19,4 +19,5 @@ export enum EndPoint {
   CHANGE_PASSWORD = 'account/ChangePassword',
   //FIXME: gonna be changed when API is Ready
   MOCK_AGENTS = './mock/agents.mock.json',
+  INSTALLED_METERS_DETAILS = 'Dashboard/InstalledMetersDetails',
 }
