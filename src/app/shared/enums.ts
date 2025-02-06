@@ -22,4 +22,7 @@ export enum EndPoint {
   UPDATE_AGENT = 'waiting4',
   GET_AGENT_BY_ID = 'wainting5',
   ADD_AGENT = 'waiting6',
+  UPDATE_CONTRACTOR = 'waiting1',
+  GET_CONTRACTOR_BY_ID = 'wainting2',
+  ADD_CONTRACTOR = 'waiting3',
 }
