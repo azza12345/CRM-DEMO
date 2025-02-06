@@ -11,7 +11,7 @@
               <div class="col">
                 <mat-form-field color="accent" appearance="outline">
                   <mat-label>{{ 'code' | translate }}</mat-label>
-                  <input matInput formControlName="code" />
+                  <input matInput formControlName="code" [disabled]="true" />
                   @if (agentForm.controls.code.errors?.required) {
                     <mat-error>{{ 'code_required' | translate }}</mat-error>
                   }

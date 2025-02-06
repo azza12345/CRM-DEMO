@@ -90,7 +90,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     });
 
     if (this.isEditMode) {
-      this.agentForm.addControl('code', this.fb.control('', Validators.required));
+      this.fb.control({ value: '', disabled: true }, Validators.required);
     }
   }
 
