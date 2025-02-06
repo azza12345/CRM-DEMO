@@ -1,26 +1,23 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MeterItem } from '@shared/interfaces/meter-info.model';
-import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-spare-parts-table',
   standalone: true,
-  imports: [AsyncPipe, MatTableModule],
+  imports: [MatTableModule],
   templateUrl: './spare-parts-table.component.html',
   styleUrl: './spare-parts-table.component.scss',
 })
-export class SparePartsTableComponent {
-  private _spareParts$: Observable<MeterItem[]> = of([]);
+export class SparePartsTableComponent implements OnChanges {
+  @Input() spareParts: MeterItem[] = [];
 
-  @Input() title!: string;
+  displayedColumns: string[] = ['name', 'quantity'];
+  dataSource = new MatTableDataSource<MeterItem>();
 
-  @Input() set spareParts(value: MeterItem[] | null) {
-    this._spareParts$ = of(value || []);
-  }
-
-  get spareParts$(): Observable<MeterItem[]> {
-    return this._spareParts$;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.spareParts) {
+      this.dataSource.data = this.spareParts || [];
+    }
   }
 }
