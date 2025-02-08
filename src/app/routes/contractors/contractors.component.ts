@@ -70,7 +70,7 @@ export class ContractorsComponent {
       type: 'text',
     },
   ];
-  endpoint: EndPoint = EndPoint.GET_AGENTS_BY_DISTRICT_ID;
+  endpoint: EndPoint = EndPoint.GET_Contractors_BY_DISTRICT_ID;
   httpVerb: HttpVerb = HttpVerb.GET;
 
   constructor() {}

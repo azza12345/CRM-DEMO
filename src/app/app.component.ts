@@ -1,12 +1,18 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { PreloaderService, SettingsService } from '@core';
 import { RouterOutlet } from '@angular/router';
+import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'app-root',
-  template: '<router-outlet></router-outlet>',
+  template: `
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+    <app-footer></app-footer>
+  `,
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, FooterComponent],
 })
 export class AppComponent implements OnInit, AfterViewInit {
   constructor(
