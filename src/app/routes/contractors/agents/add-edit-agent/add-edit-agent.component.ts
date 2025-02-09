@@ -89,7 +89,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     }
   }
 
-  //FIXME: Will be changed based on api response
+  //TODO: Will be changed based on api response
   private loadAgentData(id: string): void {
     // this.agentSub= this.apiService
     //   .triggerApiRequest(EndPoint.GET_Agent_BY_ID, HttpVerb.GET, { id })
@@ -136,7 +136,6 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     if (this.agentForm.invalid) return;
 
     const formData = this.agentForm.value;
-    console.log(formData);
 
     if (this.isEditMode) {
       this.formSub = this.apiService
