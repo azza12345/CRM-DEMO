@@ -8,8 +8,8 @@ import { FooterComponent } from './footer/footer.component';
   template: `
     <div class="content">
       <router-outlet></router-outlet>
+      <app-footer></app-footer>
     </div>
-    <app-footer></app-footer>
   `,
   standalone: true,
   imports: [RouterOutlet, FooterComponent],

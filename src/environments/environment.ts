@@ -5,5 +5,6 @@ export const environment = {
   ApiUrl: 'https://localhost:7130/api/v1',
   baseUrl: '',
   useHash: false,
-  versionNmber: ' 2025 - V 1.0.0',
+  releaseDate: '2025',
+  versionNumber: '1.0.0',
 };

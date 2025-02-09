@@ -9,5 +9,6 @@ import { environment } from '@env/environment';
   styleUrl: './footer.component.scss',
 })
 export class FooterComponent {
-  public version = environment.versionNmber;
+  version = environment.versionNumber;
+  releaseDate = environment.releaseDate;
 }
