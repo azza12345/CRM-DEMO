@@ -38,7 +38,7 @@ export class ContractorsComponent {
     {
       header: 'Actions',
       field: 'action',
-      width: '100px',
+      width: '150px',
       pinned: 'right',
       right: '0px',
       type: 'button',
@@ -49,6 +49,13 @@ export class ContractorsComponent {
           icon: 'visibility',
           tooltip: 'Show Agents',
           click: (rowData: Contractor) => this.viewAgents(rowData.id),
+        },
+        {
+          type: 'icon',
+          text: 'Edit',
+          icon: 'edit',
+          tooltip: 'Edit Contractor',
+          click: (rowData: Contractor) => this.editContractor(rowData.id),
         },
       ],
     },
@@ -81,5 +88,8 @@ export class ContractorsComponent {
 
   viewAgents(contractorId: number): void {
     this.router.navigate([`contractors/${contractorId}/agents`]);
+  }
+  editContractor(contractorId: number): void {
+    this.router.navigate([`contractors/edit/${contractorId}`]);
   }
 }
