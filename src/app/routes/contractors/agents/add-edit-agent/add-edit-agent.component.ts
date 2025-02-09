@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { Subscription } from 'rxjs';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-add-edit-agent',
@@ -104,12 +105,16 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     if (file) {
       if (!file.type.startsWith('image/')) {
         this.toastr.error('Please upload an image file (JPEG, PNG, etc.)');
-        this.imagePreview = 'assets/images/avatar.png';
-        this.agentForm.get('image')?.setValue(null);
-        this.fileInput.nativeElement.value = '';
+        this.resetImageSelection();
         return;
       }
-
+      if (file.size > environment.maxImageSize) {
+        this.toastr.error(
+          `File size should not exceed ${environment.maxImageSize / 1024 / 1024} MB.`
+        );
+        this.resetImageSelection();
+        return;
+      }
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreview = e.target.result;
@@ -119,10 +124,19 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     }
   }
 
+  resetImageSelection(): void {
+    this.imagePreview = 'assets/images/avatar.png';
+    this.agentForm.get('image')?.setValue(null);
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
+  }
+
   onSubmit(): void {
     if (this.agentForm.invalid) return;
 
     const formData = this.agentForm.value;
+    console.log(formData);
 
     if (this.isEditMode) {
       this.formSub = this.apiService

@@ -5,4 +5,5 @@ export const environment = {
   // ApiUrl: 'https://localhost:7130/api/v1',
   baseUrl: '',
   useHash: false,
+  maxImageSize: 5 * 1024 * 1024,
 };
