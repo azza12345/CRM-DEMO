@@ -106,8 +106,6 @@ export class AddEditContractorComponent implements OnInit, OnDestroy {
     if (this.contractorForm.invalid) return;
 
     const formData = this.contractorForm.value;
-    console.log(formData);
-
     if (this.isEditMode) {
       this.formSub = this.apiService
         .triggerApiRequest(EndPoint.UPDATE_CONTRACTOR, HttpVerb.PUT, null, formData)
