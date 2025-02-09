@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
@@ -12,10 +12,7 @@ import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EndPoint, HttpVerb } from '@shared/enums';
-import { AsyncPipe } from '@angular/common';
-import { map, Observable, Subscription } from 'rxjs';
-import { District } from '@shared/interfaces/district.model';
-import { BaseResponse } from '@shared/interfaces/base-response';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-edit-agent',
@@ -30,7 +27,6 @@ import { BaseResponse } from '@shared/interfaces/base-response';
     MatButtonModule,
     MatSelectModule,
     MatCheckboxModule,
-    AsyncPipe,
   ],
   templateUrl: './add-edit-agent.component.html',
   styleUrl: './add-edit-agent.component.scss',
@@ -45,10 +41,10 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   agentId: string | null = null;
   imagePreview: string = 'assets/images/avatar.png';
-  availableDistricts$!: Observable<District[]>;
   private routeSub!: Subscription;
   private agentSub!: Subscription;
   private formSub!: Subscription;
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.subscribe(params => {
@@ -59,10 +55,6 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
         this.loadAgentData(this.agentId!);
       }
     });
-
-    this.availableDistricts$ = this.apiService
-      .triggerApiRequest<BaseResponse<District[]>>(EndPoint.DISTRICTS, HttpVerb.GET)
-      .pipe(map(response => response.data));
   }
 
   ngOnDestroy(): void {
@@ -86,7 +78,6 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
       phone: ['', Validators.required],
       email: ['', [Validators.email]],
       status: [null],
-      selectedDistricts: [[]],
     });
 
     if (this.isEditMode) {
@@ -111,6 +102,14 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
   onImageUpload(event: any): void {
     const file = event.target.files[0];
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        this.toastr.error('Please upload an image file (JPEG, PNG, etc.)');
+        this.imagePreview = 'assets/images/avatar.png';
+        this.agentForm.get('image')?.setValue(null);
+        this.fileInput.nativeElement.value = '';
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreview = e.target.result;
