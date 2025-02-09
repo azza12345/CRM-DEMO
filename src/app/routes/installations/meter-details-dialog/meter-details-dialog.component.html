@@ -10,7 +10,7 @@
             <app-spare-parts-table [spareParts]="oldMeterSpareParts"> </app-spare-parts-table>
           </div>
           <div class="meter-image">
-            <img [src]="data.oldMeter?.meterImage" alt="old meter image" />
+            <img [src]="data.oldMeter.image" alt="old meter image" />
           </div>
         </div>
       </mat-tab>
@@ -22,7 +22,7 @@
             <app-spare-parts-table [spareParts]="newMeterSpareParts"> </app-spare-parts-table>
           </div>
           <div class="meter-image">
-            <img [src]="data.newMeter.meterImage" alt="new meter image" />
+            <img [src]="data.newMeter.image" alt="new meter image" />
           </div>
         </div>
       </mat-tab>
@@ -36,7 +36,7 @@
         <app-spare-parts-table [spareParts]="newMeterSpareParts"> </app-spare-parts-table>
       </div>
       <div class="meter-image">
-        <img [src]="data.newMeter.meterImage" alt="new meter image" />
+        <img [src]="data.newMeter.image" alt="new meter image" />
       </div>
     </div>
   }

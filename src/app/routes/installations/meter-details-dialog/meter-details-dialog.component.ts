@@ -1,15 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
-import { InstalledMeterInfo, MeterItem, OldMeterInfo } from '@shared/interfaces/meter-info.model';
 import { MeterInfoComponent } from './meter-info/meter-info.component';
 import { SparePartsTableComponent } from './spare-parts-table/spare-parts-table.component';
+import { BaseMeter, MeterItem } from '@shared/interfaces/meter-info.model';
 
 interface MeterDetail {
   label: string;
   value: string | number | null;
 }
-
 @Component({
   selector: 'app-meter-details-dialog',
   standalone: true,
@@ -29,8 +28,8 @@ export class MeterDetailsDialogComponent implements OnInit {
     public data: {
       title: string;
       showTabs: boolean;
-      oldMeter: OldMeterInfo | null;
-      newMeter: InstalledMeterInfo;
+      oldMeter: BaseMeter;
+      newMeter: BaseMeter;
     }
   ) {}
 
@@ -42,22 +41,38 @@ export class MeterDetailsDialogComponent implements OnInit {
     if (this.data.oldMeter) {
       this.oldMeterDetails = [
         { label: 'Meter Serial', value: this.data.oldMeter.meterSerial },
-        { label: 'Final Reading', value: this.data.oldMeter.finalReading },
-        { label: 'Replacement Reason', value: this.data.oldMeter.replacementReason },
-        { label: 'Manufacture Year', value: this.data.oldMeter.manufactureYear },
-        { label: 'Final Balance', value: this.data.oldMeter.finalBalance },
+        { label: 'Final Reading', value: this.data.oldMeter.lastReading },
+        { label: 'Meter Type', value: this.data.oldMeter.meterType },
+        { label: 'Replacement Reason', value: this.data.oldMeter.replacement_reason },
+        { label: 'Final Balance', value: this.data.oldMeter.lastPurchase },
         { label: 'Meter Display', value: this.data.oldMeter.meterDisplay },
+        { label: 'Meter Make', value: this.data.oldMeter.meterMake },
+        { label: 'Manufacture Year', value: this.data.oldMeter.meterYearOfManufacture },
       ];
-      this.oldMeterSpareParts = this.data.oldMeter.items || [];
+      this.oldMeterSpareParts = this.mapMeterItems(
+        this.data.oldMeter.materialType,
+        this.data.oldMeter.materialQuantity
+      );
     }
 
     this.newMeterDetails = [
-      { label: 'Installation Type', value: this.data.newMeter.installationType },
+      { label: 'Meter Type', value: this.data.newMeter.meterType },
+      { label: 'Installation Type', value: this.data.newMeter.type },
+      { label: 'Meter Make', value: this.data.newMeter.meterMake },
       { label: 'Installation Date', value: this.data.newMeter.installationDate },
       { label: 'Meter Model', value: this.data.newMeter.meterModel },
       { label: 'Location', value: this.data.newMeter.location },
-      { label: 'Meter Make', value: this.data.newMeter.meterMake },
     ];
-    this.newMeterSpareParts = this.data.newMeter.items || [];
+    this.newMeterSpareParts = this.mapMeterItems(
+      this.data.newMeter.materialType,
+      this.data.newMeter.materialQuantity
+    );
+  }
+
+  private mapMeterItems(materials: string[], quantities: string[]): MeterItem[] {
+    return materials.map((name, index) => ({
+      name,
+      quantity: quantities[index] || 'N/A',
+    }));
   }
 }

@@ -1,24 +1,27 @@
-export interface BaseMeterInfo {
-  meterType: string;
-  meterMake: string;
-  meterImage: string;
-  items: MeterItem[];
-}
-export interface InstalledMeterInfo extends BaseMeterInfo {
-  installationType: string;
-  installationDate: string;
-  meterModel: string;
-  location: string;
-}
-export interface OldMeterInfo extends BaseMeterInfo {
+export interface BaseMeter {
+  id: number;
+  status: number;
+  transactionId: number;
+  type: any;
   meterSerial: string;
-  finalReading: number;
-  replacementReason: string;
-  manufactureYear: number;
-  finalBalance: number;
+  lastReading: any;
+  lastPurchase: any;
+  image: string;
+  meterYearOfManufacture: any;
+  materialType: string[];
+  materialQuantity: string[];
+  installationDate: string;
+  location: string;
+  meterMakeId: number;
+  meterModelId: any;
+  meterTypeId: number;
+  meterType: string;
+  replacement_reason: string;
+  meterMake: string;
+  meterModel: string;
   meterDisplay: string;
 }
 export interface MeterItem {
   name: string;
-  quantity: number;
+  quantity: string;
 }
