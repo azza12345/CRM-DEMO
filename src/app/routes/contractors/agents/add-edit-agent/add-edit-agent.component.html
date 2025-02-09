@@ -75,19 +75,6 @@
                 </mat-select>
               </mat-form-field>
             </div>
-
-            <div class="col">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>{{ 'selected_districts' | translate }}</mat-label>
-                <mat-select formControlName="selectedDistricts" multiple>
-                  @for (district of availableDistricts$ | async; track district.id) {
-                    <mat-option [value]="district.id">
-                      {{ district.name }}
-                    </mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
-            </div>
           </div>
         </div>
         <div class="col-md-3 vstack align-items-center">
@@ -95,7 +82,13 @@
             <img [src]="imagePreview" alt="Agent Image" class="image-preview" />
           </div>
           <div class="upload-button-container">
-            <input type="file" #fileInput (change)="onImageUpload($event)" hidden />
+            <input
+              type="file"
+              #fileInput
+              (change)="onImageUpload($event)"
+              hidden
+              accept="image/*"
+            />
             <button mat-raised-button color="accent" type="button" (click)="fileInput.click()">
               {{ 'upload_image' | translate }}
             </button>
