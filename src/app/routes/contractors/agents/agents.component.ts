@@ -13,6 +13,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '@shared/services/helper.service';
+import { ApiService } from '@shared/services/api.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-agents',
@@ -39,7 +41,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
   };
   columns: MtxGridColumn<Agent>[] = [
     { header: 'Code', field: 'code', sortable: true },
-    { header: 'AMC Username', field: 'amcUsername', sortable: true },
+    { header: 'AMC Username', field: 'userName', sortable: true },
     { header: 'Name', field: 'fullName', sortable: true },
     { header: 'Email', field: 'email', sortable: true },
     { header: 'Ghana Card', field: 'ghanaCard' },
@@ -51,7 +53,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
         return data?.state === 'enabled' ? 'text-success' : '';
       },
       sortable: true,
-      formatter: (rowData: Agent) => (rowData.state === 'enabled' ? ' Enabled' : 'Disabled'),
+      formatter: (rowData: Agent) => (rowData.isActive ? ' Enabled' : 'Disabled'),
     },
     { header: 'Actions', field: 'actions' as keyof Agent },
   ];
@@ -69,6 +71,9 @@ export class AgentsComponent implements OnInit, OnDestroy {
   url!: string;
   httpVerb: HttpVerb = HttpVerb.GET;
 
+  private apiService = inject(ApiService);
+  private toastr = inject(ToastrService);
+
   constructor() {}
 
   ngOnInit(): void {
@@ -82,7 +87,6 @@ export class AgentsComponent implements OnInit, OnDestroy {
 
         this.endpoint = url as EndPoint;
 
-        console.log(this.endpoint);
       }
     });
   }
@@ -103,15 +107,28 @@ export class AgentsComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open<AdaptiveDialogComponent>(AdaptiveDialogComponent, {
       width: '400px',
       data: {
-        title: agent.state === 'enabled' ? 'Disable Agent' : 'Enable Agent',
-        message: `Are you sure you want to ${agent.state === 'enabled' ? 'disable' : 'enable'} ${agent.name}?`,
+        title: agent.isActive ? 'Disable Agent' : 'Enable Agent',
+        message: `Are you sure you want to ${agent.isActive ? 'disable' : 'enable'} ${agent.name}?`,
         mode: 'confirmation',
       },
     });
 
     dialogRef.afterClosed().subscribe((confirmed?: boolean) => {
       if (confirmed === true) {
-        agent.state = agent.state === 'enabled' ? 'disabled' : 'enabled';
+        // Update agent status
+        const url = HelperService.formatEndpoint(EndPoint.UPDATE_AGENT_STATUS, {
+          agentId: agent.id,
+        });
+
+        this.apiService.triggerApiRequest(url as EndPoint, HttpVerb.PUT)
+        .subscribe({
+          next: () => {
+            this.toastr.success('Agent updated successfully');
+            agent.isActive = !agent.isActive;
+          }
+        }),
+
+        agent.state = agent.isActive ? 'disabled' : 'enabled';
       }
     });
   }

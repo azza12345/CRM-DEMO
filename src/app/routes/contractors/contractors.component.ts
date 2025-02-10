@@ -77,7 +77,7 @@ export class ContractorsComponent {
       type: 'text',
     },
   ];
-  endpoint: EndPoint = EndPoint.GET_CONTRACTORS;
+  endpoint: EndPoint = EndPoint.GET_AGENTS_BY_DISTRICT_ID;
   httpVerb: HttpVerb = HttpVerb.GET;
 
   constructor() {}

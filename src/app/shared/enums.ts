@@ -18,21 +18,13 @@ export enum EndPoint {
   RETIRED_METER_STATISTICS = 'meters/retired/status/district',
   AGENTS_OPERATIONS_STATISTICS = 'agents/operations/statistics',
   CHANGE_PASSWORD = 'account/ChangePassword',
-  //FIXME: gonna be changed when API is Ready
   GET_AGENTS_BY_CONTRACTOR_ID = 'contractors/{contractorId}/agents',
   MOCK_AGENTS = './mock/agents.mock.json',
   UPDATE_AGENT = 'waiting4',
-  GET_AGENT_BY_ID = 'wainting5',
-  ADD_AGENT = 'waiting6',
+  UPDATE_AGENT_STATUS = 'agents/{agentId}/status',
+  GET_AGENT_BY_ID = 'agents',
+  ADD_AGENT = 'agents/add',
   UPDATE_CONTRACTOR = 'waiting1',
   GET_CONTRACTOR_BY_ID = 'wainting2',
   ADD_CONTRACTOR = 'waiting3',
-}
-
-function formatEndpoint(endpoint: string, params: { [key: string]: string | number }): string {
-  let formattedEndpoint = endpoint;
-  for (const key in params) {
-    formattedEndpoint = formattedEndpoint.replace(`{${key}}`, params[key].toString());
-  }
-  return formattedEndpoint;
 }
