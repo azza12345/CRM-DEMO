@@ -13,6 +13,9 @@ import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { Subscription } from 'rxjs';
+import { Agent } from '@shared/interfaces/agent.model';
+import { HelperService } from '@shared/services/helper.service';
+import { BaseResponse } from '@shared/interfaces/base-response';
 import { environment } from '@env/environment';
 
 @Component({
@@ -41,6 +44,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   agentId: string | null = null;
+  contractorId: string = '';
   imagePreview: string = 'assets/images/avatar.png';
   private routeSub!: Subscription;
   private agentSub!: Subscription;
@@ -50,6 +54,8 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.subscribe(params => {
       this.agentId = params.get('id');
+      this.contractorId = params.get('contractorId') as string;
+
       this.isEditMode = !!this.agentId;
       this.initializeForm();
       if (this.isEditMode) {
@@ -74,7 +80,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     this.agentForm = this.fb.group({
       image: [null],
       name: ['', [Validators.required]],
-      username: ['', [Validators.required]],
+      userName: ['', [Validators.required]],
       ghanaCard: ['', [Validators.required]],
       phone: ['', Validators.required],
       email: ['', [Validators.email]],
@@ -91,13 +97,15 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
 
   //TODO: Will be changed based on api response
   private loadAgentData(id: string): void {
-    // this.agentSub= this.apiService
-    //   .triggerApiRequest(EndPoint.GET_Agent_BY_ID, HttpVerb.GET, { id })
-    //   .subscribe({
-    //     next: agent => {
-    //       // this.agentForm.patchValue(agent);
-    //     },
-    //   });
+    this.agentSub = this.apiService
+      .triggerApiRequest<BaseResponse<Agent>>(EndPoint.GET_AGENT_BY_ID, HttpVerb.GET, { id })
+      .subscribe({
+        next: response => {
+          this.agentForm.patchValue(response.data);
+
+          // this.agentForm.get('name')?.setValue(response.data?.fullName)
+        },
+      });
   }
 
   onImageUpload(event: any): void {
@@ -135,7 +143,17 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.agentForm.invalid) return;
 
-    const formData = this.agentForm.value;
+    const formValue = this.agentForm.value;
+    const formData = new FormData();
+
+    formData.append('contractorId', this.contractorId);
+    formData.append('name', formValue.name);
+    formData.append('userName', formValue.userName);
+    formData.append('ghanaCard', formValue.ghanaCard);
+    formData.append('phone', formValue.phone);
+    formData.append('email', formValue.email);
+    formData.append('status', formValue.status);
+    formData.append('image', formValue.image);
 
     if (this.isEditMode) {
       this.formSub = this.apiService
