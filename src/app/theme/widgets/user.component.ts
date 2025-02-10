@@ -6,32 +6,20 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { debounceTime, tap } from 'rxjs/operators';
 
-import { AuthService, SettingsService, User } from '@core';
+import { AuthService, SettingsService, TokenService, User } from '@core';
 
 @Component({
   selector: 'app-user',
   template: `
     <button class="r-full" mat-button [matMenuTriggerFor]="menu">
-      <span class="m-x-8">{{ user.name }}</span>
+      <span class="m-x-8">{{ user.userName }}</span>
       <img matButtonIcon class="avatar r-full" [src]="user.avatar" width="24" alt="avatar" />
     </button>
 
     <mat-menu #menu="matMenu">
-      <button routerLink="/profile/overview" mat-menu-item>
-        <mat-icon>account_circle</mat-icon>
-        <span>{{ 'profile' | translate }}</span>
-      </button>
-      <button routerLink="/profile/settings" mat-menu-item>
-        <mat-icon>edit</mat-icon>
-        <span>{{ 'edit_profile' | translate }}</span>
-      </button>
       <button routerLink="/profile/change-password" mat-menu-item>
         <mat-icon>vpn_key</mat-icon>
         <span>{{ 'change_password' | translate }}</span>
-      </button>
-      <button mat-menu-item (click)="restore()">
-        <mat-icon>restore</mat-icon>
-        <span>{{ 'restore_defaults' | translate }}</span>
       </button>
       <button mat-menu-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>
@@ -57,14 +45,18 @@ export class UserComponent implements OnInit {
     private router: Router,
     private auth: AuthService,
     private cdr: ChangeDetectorRef,
-    private settings: SettingsService
+    private settings: SettingsService,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
     this.auth
       .user()
       .pipe(
-        tap(user => (this.user = user)),
+        tap(user => {
+          this.user = user;
+          this.user.userName = this.tokenService.getUsername();
+        }),
         debounceTime(10)
       )
       .subscribe(() => this.cdr.detectChanges());
