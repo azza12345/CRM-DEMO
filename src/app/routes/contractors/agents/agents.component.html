@@ -4,7 +4,7 @@
     <a
       mat-mini-fab
       color="primary"
-      [routerLink]="['contractors/agents/add-agent']"
+      [routerLink]="['/contractors', contractorId, 'agents', 'add']"
       class="add-icon ms-3"
       matTooltip="Add Agent"
       matTooltipPosition="below"
@@ -35,11 +35,16 @@
       color="primary"
       mat-icon-button
       (click)="toggleAgentState(row)"
-      [matTooltip]="row.state === 'enabled' ? 'Disable Agent' : 'Enable Agent'"
+      [matTooltip]="row.isActive ? 'Disable Agent' : 'Enable Agent'"
     >
-      <mat-icon color="primary">{{ row.state === 'enabled' ? 'block' : 'check_circle' }}</mat-icon>
+      <mat-icon color="primary">{{ row.isActive ? 'block' : 'check_circle' }}</mat-icon>
     </button>
-    <a color="primary" mat-icon-button (click)="editAgent(row)" matTooltip="Edit Agent">
+    <a
+      color="primary"
+      mat-icon-button
+      [routerLink]="['/contractors', contractorId, 'agents', 'edit', row.id]"
+      matTooltip="Edit Agent"
+    >
       <mat-icon color="primary">edit</mat-icon>
     </a>
   </ng-template>

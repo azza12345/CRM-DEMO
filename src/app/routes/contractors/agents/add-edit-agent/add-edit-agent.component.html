@@ -29,9 +29,9 @@
             </div>
             <div class="col">
               <mat-form-field color="accent" appearance="outline">
-                <mat-label>{{ 'username' | translate }}</mat-label>
-                <input matInput formControlName="username" />
-                @if (agentForm.controls.username.errors?.required) {
+                <mat-label>{{ 'userName' | translate }}</mat-label>
+                <input matInput formControlName="userName" />
+                @if (agentForm.controls.userName.errors?.required) {
                   <mat-error>{{ 'username_required' | translate }}</mat-error>
                 }
               </mat-form-field>
