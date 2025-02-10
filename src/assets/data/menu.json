@@ -23,24 +23,6 @@
       "name": "contractors",
       "type": "link",
       "customIcon": "assets/images/svgs/menu/contractor.svg"
-    },
-    {
-      "route": "settings",
-      "name": "settings",
-      "type": "sub",
-      "customIcon": "assets/images/svgs/menu/menu-gear.svg",
-      "children": [
-        {
-          "route": "user-management",
-          "name": "user-management",
-          "type": "link"
-        },
-        {
-          "route": "roles",
-          "name": "roles",
-          "type": "link"
-        }
-      ]
     }
   ]
 }
