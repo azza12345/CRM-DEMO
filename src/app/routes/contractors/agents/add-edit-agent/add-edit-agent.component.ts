@@ -14,7 +14,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { Subscription } from 'rxjs';
 import { Agent } from '@shared/interfaces/agent.model';
-import { HelperService } from '@shared/services/helper.service';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { environment } from '@env/environment';
 
