@@ -21,6 +21,6 @@ export interface BaseMeter {
 }
 
 export interface MeterItem {
-  MaterialType: string;
-  MaterialQuantity: string;
+  materialType: string;
+  materialQuantity: string;
 }

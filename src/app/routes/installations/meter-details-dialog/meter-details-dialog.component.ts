@@ -66,9 +66,9 @@ export class MeterDetailsDialogComponent implements OnInit {
   }
 
   private mapMeterItems(materials: MeterItem[]): MeterItem[] {
-    return materials.map(({ MaterialType, MaterialQuantity }) => ({
-      name: MaterialType,
-      quantity: MaterialQuantity || 'N/A',
+    return materials.map(({ materialType, materialQuantity }) => ({
+      materialType,
+      materialQuantity: materialQuantity || 'N/A',
     }));
   }
 }
