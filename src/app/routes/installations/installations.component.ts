@@ -41,7 +41,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           icon: 'visibility',
           tooltip: 'View Details',
           //FIXME: gonna be changed based on API
-          click: (rowData: Installment) => this.openViewDetailsDialog(rowData.id),
+          click: (rowData: Installment) => this.openViewDetailsDialog(rowData.meterId),
         },
         {
           type: 'icon',
@@ -137,7 +137,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       .triggerApiRequest<BaseResponse<{ oldMeter: BaseMeter; newMeter: BaseMeter }>>(
         EndPoint.INSTALLED_METERS_DETAILS,
         HttpVerb.GET,
-        { id: meterId }
+        { meterId }
       )
       .pipe(
         switchMap(response => {
