@@ -49,7 +49,7 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Meter Make', value: this.data.oldMeter.meterMake },
         { label: 'Manufacture Year', value: this.data.oldMeter.meterYearOfManufacture },
       ];
-      this.oldMeterSpareParts = this.mapMeterItems(this.data.oldMeter.materialDetailsOutPutModels);
+      this.oldMeterSpareParts = this.mapMeterItems(this.data.oldMeter.materialDetails);
     }
 
     if (this.data.newMeter) {
@@ -61,13 +61,14 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Meter Model', value: this.data.newMeter.meterModel },
         { label: 'Location', value: this.data.newMeter.location },
       ];
-      this.newMeterSpareParts = this.mapMeterItems(this.data.newMeter.materialDetailsOutPutModels);
+      this.newMeterSpareParts = this.mapMeterItems(this.data.newMeter.materialDetails);
     }
   }
 
   private mapMeterItems(materials: MeterItem[]): MeterItem[] {
-    return materials.map(({ materialType, materialQuantity }) => ({
-      materialType,
+    return materials.map(({ materialTypeId, materialTypeName, materialQuantity }) => ({
+      materialTypeId,
+      materialTypeName,
       materialQuantity: materialQuantity || 'N/A',
     }));
   }

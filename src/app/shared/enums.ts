@@ -9,7 +9,7 @@ export enum HttpVerb {
 export enum EndPoint {
   AGENTS_LIST = 'agents/list',
   DISTRICTS_LIST = 'Districts/ActiveDistrics/list',
-  INSTALLATIONS = 'Dashboard/InstallationPage',
+  INSTALLED_METERS = 'meters/installed',
   GET_CONTRACTORS = 'contractors/all',
   GET_Contractors_BY_DISTRICT_ID = 'Districts/Contractors',
   RETIRED_METERS = 'Meters/retired',
@@ -27,5 +27,6 @@ export enum EndPoint {
   UPDATE_CONTRACTOR = 'waiting1',
   GET_CONTRACTOR_BY_ID = 'wainting2',
   ADD_CONTRACTOR = 'waiting3',
-  INSTALLED_METERS_DETAILS = 'Dashboard/InstalledMetersDetails',
+  INSTALLED_METERS_DETAILS = 'meters/{meterId}/details',
+  ASSIGN_METER_TO_AGENT = 'meters/assign-to-contractor',
 }

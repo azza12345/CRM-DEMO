@@ -39,7 +39,7 @@ import { ApiService } from '@shared/services/api.service';
   styleUrl: './filter.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class FilterComponent implements OnInit, OnChanges {
+export class FilterComponent implements OnInit {
   @Input() controls: FilterControl[] = [];
   @Input() resetBtn: boolean = false;
   @Input() isPrimary: boolean = true;
@@ -52,9 +52,6 @@ export class FilterComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private apiService: ApiService
   ) {}
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
-  }
 
   ngOnInit(): void {
     this.buildForm();

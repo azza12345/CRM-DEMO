@@ -17,10 +17,11 @@ export interface BaseMeter {
   meterMake: string;
   meterModel: string;
   meterDisplay: string;
-  materialDetailsOutPutModels: MeterItem[];
+  materialDetails: MeterItem[];
 }
 
 export interface MeterItem {
-  materialType: string;
+  materialTypeId: string;
+  materialTypeName: string;
   materialQuantity: string;
 }
