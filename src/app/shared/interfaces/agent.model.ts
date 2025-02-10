@@ -8,6 +8,7 @@ export interface Agent {
   ghanaCard: string;
   phone: string;
   state: 'enabled' | 'disabled';
+  isActive: boolean;
   actionIcon?: string;
   actionTooltip?: string;
 }
