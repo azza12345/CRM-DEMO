@@ -7,19 +7,17 @@
     >
       {{ total | number }}
     </h1>
-    <ul>
+    <table class="stats-table">
       @for (item of stats; track item) {
-        <li>
-          <div class="d-flex align-items-center">
-            <span [style.background]="item.color"></span>
+        <tr>
+          <td class="d-flex align-items-center me-1">
+            <span [style.background]="item.color" class="color-box"></span>
             <span class="text-secondary" [style.color]="item.color">{{ item.label }}:</span>
-          </div>
-          <span>
-            {{ values[item.key] | number }}
-          </span>
-        </li>
+          </td>
+          <td>{{ values[item.key] | number }}</td>
+        </tr>
       }
-    </ul>
+    </table>
   </div>
   <app-dynamic-chart [chartOptions]="chartOptions" [chartId]="chartId"></app-dynamic-chart>
 </div>
