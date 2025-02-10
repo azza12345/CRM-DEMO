@@ -20,7 +20,7 @@ export class DashboardHeaderComponent {
       label: 'District',
       type: 'select',
       apiEndpoint: EndPoint.DISTRICTS,
-      isFirstValueDynamic: true,
+      /*isFirstValueDynamic: true,*/
     },
   ];
 

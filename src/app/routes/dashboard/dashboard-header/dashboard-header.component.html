@@ -3,5 +3,9 @@
     <h1 class="title">Dashboard</h1>
     <span>{{ currentDate | date: 'dd-MM-yyyy | hh:mm:ss a' }}</span>
   </div>
-  <app-filter [controls]="filterControls" (filterChanged)="onFilterChanged($event)"></app-filter>
+  <app-filter
+    [controls]="filterControls"
+    [showAllOption]="true"
+    (filterChanged)="onFilterChanged($event)"
+  ></app-filter>
 </div>

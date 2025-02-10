@@ -1,4 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +25,7 @@ import { ApiService } from '@shared/services/api.service';
   selector: 'app-filter',
   standalone: true,
   imports: [
+    CommonModule,
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
@@ -28,10 +39,11 @@ import { ApiService } from '@shared/services/api.service';
   styleUrl: './filter.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class FilterComponent implements OnInit {
+export class FilterComponent implements OnInit, OnChanges {
   @Input() controls: FilterControl[] = [];
   @Input() resetBtn: boolean = false;
   @Input() isPrimary: boolean = true;
+  @Input() showAllOption: boolean = false;
   @Output() filterChanged: EventEmitter<any> = new EventEmitter<any>();
 
   filterForm!: FormGroup;
@@ -40,11 +52,15 @@ export class FilterComponent implements OnInit {
     private fb: FormBuilder,
     private apiService: ApiService
   ) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+  }
 
   ngOnInit(): void {
     this.buildForm();
     this.fetchDynamicOptions();
   }
+
   fetchDynamicOptions(): void {
     this.controls.forEach(control => {
       if (control.apiEndpoint) {
@@ -61,12 +77,17 @@ export class FilterComponent implements OnInit {
                 label: item.name,
               }));
             }
+
             if (control.isFirstValueDynamic) {
               if (control.options && control.options.length > 0) {
                 const initialValue = control.options[0].value;
                 this.filterForm.get(control.formControlName)?.setValue(initialValue);
                 this.filterChanged.emit(this.filterForm.value);
               }
+            } else {
+              // set default selected option
+              this.filterForm.get(control.formControlName)?.setValue('0');
+              this.filterChanged.emit(this.filterForm.value);
             }
           },
           error: () => {

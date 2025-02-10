@@ -7,11 +7,12 @@ import { FilterComponent } from '../../../shared/components/filter/filter.compon
 import { AgentOperationData } from '@shared/interfaces/dashboard';
 import { EndPoint } from '@shared/enums';
 import { DashboardService } from '../dashboard.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard-table',
   standalone: true,
-  imports: [MatTableModule, FilterComponent, MatPaginatorModule],
+  imports: [CommonModule, MatTableModule, FilterComponent, MatPaginatorModule],
   templateUrl: './dashboard-table.component.html',
   styleUrl: './dashboard-table.component.scss',
 })
@@ -35,8 +36,8 @@ export class DashboardTableComponent implements OnInit, AfterViewInit {
       apiEndpoint: EndPoint.AGENTS_LIST,
       optionLabel: 'name',
       optionVal: 'id',
-      //initialValue: 'Contractor1',
-      isFirstValueDynamic: true,
+      // initialValue: 'Contractor1',
+      // isFirstValueDynamic: true,
     },
   ];
 
