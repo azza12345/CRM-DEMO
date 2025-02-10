@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Agent } from '@shared/interfaces/agent.model';
-import { Subscription } from 'rxjs';
+import { Subscription, takeUntil, takeWhile } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,6 +35,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
   private dialog = inject(MatDialog);
   contractorId!: string;
   filters: any = {};
+  alive = false;
 
   rowClassFormatter: MtxGridRowClassFormatter = {
     'disabled-state': (data, index) => data.state === 'disabled',
@@ -80,13 +81,11 @@ export class AgentsComponent implements OnInit, OnDestroy {
     this.routeSub = this.route.paramMap.subscribe(params => {
       this.contractorId = params.get('contractorId')!;
       if (this.contractorId) {
-        console.log(this.contractorId);
         const url = HelperService.formatEndpoint(EndPoint.GET_AGENTS_BY_CONTRACTOR_ID, {
           contractorId: this.contractorId,
         });
 
         this.endpoint = url as EndPoint;
-
       }
     });
   }
@@ -120,15 +119,18 @@ export class AgentsComponent implements OnInit, OnDestroy {
           agentId: agent.id,
         });
 
-        this.apiService.triggerApiRequest(url as EndPoint, HttpVerb.PUT)
-        .subscribe({
-          next: () => {
-            this.toastr.success('Agent updated successfully');
-            agent.isActive = !agent.isActive;
-          }
-        }),
-
-        agent.state = agent.isActive ? 'disabled' : 'enabled';
+        (this.routeSub = this.apiService
+          .triggerApiRequest(url as EndPoint, HttpVerb.PUT)
+          .subscribe({
+            next: () => {
+              this.toastr.success('Agent updated successfully');
+              agent.isActive = !agent.isActive;
+            },
+            error: () => {
+              this.toastr.error('Failed to update agent status');
+            },
+          })),
+          (agent.state = agent.isActive ? 'disabled' : 'enabled');
       }
     });
   }

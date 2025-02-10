@@ -55,7 +55,6 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
       this.agentId = params.get('id');
       this.contractorId = params.get('contractorId') as string;
 
-      console.log(this.contractorId);
       this.isEditMode = !!this.agentId;
       this.initializeForm();
       if (this.isEditMode) {
@@ -97,10 +96,6 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
 
   //FIXME: Will be changed based on api response
   private loadAgentData(id: string): void {
-    /*const url = HelperService.formatEndpoint(EndPoint.GET_AGENT_BY_ID, {
-      agentId: id,
-    });*/
-
     this.agentSub = this.apiService
       .triggerApiRequest<BaseResponse<Agent>>(EndPoint.GET_AGENT_BY_ID, HttpVerb.GET, { id })
       .subscribe({
@@ -138,7 +133,6 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     const formValue = this.agentForm.value;
     const formData = new FormData();
 
-    console.log(formValue);
     formData.append('contractorId', this.contractorId);
     formData.append('name', formValue.name);
     formData.append('userName', formValue.userName);
