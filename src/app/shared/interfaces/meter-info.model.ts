@@ -1,6 +1,5 @@
 export interface BaseMeter {
   id: number;
-  status: number;
   transactionId: number;
   type: any;
   meterSerial: string;
@@ -8,8 +7,6 @@ export interface BaseMeter {
   lastPurchase: any;
   image: string;
   meterYearOfManufacture: any;
-  materialType: string[];
-  materialQuantity: string[];
   installationDate: string;
   location: string;
   meterMakeId: number;
@@ -20,8 +17,10 @@ export interface BaseMeter {
   meterMake: string;
   meterModel: string;
   meterDisplay: string;
+  materialDetailsOutPutModels: MeterItem[];
 }
+
 export interface MeterItem {
-  name: string;
-  quantity: string;
+  MaterialType: string;
+  MaterialQuantity: string;
 }

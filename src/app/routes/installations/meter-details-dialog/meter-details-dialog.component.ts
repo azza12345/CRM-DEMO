@@ -49,30 +49,26 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Meter Make', value: this.data.oldMeter.meterMake },
         { label: 'Manufacture Year', value: this.data.oldMeter.meterYearOfManufacture },
       ];
-      this.oldMeterSpareParts = this.mapMeterItems(
-        this.data.oldMeter.materialType,
-        this.data.oldMeter.materialQuantity
-      );
+      this.oldMeterSpareParts = this.mapMeterItems(this.data.oldMeter.materialDetailsOutPutModels);
     }
 
-    this.newMeterDetails = [
-      { label: 'Meter Type', value: this.data.newMeter.meterType },
-      { label: 'Installation Type', value: this.data.newMeter.type },
-      { label: 'Meter Make', value: this.data.newMeter.meterMake },
-      { label: 'Installation Date', value: this.data.newMeter.installationDate },
-      { label: 'Meter Model', value: this.data.newMeter.meterModel },
-      { label: 'Location', value: this.data.newMeter.location },
-    ];
-    this.newMeterSpareParts = this.mapMeterItems(
-      this.data.newMeter.materialType,
-      this.data.newMeter.materialQuantity
-    );
+    if (this.data.newMeter) {
+      this.newMeterDetails = [
+        { label: 'Meter Type', value: this.data.newMeter.meterType },
+        { label: 'Installation Type', value: this.data.newMeter.type },
+        { label: 'Meter Make', value: this.data.newMeter.meterMake },
+        { label: 'Installation Date', value: this.data.newMeter.installationDate },
+        { label: 'Meter Model', value: this.data.newMeter.meterModel },
+        { label: 'Location', value: this.data.newMeter.location },
+      ];
+      this.newMeterSpareParts = this.mapMeterItems(this.data.newMeter.materialDetailsOutPutModels);
+    }
   }
 
-  private mapMeterItems(materials: string[], quantities: string[]): MeterItem[] {
-    return materials.map((name, index) => ({
-      name,
-      quantity: quantities[index] || 'N/A',
+  private mapMeterItems(materials: MeterItem[]): MeterItem[] {
+    return materials.map(({ MaterialType, MaterialQuantity }) => ({
+      name: MaterialType,
+      quantity: MaterialQuantity || 'N/A',
     }));
   }
 }

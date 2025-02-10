@@ -147,8 +147,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: ({ oldMeter, newMeter }) => {
-          const isEmptyOldMeter = oldMeter.status === 0;
-          const showTabs = !isEmptyOldMeter;
+          const showTabs = !!oldMeter.id;
 
           this.dialog.open<MeterDetailsDialogComponent>(MeterDetailsDialogComponent, {
             width: '744px',
