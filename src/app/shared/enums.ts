@@ -10,7 +10,7 @@ export enum EndPoint {
   AGENTS_LIST = 'agents/list',
   DISTRICTS_LIST = 'Districts/ActiveDistrics/list',
   INSTALLATIONS = 'Dashboard/InstallationPage',
-  GET_AGENTS_BY_DISTRICT_ID = 'Districts/Contractors',
+  GET_Contractors_BY_DISTRICT_ID = 'Districts/Contractors',
   GET_CONTRACTORS = 'contractors/all',
   RETIRED_METERS = 'Meters/retired',
   DISTRICTS = 'Districts/all',
