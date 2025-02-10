@@ -27,4 +27,5 @@ export enum EndPoint {
   UPDATE_CONTRACTOR = 'waiting1',
   GET_CONTRACTOR_BY_ID = 'wainting2',
   ADD_CONTRACTOR = 'waiting3',
+  INSTALLED_METERS_DETAILS = 'Dashboard/InstalledMetersDetails',
 }

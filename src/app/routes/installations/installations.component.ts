@@ -7,11 +7,12 @@ import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
 import { ApiService } from '@shared/services/api.service';
-import { Subscription } from 'rxjs';
+import { delay, of, Subscription, switchMap } from 'rxjs';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { Contractor } from '@shared/interfaces/contractor.model';
 import { Installment } from '@shared/interfaces/installment.model';
-import { FormDialogData } from '@shared/interfaces/dialog-data.model';
+import { MeterDetailsDialogComponent } from './meter-details-dialog/meter-details-dialog.component';
+import { BaseMeter } from '@shared/interfaces/meter-info.model';
 
 @Component({
   selector: 'app-installations',
@@ -39,7 +40,8 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           text: 'View',
           icon: 'visibility',
           tooltip: 'View Details',
-          click: () => alert('Not Implemented yet ..'),
+          //FIXME: gonna be changed based on API
+          click: (rowData: Installment) => this.openViewDetailsDialog(rowData.meterId),
         },
         {
           type: 'icon',
@@ -73,6 +75,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   httpVerb: HttpVerb = HttpVerb.GET;
   contractors: Contractor[] = [];
   private contractorsSubscription!: Subscription;
+  private meterDetailsSub!: Subscription;
 
   constructor(
     private dialog: MatDialog,
@@ -86,6 +89,9 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.contractorsSubscription) {
       this.contractorsSubscription.unsubscribe();
+    }
+    if (this.meterDetailsSub) {
+      this.meterDetailsSub.unsubscribe();
     }
   }
 
@@ -123,6 +129,37 @@ export class InstallationsComponent implements OnInit, OnDestroy {
         this.assignToContractor(rowData, result.contractor);
       }
     });
+  }
+
+  //FIXME: gonna be changed based on API
+  openViewDetailsDialog(meterId: number): void {
+    this.apiService
+      .triggerApiRequest<BaseResponse<{ oldMeter: BaseMeter; newMeter: BaseMeter }>>(
+        EndPoint.INSTALLED_METERS_DETAILS,
+        HttpVerb.GET,
+        { meterId }
+      )
+      .pipe(
+        switchMap(response => {
+          const { oldMeter, newMeter } = response.data;
+          return of({ oldMeter, newMeter });
+        })
+      )
+      .subscribe({
+        next: ({ oldMeter, newMeter }) => {
+          const showTabs = !!oldMeter.id;
+
+          this.dialog.open<MeterDetailsDialogComponent>(MeterDetailsDialogComponent, {
+            width: '744px',
+            data: {
+              title: 'Meter Information',
+              showTabs,
+              oldMeter,
+              newMeter,
+            },
+          });
+        },
+      });
   }
 
   // TODO
