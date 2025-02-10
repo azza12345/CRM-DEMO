@@ -14,8 +14,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { Subscription } from 'rxjs';
 import { Agent } from '@shared/interfaces/agent.model';
-import { HelperService } from '@shared/services/helper.service';
 import { BaseResponse } from '@shared/interfaces/base-response';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-add-edit-agent',
@@ -94,7 +94,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     }
   }
 
-  //FIXME: Will be changed based on api response
+  //TODO: Will be changed based on api response
   private loadAgentData(id: string): void {
     this.agentSub = this.apiService
       .triggerApiRequest<BaseResponse<Agent>>(EndPoint.GET_AGENT_BY_ID, HttpVerb.GET, { id })
@@ -112,18 +112,30 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     if (file) {
       if (!file.type.startsWith('image/')) {
         this.toastr.error('Please upload an image file (JPEG, PNG, etc.)');
-        this.imagePreview = 'assets/images/avatar.png';
-        this.agentForm.get('image')?.setValue(null);
-        this.fileInput.nativeElement.value = '';
+        this.resetImageSelection();
         return;
       }
-
+      if (file.size > environment.maxImageSize) {
+        this.toastr.error(
+          `File size should not exceed ${environment.maxImageSize / 1024 / 1024} MB.`
+        );
+        this.resetImageSelection();
+        return;
+      }
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreview = e.target.result;
       };
       reader.readAsDataURL(file);
       this.agentForm.get('image')?.setValue(file, { emitEvent: false });
+    }
+  }
+
+  resetImageSelection(): void {
+    this.imagePreview = 'assets/images/avatar.png';
+    this.agentForm.get('image')?.setValue(null);
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
     }
   }
 
