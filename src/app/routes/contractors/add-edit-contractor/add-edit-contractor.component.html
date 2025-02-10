@@ -47,7 +47,7 @@
           </mat-form-field>
           <mat-form-field color="accent" appearance="outline">
             <mat-label>{{ 'selected_districts' | translate }}</mat-label>
-            <mat-select formControlName="selectedDistricts" multiple>
+            <mat-select formControlName="assignedDistricts" multiple>
               @for (district of availableDistricts$ | async; track district.id) {
                 <mat-option [value]="district.id">
                   {{ district.name }}

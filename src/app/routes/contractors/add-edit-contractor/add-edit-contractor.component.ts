@@ -81,7 +81,7 @@ export class AddEditContractorComponent implements OnInit, OnDestroy {
       phone: ['', Validators.required],
       ghanaPostAddress: ['', Validators.maxLength(50)],
       officeAddress: ['', Validators.maxLength(250)],
-      selectedDistricts: [[], Validators.required],
+      assignedDistricts: [[], Validators.required],
     });
     if (this.isEditMode) {
       this.contractorForm.addControl(
