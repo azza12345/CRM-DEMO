@@ -30,8 +30,8 @@ import { map, Observable, Subscription } from 'rxjs';
     MatIconModule,
     MatButtonModule,
     AsyncPipe,
-    MatSelectModule
-    ],
+    MatSelectModule,
+  ],
 
   templateUrl: './add-edit-contractor.component.html',
   styleUrl: './add-edit-contractor.component.scss',
@@ -78,9 +78,12 @@ export class AddEditContractorComponent implements OnInit, OnDestroy {
 
   private initializeForm(): void {
     this.contractorForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(50),StringValidator.isEmptyString ]],
-      contactPersonName: ['', [Validators.required, Validators.maxLength(50),StringValidator.isEmptyString]],
-      phone: ['', Validators.required,StringValidator.isEmptyString],
+      name: ['', [Validators.required, Validators.maxLength(50), StringValidator.isEmptyString]],
+      contactPersonName: [
+        '',
+        [Validators.required, Validators.maxLength(50), StringValidator.isEmptyString],
+      ],
+      phone: ['', Validators.required, StringValidator.isEmptyString],
       ghanaPostAddress: ['', Validators.maxLength(50)],
       officeAddress: ['', Validators.maxLength(250)],
       assignedDistricts: [[], Validators.required],
