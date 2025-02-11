@@ -69,8 +69,8 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       formControlName: 'MeterSerial',
       label: 'MeterSerial',
       type: 'text',
-      optionLabel: 'MeterSerial',
-      optionVal: 'meterSerial',
+      optionLabel: 'meterSerial',
+      optionVal: 'MeterSerial',
     },
   ];
   endpoint: EndPoint = EndPoint.INSTALLED_METERS;
@@ -144,7 +144,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   //FIXME: gonna be changed based on API
   openViewDetailsDialog(meterId: number): void {
     const url = HelperService.formatEndpoint(EndPoint.INSTALLED_METERS_DETAILS, {
-      meterId: meterId,
+      meterId,
     }) as EndPoint;
 
     this.apiService
@@ -182,7 +182,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   }
 
   assignToContractor(meter: InstalledMeter, contractorId: number): void {
-    const assignMeterToContractorRequest = { contractorId: contractorId, meterId: meter.meterId };
+    const assignMeterToContractorRequest = { contractorId, meterId: meter.meterId };
 
     const response = this.apiService
       .triggerApiRequest<

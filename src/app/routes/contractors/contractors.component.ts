@@ -33,7 +33,7 @@ export class ContractorsComponent {
     //{ header: 'NationalId', field: 'nationalID', sortable: true },
     { header: 'Office Address', field: 'officeAddress' },
     { header: 'Ghana Post Address', field: 'postalAddress' },
-    { header: 'Contact Person', field: 'contactPerson' },
+    { header: 'Contact Person', field: 'contactPersonName' },
     { header: 'Phone', field: 'phone' },
     {
       header: 'Actions',
@@ -64,7 +64,7 @@ export class ContractorsComponent {
   ];
   filterControls: FilterControl[] = [
     {
-      formControlName: 'district',
+      formControlName: 'districtID',
       label: 'District',
       type: 'select',
       apiEndpoint: EndPoint.DISTRICTS_LIST,
@@ -72,9 +72,11 @@ export class ContractorsComponent {
       optionVal: 'id',
     },
     {
-      formControlName: 'search',
-      label: 'Search',
+      formControlName: 'Name',
+      label: 'SearchByName',
       type: 'text',
+      optionLabel: 'name',
+      optionVal: 'Name',
     },
   ];
   endpoint: EndPoint = EndPoint.GET_Contractors_BY_DISTRICT_ID;
