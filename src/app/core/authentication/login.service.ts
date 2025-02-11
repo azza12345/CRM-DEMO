@@ -27,7 +27,10 @@ export class LoginService {
   }
 
   logout() {
-    return this.http.post<any>('/auth/logout', {});
+    //TODO
+    // gonna be fixed when api is ready
+    // return this.http.post<any>('/auth/logout', {});
+    return of(true);
   }
 
   me() {
