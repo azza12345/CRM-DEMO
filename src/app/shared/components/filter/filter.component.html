@@ -20,7 +20,9 @@
                 [color]="isPrimary ? 'primary' : 'accent'"
               >
                 <mat-label>{{ control.label }}</mat-label>
+
                 <mat-select [formControlName]="control.formControlName">
+                  <mat-option *ngIf="showAllOption" value="0">All</mat-option>
                   @for (option of control.options; track option.value) {
                     <mat-option [value]="option.value">
                       {{ option.label }}
