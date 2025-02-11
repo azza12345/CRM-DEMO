@@ -73,7 +73,7 @@ export class ContractorsComponent {
     },
     {
       formControlName: 'Name',
-      label: 'SearchByName',
+      label: 'Search By Name',
       type: 'text',
       optionLabel: 'name',
       optionVal: 'Name',
