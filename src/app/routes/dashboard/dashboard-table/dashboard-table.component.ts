@@ -36,8 +36,6 @@ export class DashboardTableComponent implements OnInit, AfterViewInit {
       apiEndpoint: EndPoint.AGENTS_LIST,
       optionLabel: 'name',
       optionVal: 'id',
-      // initialValue: 'Contractor1',
-      // isFirstValueDynamic: true,
     },
   ];
 
