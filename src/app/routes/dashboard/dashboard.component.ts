@@ -59,6 +59,7 @@ export class DashboardComponent implements OnInit {
   }>;
 
   private districtSubject = new BehaviorSubject<number>(1);
+  selectedDistrict: number = 0;
 
   ngOnInit(): void {
     this.fetchData();
@@ -66,6 +67,8 @@ export class DashboardComponent implements OnInit {
 
   onDistrictChanged(districtId: number): void {
     this.districtSubject.next(districtId);
+
+    this.selectedDistrict = districtId;
   }
 
   private fetchData(): void {

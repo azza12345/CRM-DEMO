@@ -10,9 +10,9 @@ export interface MeterStatusDto {
   onAgent: number;
 }
 
-export interface AgentOperationData {
-  agentId: number;
-  agentName: string;
+export interface ContractorOperationData {
+  contractorId: number;
+  contractorName: string;
   onAssignCount: number;
   onAgentCount: number;
   onCustomerCount: number;

@@ -5,7 +5,7 @@ import { EndPoint, HttpVerb } from '@shared/enums';
 import { ApiService } from '@shared/services/api.service';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import {
-  AgentOperationData,
+  ContractorOperationData,
   MeterStatusDto,
   RetiredMeterStatusDto,
 } from '@shared/interfaces/dashboard';
@@ -18,9 +18,13 @@ export class DashboardService {
     private http: HttpClient
   ) {}
 
-  getAgentsOperations(agentId: string = ''): Observable<BaseResponse<AgentOperationData[]>> {
-    return this.http.get<BaseResponse<AgentOperationData[]>>(
-      `${environment.ApiUrl}/agents/operations/statistics/?agentId=${agentId}`
-    );
+  getContractorsOperations(
+    districtId: string = '0'
+  ): Observable<BaseResponse<ContractorOperationData[]>> {
+    const url = districtId
+      ? `${environment.ApiUrl}/contractors/operations/statistics/?districtId=${districtId}`
+      : `${environment.ApiUrl}/contractors/operations/statistics/`;
+
+    return this.http.get<BaseResponse<ContractorOperationData[]>>(url);
   }
 }
