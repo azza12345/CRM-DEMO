@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs';
 import { Agent } from '@shared/interfaces/agent.model';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { environment } from '@env/environment';
+import { StringValidator } from '@shared/validators/is-empty-string';
 
 @Component({
   selector: 'app-add-edit-agent',
@@ -78,10 +79,10 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
   private initializeForm(): void {
     this.agentForm = this.fb.group({
       image: [null],
-      name: ['', [Validators.required]],
-      userName: ['', [Validators.required]],
-      ghanaCard: ['', [Validators.required]],
-      phone: ['', Validators.required],
+      name: ['', [Validators.required, StringValidator.isEmptyString]],
+      userName: ['', [Validators.required , StringValidator.isEmptyString]],
+      ghanaCard: ['', [Validators.required , StringValidator.isEmptyString]],
+      phone: ['', [Validators.required , StringValidator.isEmptyString]],
       email: ['', [Validators.email]],
       status: [null],
     });
