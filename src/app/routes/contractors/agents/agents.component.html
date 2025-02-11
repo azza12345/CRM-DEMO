@@ -28,7 +28,12 @@
   [isLoading]="false"
 >
   <ng-template #actionBtns let-row let-index="index" let-col="colDef">
-    <a mat-icon-button color="primary" (click)="viewDetails(row)" matTooltip="View Details">
+    <a
+      mat-icon-button
+      color="primary"
+      (click)="openViewDetailsDialog(row.id)"
+      matTooltip="View Details"
+    >
       <mat-icon color="primary"> visibility</mat-icon>
     </a>
     <button
