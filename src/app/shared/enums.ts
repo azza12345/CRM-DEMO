@@ -20,7 +20,7 @@ export enum EndPoint {
   CHANGE_PASSWORD = 'account/ChangePassword',
   GET_AGENTS_BY_CONTRACTOR_ID = 'contractors/{contractorId}/agents',
   MOCK_AGENTS = './mock/agents.mock.json',
-  UPDATE_AGENT = 'waiting4',
+  UPDATE_AGENT = 'agents/edit',
   UPDATE_AGENT_STATUS = 'agents/{agentId}/status',
   GET_AGENT_BY_ID = 'agents',
   ADD_AGENT = 'agents/add',

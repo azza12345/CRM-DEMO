@@ -143,6 +143,8 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     formData.append('image', formValue.image);
 
     if (this.isEditMode) {
+      formData.append('id', this.agentId as string);
+
       this.formSub = this.apiService
         .triggerApiRequest(EndPoint.UPDATE_AGENT, HttpVerb.PUT, null, formData)
         .subscribe({
