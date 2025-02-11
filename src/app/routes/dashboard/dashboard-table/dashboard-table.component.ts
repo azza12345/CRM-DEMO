@@ -1,13 +1,21 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
 import { FilterComponent } from '../../../shared/components/filter/filter.component';
-import { AgentOperationData } from '@shared/interfaces/dashboard';
 import { EndPoint } from '@shared/enums';
 import { DashboardService } from '../dashboard.service';
 import { CommonModule } from '@angular/common';
+import { ContractorOperationData } from '@shared/interfaces/dashboard';
 
 @Component({
   selector: 'app-dashboard-table',
@@ -16,10 +24,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './dashboard-table.component.html',
   styleUrl: './dashboard-table.component.scss',
 })
-export class DashboardTableComponent implements OnInit, AfterViewInit {
-  dataSource = new MatTableDataSource<AgentOperationData>();
+export class DashboardTableComponent implements OnInit, OnChanges, AfterViewInit {
+  dataSource = new MatTableDataSource<ContractorOperationData>();
   displayedColumns: string[] = [
-    'agentName',
+    'contractorName',
     'onAssignCount',
     'onAgentCount',
     'onCustomerCount',
@@ -42,10 +50,17 @@ export class DashboardTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  @Input() districtId: number = 0;
+
   constructor(private dashboardService: DashboardService) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.districtId) {
+      this.applyFilter(changes.districtId.currentValue);
+    }
+  }
 
   ngOnInit(): void {
-    this.dashboardService.getAgentsOperations().subscribe(
+    this.dashboardService.getContractorsOperations().subscribe(
       response => {
         this.dataSource.data = response.data;
       },
@@ -59,8 +74,8 @@ export class DashboardTableComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter(filterValue: any): void {
-    const agentId = filterValue.agent || '';
-    this.dashboardService.getAgentsOperations(agentId).subscribe(
+    // const agentId = filterValue.agent || '';
+    this.dashboardService.getContractorsOperations(filterValue).subscribe(
       response => {
         this.dataSource.data = response.data;
       },
