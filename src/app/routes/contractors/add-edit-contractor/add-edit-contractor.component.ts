@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { BaseResponse } from '@shared/interfaces/base-response';
+import { Contractor } from '@shared/interfaces/contractor.model';
 import { District } from '@shared/interfaces/district.model';
 import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
@@ -81,7 +82,7 @@ export class AddEditContractorComponent implements OnInit, OnDestroy {
       phone: ['', Validators.required],
       ghanaPostAddress: ['', Validators.maxLength(50)],
       officeAddress: ['', Validators.maxLength(250)],
-      selectedDistricts: [[], Validators.required],
+      assignedDistricts: [[], Validators.required],
     });
     if (this.isEditMode) {
       this.contractorForm.addControl(
@@ -91,24 +92,47 @@ export class AddEditContractorComponent implements OnInit, OnDestroy {
     }
   }
 
-  //FIXME: Will be changed based on api response
   private loadContractorData(id: string): void {
-    // this.contractorsSub = this.apiService
-    //   .triggerApiRequest(EndPoint.GET_CONTRACTOR_BY_ID, HttpVerb.GET, { id })
-    //   .subscribe({
-    //     next: contractor => {
-    //       // this.contractorForm.patchValue(contractor);
-    //     },
-    //   });
+    this.contractorsSub = this.apiService
+      .triggerApiRequest<
+        BaseResponse<Contractor>
+      >(EndPoint.GET_CONTRACTOR_BY_ID, HttpVerb.GET, { id })
+      .subscribe({
+        next: response => {
+          if (response && response.status.code === 0 && response.data) {
+            const contractor = response.data;
+
+            this.contractorForm.patchValue({
+              name: contractor.name || '',
+              contactPersonName: contractor.contactPersonName || '',
+              phone: contractor.phone || '',
+              ghanaPostAddress: contractor.ghanaPostAddress || '',
+              officeAddress: contractor.officeAddress || '',
+              assignedDistricts: contractor.assignedDistricts || [],
+            });
+
+            if (this.isEditMode && contractor.code) {
+              this.contractorForm.controls.code.setValue(contractor.code);
+            }
+          } else {
+            this.toastr.error('Failed to load contractor data');
+          }
+        },
+        error: () => {
+          this.toastr.error('An error occurred while fetching contractor data');
+        },
+      });
   }
 
   onSubmit(): void {
     if (this.contractorForm.invalid) return;
 
     const formData = this.contractorForm.value;
+
     if (this.isEditMode) {
+      const updatedData = { ...formData, id: this.contractorId };
       this.formSub = this.apiService
-        .triggerApiRequest(EndPoint.UPDATE_CONTRACTOR, HttpVerb.PUT, null, formData)
+        .triggerApiRequest(EndPoint.UPDATE_CONTRACTOR, HttpVerb.PUT, null, updatedData)
         .subscribe({
           next: () => {
             this.toastr.success('Contractor updated successfully');

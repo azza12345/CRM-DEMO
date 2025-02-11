@@ -24,9 +24,9 @@ export enum EndPoint {
   UPDATE_AGENT_STATUS = 'agents/{agentId}/status',
   GET_AGENT_BY_ID = 'agents',
   ADD_AGENT = 'agents/add',
-  UPDATE_CONTRACTOR = 'waiting1',
-  GET_CONTRACTOR_BY_ID = 'wainting2',
-  ADD_CONTRACTOR = 'waiting3',
+  UPDATE_CONTRACTOR = 'contractors/edit',
+  GET_CONTRACTOR_BY_ID = 'contractors',
+  ADD_CONTRACTOR = 'contractors/add',
   INSTALLED_METERS_DETAILS = 'meters/{meterId}/details',
   ASSIGN_METER_TO_AGENT = 'meters/assign-to-contractor',
 }
