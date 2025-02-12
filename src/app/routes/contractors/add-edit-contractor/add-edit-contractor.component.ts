@@ -83,7 +83,7 @@ export class AddEditContractorComponent implements OnInit, OnDestroy {
         '',
         [Validators.required, Validators.maxLength(50), StringValidator.isEmptyString],
       ],
-      phone: ['', [Validators.required, StringValidator.isEmptyString]],
+      phone: ['', Validators.required, StringValidator.isEmptyString],
       ghanaPostAddress: ['', Validators.maxLength(50)],
       officeAddress: ['', Validators.maxLength(250)],
       assignedDistricts: [[], Validators.required],

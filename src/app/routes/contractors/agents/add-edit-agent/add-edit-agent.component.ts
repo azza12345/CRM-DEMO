@@ -17,6 +17,7 @@ import { Agent } from '@shared/interfaces/agent.model';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { environment } from '@env/environment';
 import { StringValidator } from '@shared/validators/is-empty-string';
+import { Contractor } from '@shared/interfaces/contractor.model';
 
 @Component({
   selector: 'app-add-edit-agent',
@@ -49,6 +50,8 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
   private routeSub!: Subscription;
   private agentSub!: Subscription;
   private formSub!: Subscription;
+  contractorsSub!: Subscription;
+  contractorName?: string;
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   ngOnInit(): void {
@@ -58,6 +61,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
 
       this.isEditMode = !!this.agentId;
       this.initializeForm();
+      this.fetchContractorDetails();
       if (this.isEditMode) {
         this.loadAgentData(this.agentId!);
       }
@@ -73,6 +77,9 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     }
     if (this.formSub) {
       this.formSub.unsubscribe();
+    }
+    if (this.contractorsSub) {
+      this.contractorsSub.unsubscribe();
     }
   }
 
@@ -140,6 +147,17 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     }
   }
 
+  fetchContractorDetails(): void {
+    this.contractorsSub = this.apiService
+      .triggerApiRequest<
+        BaseResponse<Contractor>
+      >(EndPoint.GET_CONTRACTOR_BY_ID, HttpVerb.GET, { id: this.contractorId })
+      .subscribe({
+        next: res => {
+          this.contractorName = res.data.name;
+        },
+      });
+  }
   onSubmit(): void {
     if (this.agentForm.invalid) return;
 
@@ -150,7 +168,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     formData.append('name', formValue.name);
     formData.append('userName', formValue.userName);
     formData.append('ghanaCard', formValue.ghanaCard);
-    formData.append('phone', formValue.phone);
+    formData.append('mobile', formValue.phone);
     formData.append('email', formValue.email);
     formData.append('status', formValue.status);
     formData.append('image', formValue.image);

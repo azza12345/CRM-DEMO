@@ -8,13 +8,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Agent } from '@shared/interfaces/agent.model';
-import { Subscription, takeUntil, takeWhile } from 'rxjs';
+import { of, Subscription, switchMap, takeUntil, takeWhile } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '@shared/services/helper.service';
 import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
+import { BaseResponse } from '@shared/interfaces/base-response';
+import { AgentDetailsDialogComponent } from './agent-details-dialog/agent-details-dialog.component';
+import { Contractor } from '@shared/interfaces/contractor.model';
 
 @Component({
   selector: 'app-agents',
@@ -36,6 +39,9 @@ export class AgentsComponent implements OnInit, OnDestroy {
   contractorId!: string;
   filters: any = {};
   alive = false;
+  viewDetailsSub!: Subscription;
+  contractorsSub!: Subscription;
+  contractorName?: string;
 
   rowClassFormatter: MtxGridRowClassFormatter = {
     'disabled-state': (data, index) => data.state === 'disabled',
@@ -46,7 +52,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     { header: 'Name', field: 'name', sortable: true },
     { header: 'Email', field: 'email', sortable: true },
     { header: 'Ghana Card', field: 'ghanaCard' },
-    { header: 'Phone', field: 'phone' },
+    { header: 'Phone', field: 'mobile' },
     {
       header: 'State',
       field: 'state',
@@ -56,7 +62,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
       sortable: true,
       formatter: (rowData: Agent) => (rowData.isActive ? ' Enabled' : 'Disabled'),
     },
-    { header: 'Actions', field: 'actions' as keyof Agent },
+    { header: 'Actions', field: 'actions' as keyof Agent, width: '170px' },
   ];
   filterControls: FilterControl[] = [
     {
@@ -67,7 +73,6 @@ export class AgentsComponent implements OnInit, OnDestroy {
   ];
   private routeSub!: Subscription;
 
-  //FIXME: gonna be changed when API is Ready
   endpoint!: EndPoint;
   url!: string;
   httpVerb: HttpVerb = HttpVerb.GET;
@@ -84,8 +89,8 @@ export class AgentsComponent implements OnInit, OnDestroy {
         const url = HelperService.formatEndpoint(EndPoint.GET_AGENTS_BY_CONTRACTOR_ID, {
           contractorId: this.contractorId,
         });
-
         this.endpoint = url as EndPoint;
+        this.fetchContractorDetails();
       }
     });
   }
@@ -94,14 +99,35 @@ export class AgentsComponent implements OnInit, OnDestroy {
     if (this.routeSub) {
       this.routeSub.unsubscribe();
     }
+    if (this.viewDetailsSub) {
+      this.viewDetailsSub.unsubscribe();
+    }
   }
   onFilterChanged(filterValues: any): void {
     this.filters = filterValues;
   }
 
-  viewDetails(agent: Agent): void {
-    alert(`Viewing details for ${agent.name}`);
-  }
+  // openViewDetailsDialog(id: number): void {
+  //   this.viewDetailsSub = this.apiService
+  //     .triggerApiRequest<BaseResponse<Agent>>(EndPoint.GET_AGENT_BY_ID, HttpVerb.GET, { id })
+  //     .pipe(
+  //       switchMap(response => {
+  //         const agent: Agent = response.data;
+  //         return of(agent);
+  //       })
+  //     )
+  //     .subscribe({
+  //       next: agent => {
+  //         this.dialog.open<AgentDetailsDialogComponent>(AgentDetailsDialogComponent, {
+  //           width: '744px',
+  //           data: {
+  //             title: 'Agent Details',
+  //             agent,
+  //           },
+  //         });
+  //       },
+  //     });
+  // }
   toggleAgentState(agent: Agent): void {
     const dialogRef = this.dialog.open<AdaptiveDialogComponent>(AdaptiveDialogComponent, {
       width: '400px',
@@ -135,7 +161,15 @@ export class AgentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  editAgent(agent: Agent): void {
-    alert(`Editing ${agent.name}`);
+  fetchContractorDetails(): void {
+    this.contractorsSub = this.apiService
+      .triggerApiRequest<
+        BaseResponse<Contractor>
+      >(EndPoint.GET_CONTRACTOR_BY_ID, HttpVerb.GET, { id: this.contractorId })
+      .subscribe({
+        next: res => {
+          this.contractorName = res.data.name;
+        },
+      });
   }
 }

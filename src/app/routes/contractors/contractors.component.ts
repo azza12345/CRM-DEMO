@@ -28,7 +28,7 @@ export class ContractorsComponent {
   private router = inject(Router);
   filters: any = {};
   columns: MtxGridColumn[] = [
-    // { header: 'Code', field: 'code', sortable: true },
+    { header: 'Code', field: 'code', sortable: true },
     { header: 'Name', field: 'name', sortable: true },
     //{ header: 'NationalId', field: 'nationalID', sortable: true },
     { header: 'Office Address', field: 'officeAddress' },
