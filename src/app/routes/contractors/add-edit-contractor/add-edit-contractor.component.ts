@@ -14,6 +14,7 @@ import { BaseResponse } from '@shared/interfaces/base-response';
 import { Contractor } from '@shared/interfaces/contractor.model';
 import { District } from '@shared/interfaces/district.model';
 import { ApiService } from '@shared/services/api.service';
+import { StringValidator } from '@shared/validators/is-empty-string';
 import { ToastrService } from 'ngx-toastr';
 import { map, Observable, Subscription } from 'rxjs';
 
@@ -77,9 +78,12 @@ export class AddEditContractorComponent implements OnInit, OnDestroy {
 
   private initializeForm(): void {
     this.contractorForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(50)]],
-      contactPersonName: ['', [Validators.required, Validators.maxLength(50)]],
-      phone: ['', Validators.required],
+      name: ['', [Validators.required, Validators.maxLength(50), StringValidator.isEmptyString]],
+      contactPersonName: [
+        '',
+        [Validators.required, Validators.maxLength(50), StringValidator.isEmptyString],
+      ],
+      phone: ['', Validators.required, StringValidator.isEmptyString],
       ghanaPostAddress: ['', Validators.maxLength(50)],
       officeAddress: ['', Validators.maxLength(250)],
       assignedDistricts: [[], Validators.required],
