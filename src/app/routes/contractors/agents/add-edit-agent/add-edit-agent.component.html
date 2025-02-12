@@ -1,8 +1,14 @@
 <form [formGroup]="agentForm" (ngSubmit)="onSubmit()" class="custom-form">
   <mat-card class="card-border">
-    <mat-card-title class="secondary-title">
-      {{ isEditMode ? ('edit_agent' | translate) : ('add_agent' | translate) }}
-    </mat-card-title>
+    <div class="mb-4">
+      <mat-card-title class="secondary-title mb-1">
+        <span> {{ isEditMode ? ('edit_agent' | translate) : ('add_agent' | translate) }} </span>
+      </mat-card-title>
+      <div class="subtitle">
+        <span>For contractor :</span>
+        <span>{{ contractorName }}</span>
+      </div>
+    </div>
     <mat-card-content>
       <div class="row gx-5 justify-content-between">
         <div class="col-md-8">

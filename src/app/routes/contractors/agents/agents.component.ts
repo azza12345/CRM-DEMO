@@ -17,6 +17,7 @@ import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { AgentDetailsDialogComponent } from './agent-details-dialog/agent-details-dialog.component';
+import { Contractor } from '@shared/interfaces/contractor.model';
 
 @Component({
   selector: 'app-agents',
@@ -39,6 +40,8 @@ export class AgentsComponent implements OnInit, OnDestroy {
   filters: any = {};
   alive = false;
   viewDetailsSub!: Subscription;
+  contractorsSub!: Subscription;
+  contractorName?: string;
 
   rowClassFormatter: MtxGridRowClassFormatter = {
     'disabled-state': (data, index) => data.state === 'disabled',
@@ -86,8 +89,8 @@ export class AgentsComponent implements OnInit, OnDestroy {
         const url = HelperService.formatEndpoint(EndPoint.GET_AGENTS_BY_CONTRACTOR_ID, {
           contractorId: this.contractorId,
         });
-
         this.endpoint = url as EndPoint;
+        this.fetchContractorDetails();
       }
     });
   }
@@ -98,6 +101,9 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
     if (this.viewDetailsSub) {
       this.viewDetailsSub.unsubscribe();
+    }
+    if (this.contractorsSub) {
+      this.contractorsSub.unsubscribe();
     }
   }
   onFilterChanged(filterValues: any): void {
@@ -156,5 +162,17 @@ export class AgentsComponent implements OnInit, OnDestroy {
           (agent.state = agent.isActive ? 'disabled' : 'enabled');
       }
     });
+  }
+
+  fetchContractorDetails(): void {
+    this.contractorsSub = this.apiService
+      .triggerApiRequest<
+        BaseResponse<Contractor>
+      >(EndPoint.GET_CONTRACTOR_BY_ID, HttpVerb.GET, { id: this.contractorId })
+      .subscribe({
+        next: res => {
+          this.contractorName = res.data.name;
+        },
+      });
   }
 }
