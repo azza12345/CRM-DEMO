@@ -15,6 +15,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '@shared/services/helper.service';
 import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
+import { BaseResponse } from '@shared/interfaces/base-response';
+import { AgentDetailsDialogComponent } from './agent-details-dialog/agent-details-dialog.component';
+
 @Component({
   selector: 'app-agents',
   standalone: true,
@@ -36,6 +39,8 @@ export class AgentsComponent implements OnInit, OnDestroy {
   filters: any = {};
   alive = false;
   viewDetailsSub!: Subscription;
+  contractorsSub!: Subscription;
+  contractorName?: string;
 
   rowClassFormatter: MtxGridRowClassFormatter = {
     'disabled-state': (data, index) => data.state === 'disabled',
@@ -56,7 +61,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
       sortable: true,
       formatter: (rowData: Agent) => (rowData.isActive ? ' Enabled' : 'Disabled'),
     },
-    { header: 'Actions', field: 'actions' as keyof Agent },
+    { header: 'Actions', field: 'actions' as keyof Agent, width: '170px' },
   ];
   filterControls: FilterControl[] = [
     {
@@ -83,8 +88,8 @@ export class AgentsComponent implements OnInit, OnDestroy {
         const url = HelperService.formatEndpoint(EndPoint.GET_AGENTS_BY_CONTRACTOR_ID, {
           contractorId: this.contractorId,
         });
-
         this.endpoint = url as EndPoint;
+        this.fetchContractorDetails();
       }
     });
   }
@@ -93,9 +98,9 @@ export class AgentsComponent implements OnInit, OnDestroy {
     if (this.routeSub) {
       this.routeSub.unsubscribe();
     }
-    // if (this.viewDetailsSub) {
-    //   this.viewDetailsSub.unsubscribe();
-    // }
+    if (this.viewDetailsSub) {
+      this.viewDetailsSub.unsubscribe();
+    }
   }
   onFilterChanged(filterValues: any): void {
     this.filters = filterValues;
@@ -153,5 +158,17 @@ export class AgentsComponent implements OnInit, OnDestroy {
           (agent.state = agent.isActive ? 'disabled' : 'enabled');
       }
     });
+  }
+
+  fetchContractorDetails(): void {
+    this.contractorsSub = this.apiService
+      .triggerApiRequest<
+        BaseResponse<Contractor>
+      >(EndPoint.GET_CONTRACTOR_BY_ID, HttpVerb.GET, { id: this.contractorId })
+      .subscribe({
+        next: res => {
+          this.contractorName = res.data.name;
+        },
+      });
   }
 }
