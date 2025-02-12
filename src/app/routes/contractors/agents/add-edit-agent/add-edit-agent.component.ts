@@ -184,7 +184,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             this.toastr.success('Agent updated successfully');
-            this.router.navigate(['/agents']);
+            this.router.navigate(['/contractors']);
           },
         });
     } else {
@@ -193,7 +193,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             this.toastr.success('Agent added successfully');
-            this.router.navigate(['/agents']);
+            this.router.navigate(['/contractors']);
           },
         });
     }
