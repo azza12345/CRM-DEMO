@@ -168,7 +168,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     formData.append('name', formValue.name);
     formData.append('userName', formValue.userName);
     formData.append('ghanaCard', formValue.ghanaCard);
-    formData.append('mobile', formValue.phone);
+    formData.append('mobile', formValue.mobile);
     formData.append('email', formValue.email);
     formData.append('status', formValue.status);
     formData.append('image', formValue.image);

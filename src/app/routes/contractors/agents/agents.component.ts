@@ -52,7 +52,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     { header: 'Name', field: 'name', sortable: true },
     { header: 'Email', field: 'email', sortable: true },
     { header: 'Ghana Card', field: 'ghanaCard' },
-    { header: 'Phone', field: 'mobile' },
+    { header: 'Mobile', field: 'mobile' },
     {
       header: 'State',
       field: 'state',
