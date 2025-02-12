@@ -15,9 +15,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '@shared/services/helper.service';
 import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
-import { BaseResponse } from '@shared/interfaces/base-response';
-import { AgentDetailsDialogComponent } from './agent-details-dialog/agent-details-dialog.component';
-
 @Component({
   selector: 'app-agents',
   standalone: true,
@@ -49,7 +46,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     { header: 'Name', field: 'name', sortable: true },
     { header: 'Email', field: 'email', sortable: true },
     { header: 'Ghana Card', field: 'ghanaCard' },
-    { header: 'Phone', field: 'phone' },
+    { header: 'Phone', field: 'mobile' },
     {
       header: 'State',
       field: 'state',
@@ -96,35 +93,35 @@ export class AgentsComponent implements OnInit, OnDestroy {
     if (this.routeSub) {
       this.routeSub.unsubscribe();
     }
-    if (this.viewDetailsSub) {
-      this.viewDetailsSub.unsubscribe();
-    }
+    // if (this.viewDetailsSub) {
+    //   this.viewDetailsSub.unsubscribe();
+    // }
   }
   onFilterChanged(filterValues: any): void {
     this.filters = filterValues;
   }
 
-  openViewDetailsDialog(id: number): void {
-    this.viewDetailsSub = this.apiService
-      .triggerApiRequest<BaseResponse<Agent>>(EndPoint.GET_AGENT_BY_ID, HttpVerb.GET, { id })
-      .pipe(
-        switchMap(response => {
-          const agent: Agent = response.data;
-          return of(agent);
-        })
-      )
-      .subscribe({
-        next: agent => {
-          this.dialog.open<AgentDetailsDialogComponent>(AgentDetailsDialogComponent, {
-            width: '744px',
-            data: {
-              title: 'Agent Details',
-              agent,
-            },
-          });
-        },
-      });
-  }
+  // openViewDetailsDialog(id: number): void {
+  //   this.viewDetailsSub = this.apiService
+  //     .triggerApiRequest<BaseResponse<Agent>>(EndPoint.GET_AGENT_BY_ID, HttpVerb.GET, { id })
+  //     .pipe(
+  //       switchMap(response => {
+  //         const agent: Agent = response.data;
+  //         return of(agent);
+  //       })
+  //     )
+  //     .subscribe({
+  //       next: agent => {
+  //         this.dialog.open<AgentDetailsDialogComponent>(AgentDetailsDialogComponent, {
+  //           width: '744px',
+  //           data: {
+  //             title: 'Agent Details',
+  //             agent,
+  //           },
+  //         });
+  //       },
+  //     });
+  // }
   toggleAgentState(agent: Agent): void {
     const dialogRef = this.dialog.open<AdaptiveDialogComponent>(AdaptiveDialogComponent, {
       width: '400px',

@@ -80,9 +80,9 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     this.agentForm = this.fb.group({
       image: [null],
       name: ['', [Validators.required, StringValidator.isEmptyString]],
-      userName: ['', [Validators.required , StringValidator.isEmptyString]],
-      ghanaCard: ['', [Validators.required , StringValidator.isEmptyString]],
-      phone: ['', [Validators.required , StringValidator.isEmptyString]],
+      userName: ['', [Validators.required, StringValidator.isEmptyString]],
+      ghanaCard: ['', [Validators.required, StringValidator.isEmptyString]],
+      phone: ['', [Validators.required, StringValidator.isEmptyString]],
       email: ['', [Validators.email]],
       status: [null],
     });
@@ -150,7 +150,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
     formData.append('name', formValue.name);
     formData.append('userName', formValue.userName);
     formData.append('ghanaCard', formValue.ghanaCard);
-    formData.append('phone', formValue.phone);
+    formData.append('mobile', formValue.phone);
     formData.append('email', formValue.email);
     formData.append('status', formValue.status);
     formData.append('image', formValue.image);
