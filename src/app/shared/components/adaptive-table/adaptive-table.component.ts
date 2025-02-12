@@ -34,7 +34,7 @@ export class AdaptiveTableComponent implements OnInit, OnChanges, AfterViewInit 
   @Input() filters: any = {};
   @Input() columns: MtxGridColumn[] = [];
   @Input() isLoading: boolean = false;
-  @Input() pageSizeOptions: number[] = [5, 10, 50, 100];
+  @Input() pageSizeOptions: number[] = [10, 50, 100];
   @Input() additionalParams: any = {};
   @Input() httpMethod: HttpVerb = HttpVerb.GET;
   @Input() rowClassFormatter: MtxGridRowClassFormatter = {};
@@ -46,7 +46,7 @@ export class AdaptiveTableComponent implements OnInit, OnChanges, AfterViewInit 
   }>();
 
   pageIndex = 0;
-  pageSize = 5;
+  pageSize = 10;
   totalRecords = 0;
   data$!: Observable<any[]>;
   private fetchSubject = new BehaviorSubject<void>(undefined);
@@ -69,7 +69,7 @@ export class AdaptiveTableComponent implements OnInit, OnChanges, AfterViewInit 
 
   resetPagination(): void {
     this.pageIndex = 0;
-    this.pageSize = 5;
+    this.pageSize = 10;
     this.totalRecords = 0;
   }
 
