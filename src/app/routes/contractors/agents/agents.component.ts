@@ -59,7 +59,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
       sortable: true,
       formatter: (rowData: Agent) => (rowData.isActive ? ' Enabled' : 'Disabled'),
     },
-    { header: 'Actions', field: 'actions' as keyof Agent },
+    { header: 'Actions', field: 'actions' as keyof Agent, width: '170px' },
   ];
   filterControls: FilterControl[] = [
     {
