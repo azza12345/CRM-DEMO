@@ -17,6 +17,7 @@ import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { AgentDetailsDialogComponent } from './agent-details-dialog/agent-details-dialog.component';
+import { Contractor } from '@shared/interfaces/contractor.model';
 
 @Component({
   selector: 'app-agents',
