@@ -120,3 +120,14 @@ app-auth-layout {
   flex-grow: 1;
   padding-bottom: $footer-height;
 }
+
+// global subtitle to be used with two spans ( ex: for contractor : contr.name )
+.subtitle {
+  margin-top: 5px;
+  span:first-child {
+    color: $text-secondary-color;
+  }
+  span {
+    color: #000;
+  }
+}
