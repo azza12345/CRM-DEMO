@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "allowedCommonJsDependencies": ["base64-js", "moment"],
+            "allowedCommonJsDependencies": ["base64-js", "moment","sha.js"],
             "outputPath": "dist/meter-installments",
             "index": "src/index.html",
             "browser": "src/main.ts",
