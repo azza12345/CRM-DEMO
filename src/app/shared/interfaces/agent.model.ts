@@ -1,5 +1,6 @@
 //FIXME: this interface will be changed based on api resonse
 export interface Agent {
+  mobile: string;
   id: string;
   code: string;
   userName: string;
@@ -7,7 +8,7 @@ export interface Agent {
   image?: string;
   email: string;
   ghanaCard: string;
-  phone: string;
+  // phone: string;
   state: 'enabled' | 'disabled';
   isActive: boolean;
   actionIcon?: string;

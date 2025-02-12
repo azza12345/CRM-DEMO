@@ -89,7 +89,7 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
       name: ['', [Validators.required, StringValidator.isEmptyString]],
       userName: ['', [Validators.required, StringValidator.isEmptyString]],
       ghanaCard: ['', [Validators.required, StringValidator.isEmptyString]],
-      phone: ['', [Validators.required, StringValidator.isEmptyString]],
+      mobile: ['', [Validators.required, StringValidator.isEmptyString]],
       email: ['', [Validators.email]],
       status: [null],
     });
