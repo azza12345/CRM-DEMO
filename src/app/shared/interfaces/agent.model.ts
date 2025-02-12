@@ -2,8 +2,9 @@
 export interface Agent {
   id: string;
   code: string;
-  amcUsername: string;
+  userName: string;
   name: string;
+  image?: string;
   email: string;
   ghanaCard: string;
   phone: string;

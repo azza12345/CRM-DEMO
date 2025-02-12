@@ -8,13 +8,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Agent } from '@shared/interfaces/agent.model';
-import { Subscription, takeUntil, takeWhile } from 'rxjs';
+import { of, Subscription, switchMap, takeUntil, takeWhile } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '@shared/services/helper.service';
 import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
+import { BaseResponse } from '@shared/interfaces/base-response';
+import { AgentDetailsDialogComponent } from './agent-details-dialog/agent-details-dialog.component';
 
 @Component({
   selector: 'app-agents',
@@ -36,6 +38,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
   contractorId!: string;
   filters: any = {};
   alive = false;
+  viewDetailsSub!: Subscription;
 
   rowClassFormatter: MtxGridRowClassFormatter = {
     'disabled-state': (data, index) => data.state === 'disabled',
@@ -67,7 +70,6 @@ export class AgentsComponent implements OnInit, OnDestroy {
   ];
   private routeSub!: Subscription;
 
-  //FIXME: gonna be changed when API is Ready
   endpoint!: EndPoint;
   url!: string;
   httpVerb: HttpVerb = HttpVerb.GET;
@@ -94,13 +96,34 @@ export class AgentsComponent implements OnInit, OnDestroy {
     if (this.routeSub) {
       this.routeSub.unsubscribe();
     }
+    if (this.viewDetailsSub) {
+      this.viewDetailsSub.unsubscribe();
+    }
   }
   onFilterChanged(filterValues: any): void {
     this.filters = filterValues;
   }
 
-  viewDetails(agent: Agent): void {
-    alert(`Viewing details for ${agent.name}`);
+  openViewDetailsDialog(id: number): void {
+    this.viewDetailsSub = this.apiService
+      .triggerApiRequest<BaseResponse<Agent>>(EndPoint.GET_AGENT_BY_ID, HttpVerb.GET, { id })
+      .pipe(
+        switchMap(response => {
+          const agent: Agent = response.data;
+          return of(agent);
+        })
+      )
+      .subscribe({
+        next: agent => {
+          this.dialog.open<AgentDetailsDialogComponent>(AgentDetailsDialogComponent, {
+            width: '744px',
+            data: {
+              title: 'Agent Details',
+              agent,
+            },
+          });
+        },
+      });
   }
   toggleAgentState(agent: Agent): void {
     const dialogRef = this.dialog.open<AdaptiveDialogComponent>(AdaptiveDialogComponent, {
@@ -133,9 +156,5 @@ export class AgentsComponent implements OnInit, OnDestroy {
           (agent.state = agent.isActive ? 'disabled' : 'enabled');
       }
     });
-  }
-
-  editAgent(agent: Agent): void {
-    alert(`Editing ${agent.name}`);
   }
 }
