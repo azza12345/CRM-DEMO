@@ -6,14 +6,20 @@ import { admin, Menu } from '@core';
 import { Token } from './interface';
 import { of } from 'rxjs';
 import { environment } from '@env/environment';
+import { EncodingService } from '@shared/services/encoding.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  constructor(protected http: HttpClient) {}
+  constructor(
+    protected http: HttpClient,
+    private _encodingService: EncodingService
+  ) {}
 
   login(userName: string, password: string) {
+    // password = this._encodingService.encryptPassword(password) as string;
+
     return this.http
       .post<Token>(`${environment.ApiUrl}/dashboard/login`, {
         userName,

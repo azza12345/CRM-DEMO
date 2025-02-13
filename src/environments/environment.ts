@@ -8,4 +8,6 @@ export const environment = {
   releaseDate: '2025',
   versionNumber: '1.0.0',
   maxImageSize: 5 * 1024 * 1024,
+  Key: 'CgkiYpej4VYacsKnFom7ZQ==',
+  IV: 'kTo2ADtsGEYKtrzxFjFk5A==',
 };
