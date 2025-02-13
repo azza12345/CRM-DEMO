@@ -109,6 +109,8 @@
   "contact_person_required": "Contact person name is required",
   "phone": "Phone",
   "phone_required": "Phone number is required",
+  "mobile_required": "Mobile number is required",
+  "mobile":"Mobile",
   "ghana_post_address": "Ghana Post Address",
   "office_address": "Office Address",
   "upload_image": "Upload Image",
