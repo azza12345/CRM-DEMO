@@ -1,12 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { MatCardModule } from '@angular/material/card';
@@ -50,11 +43,10 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit(): void {
     this.initializeForm();
   }
-
   private initializeForm(): void {
     this.changePasswordForm = this.fb.group({
       oldPassword: ['', Validators.required],
-      newPassword: ['', Validators.required],
+      newPassword: ['', [Validators.required, CustomValidators.strongPassword()]],
       confirmPassword: ['', [Validators.required, CustomValidators.confirmPassword('newPassword')]],
     });
   }

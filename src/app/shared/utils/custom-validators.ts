@@ -10,10 +10,20 @@ export class CustomValidators {
         return null;
       }
       const password = passwordControl.value;
-      passwordControl.valueChanges.subscribe(() => {
-        control.updateValueAndValidity({ onlySelf: true });
-      });
       return password !== confirmPassword ? { confirmPassword: true } : null;
+    };
+  }
+
+  static strongPassword(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const password = control.value;
+
+      if (!password) {
+        return null;
+      }
+
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+      return passwordRegex.test(password) ? null : { weakPassword: true };
     };
   }
 }
