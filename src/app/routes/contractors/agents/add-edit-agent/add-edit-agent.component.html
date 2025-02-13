@@ -55,10 +55,10 @@
 
             <div class="col">
               <mat-form-field color="accent" appearance="outline">
-                <mat-label>{{ 'phone' | translate }}</mat-label>
-                <input matInput formControlName="phone" />
-                @if (agentForm.controls.phone.errors?.required) {
-                  <mat-error>{{ 'phone_required' | translate }}</mat-error>
+                <mat-label>{{ 'mobile' | translate }}</mat-label>
+                <input matInput formControlName="mobile" />
+                @if (agentForm.controls.mobile.errors?.required) {
+                  <mat-error>{{ 'mobile_required' | translate }}</mat-error>
                 }
               </mat-form-field>
             </div>
