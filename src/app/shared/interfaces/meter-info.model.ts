@@ -1,5 +1,5 @@
 export interface BaseMeter {
-  id: number;
+  meterId: number;
   transactionId: number;
   type: any;
   meterSerial: string;
