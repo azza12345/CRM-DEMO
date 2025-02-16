@@ -66,21 +66,27 @@ export class AgentsComponent implements OnInit, OnDestroy {
   ];
   filterControls: FilterControl[] = [
     {
-      formControlName: 'search',
-      label: 'Search',
+      formControlName: 'Name',
+      label: 'Search By Name',
       type: 'text',
+      optionLabel: 'name',
+      optionVal: 'Name',
     },
   ];
+  httpVerb: HttpVerb = HttpVerb.GET;
+
+  constructor() {}
+  onFilterChanged(filterValues: any): void {
+    this.filters = filterValues;
+  }
+
   private routeSub!: Subscription;
 
   endpoint!: EndPoint;
   url!: string;
-  httpVerb: HttpVerb = HttpVerb.GET;
 
   private apiService = inject(ApiService);
   private toastr = inject(ToastrService);
-
-  constructor() {}
 
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.subscribe(params => {
@@ -102,9 +108,6 @@ export class AgentsComponent implements OnInit, OnDestroy {
     if (this.viewDetailsSub) {
       this.viewDetailsSub.unsubscribe();
     }
-  }
-  onFilterChanged(filterValues: any): void {
-    this.filters = filterValues;
   }
 
   // openViewDetailsDialog(id: number): void {
