@@ -141,8 +141,6 @@ export class AgentsComponent implements OnInit, OnDestroy {
   //     });
   // }
   toggleAgentState(agent: Agent): void {
-    console.log('agent activity:', agent.isActive);
-
     const dialogRef = this.dialog.open<AdaptiveDialogComponent>(AdaptiveDialogComponent, {
       width: '400px',
       data: {
@@ -163,7 +161,6 @@ export class AgentsComponent implements OnInit, OnDestroy {
           .triggerApiRequest(url as EndPoint, HttpVerb.PUT)
           .subscribe({
             next: () => {
-              this.cdr.detectChanges();
               this.filters = { ...this.filters };
               this.toastr.success('Agent updated successfully');
             },
