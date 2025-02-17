@@ -1,4 +1,12 @@
-import { Component, inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { FilterComponent } from '../../../shared/components/filter/filter.component';
 import { AdaptiveTableComponent } from '../../../shared/components/adaptive-table/adaptive-table.component';
 import { EndPoint, HttpVerb } from '@shared/enums';
@@ -36,6 +44,7 @@ import { Contractor } from '@shared/interfaces/contractor.model';
 export class AgentsComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
+  private cdr = inject(ChangeDetectorRef);
   contractorId!: string;
   filters: any = {};
   alive = false;
@@ -55,9 +64,9 @@ export class AgentsComponent implements OnInit, OnDestroy {
     { header: 'Mobile', field: 'mobile' },
     {
       header: 'State',
-      field: 'state',
+      field: 'isActive',
       class: data => {
-        return data?.state === 'enabled' ? 'text-success' : '';
+        return data?.isActive === true ? 'text-success' : '';
       },
       sortable: true,
       formatter: (rowData: Agent) => (rowData.isActive ? ' Enabled' : 'Disabled'),
@@ -132,6 +141,8 @@ export class AgentsComponent implements OnInit, OnDestroy {
   //     });
   // }
   toggleAgentState(agent: Agent): void {
+    console.log('agent activity:', agent.isActive);
+
     const dialogRef = this.dialog.open<AdaptiveDialogComponent>(AdaptiveDialogComponent, {
       width: '400px',
       data: {
@@ -152,8 +163,9 @@ export class AgentsComponent implements OnInit, OnDestroy {
           .triggerApiRequest(url as EndPoint, HttpVerb.PUT)
           .subscribe({
             next: () => {
+              this.cdr.detectChanges();
+              this.filters = { ...this.filters };
               this.toastr.success('Agent updated successfully');
-              agent.isActive = !agent.isActive;
             },
             error: () => {
               this.toastr.error('Failed to update agent status');
