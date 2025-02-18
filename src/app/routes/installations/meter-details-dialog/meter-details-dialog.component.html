@@ -9,8 +9,10 @@
             <app-meter-info [details]="oldMeterDetails"></app-meter-info>
             <app-spare-parts-table [spareParts]="oldMeterSpareParts"> </app-spare-parts-table>
           </div>
-          <div class="meter-image">
-            <img [src]="data.oldMeter.image" alt="old meter image" />
+
+
+          <div class="meter-image" *ngIf="data.oldMeter.image">
+            <img [src]="getImageUrl(data.oldMeter.image)" alt="Old Meter Image" />
           </div>
         </div>
       </mat-tab>
@@ -21,8 +23,8 @@
             <app-meter-info [details]="newMeterDetails"></app-meter-info>
             <app-spare-parts-table [spareParts]="newMeterSpareParts"> </app-spare-parts-table>
           </div>
-          <div class="meter-image">
-            <img [src]="data.newMeter.image" alt="new meter image" />
+          <div class="meter-image" *ngIf="data.newMeter.image">
+            <img [src]="getImageUrl(data.newMeter.image)" alt="New Meter Image" />
           </div>
         </div>
       </mat-tab>
