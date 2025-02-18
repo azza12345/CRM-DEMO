@@ -113,6 +113,9 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
         next: response => {
           this.agentForm.patchValue(response.data);
 
+          if (response.data.image) {
+            this.imagePreview = `${environment.ImageUrl}${response.data.image}`;
+          }
           // this.agentForm.get('name')?.setValue(response.data?.fullName)
         },
       });

@@ -10,4 +10,5 @@ export const environment = {
   maxImageSize: 5 * 1024 * 1024,
   Key: 'CgkiYpej4VYacsKnFom7ZQ==',
   IV: 'kTo2ADtsGEYKtrzxFjFk5A==',
+  ImageUrl: 'http://localhost:5218',
 };
