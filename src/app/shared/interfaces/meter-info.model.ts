@@ -13,10 +13,10 @@ export interface BaseMeter {
   meterModelId: any;
   meterTypeId: number;
   meterType: string;
-  replacement_reason: string;
+  replacement_Reason: string;
   meterMake: string;
   meterModel: string;
-  meterDisplay: string;
+  meterDisplayNotes: string;
   materialDetails: MeterItem[];
 }
 

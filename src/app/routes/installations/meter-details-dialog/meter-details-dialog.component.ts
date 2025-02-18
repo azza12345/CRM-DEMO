@@ -4,6 +4,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MeterInfoComponent } from './meter-info/meter-info.component';
 import { SparePartsTableComponent } from './spare-parts-table/spare-parts-table.component';
 import { BaseMeter, MeterItem } from '@shared/interfaces/meter-info.model';
+import { environment } from '@env/environment';
 
 interface MeterDetail {
   label: string;
@@ -43,23 +44,35 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Meter Serial', value: this.data.oldMeter.meterSerial },
         { label: 'Final Reading', value: this.data.oldMeter.lastReading },
         { label: 'Meter Type', value: this.data.oldMeter.meterType },
-        { label: 'Replacement Reason', value: this.data.oldMeter.replacement_reason },
+        { label: 'Replacement Reason', value: this.data.oldMeter.replacement_Reason },
         { label: 'Final Balance', value: this.data.oldMeter.lastPurchase },
-        { label: 'Meter Display', value: this.data.oldMeter.meterDisplay },
+        { label: 'Meter Display', value: this.data.oldMeter.meterDisplayNotes },
         { label: 'Meter Make', value: this.data.oldMeter.meterMake },
         { label: 'Manufacture Year', value: this.data.oldMeter.meterYearOfManufacture },
+        {
+          label: 'Image',
+          value: this.data.oldMeter.image
+            ? `${environment.ImageUrl}${this.data.oldMeter.image}`
+            : null,
+        },
       ];
       this.oldMeterSpareParts = this.mapMeterItems(this.data.oldMeter.materialDetails);
     }
 
     if (this.data.newMeter) {
       this.newMeterDetails = [
-        { label: 'Meter Type', value: this.data.newMeter.meterType },
+        { label: 'Meter Type', value: this.data.newMeter.meterMake },
         { label: 'Installation Type', value: this.data.newMeter.type },
         { label: 'Meter Make', value: this.data.newMeter.meterMake },
         { label: 'Installation Date', value: this.data.newMeter.installationDate },
         { label: 'Meter Model', value: this.data.newMeter.meterModel },
         { label: 'Location', value: this.data.newMeter.location },
+        {
+          label: 'Image',
+          value: this.data.newMeter.image
+            ? `${environment.ImageUrl}${this.data.oldMeter.image}`
+            : null,
+        },
       ];
       this.newMeterSpareParts = this.mapMeterItems(this.data.newMeter.materialDetails);
     }
