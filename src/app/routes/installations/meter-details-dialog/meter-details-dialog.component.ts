@@ -19,7 +19,7 @@ interface MeterDetail {
 })
 export class MeterDetailsDialogComponent implements OnInit {
   getImageUrl(imagePath: string | null): string {
-    return imagePath ? `${environment.ImageUrl}${imagePath}` : 'assets/images/avatar-default.jpg';
+    return imagePath ? `${environment.ImageUrl}${imagePath}` : 'assets/images/avatar.png';
   }
 
   oldMeterDetails: MeterDetail[] = [];
