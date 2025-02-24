@@ -19,7 +19,7 @@ interface MeterDetail {
 })
 export class MeterDetailsDialogComponent implements OnInit {
   getImageUrl(imagePath: string | null): string {
-    return imagePath ? `${environment.ImageUrl}${imagePath}` : 'assets/images/avatar.png';
+    return imagePath ? `${environment.ImageUrl}${imagePath}` : 'src/assets/images/noImage.jpg';
   }
 
   oldMeterDetails: MeterDetail[] = [];
@@ -44,6 +44,8 @@ export class MeterDetailsDialogComponent implements OnInit {
 
   private prepareMeterDetails(): void {
     if (this.data.oldMeter) {
+      this.data.oldMeter.image = this.data.oldMeter.image || 'src/assets/images/noImage.jpg';
+
       this.oldMeterDetails = [
         { label: 'Meter Serial', value: this.data.oldMeter.meterSerial },
         { label: 'Final Reading', value: this.data.oldMeter.lastReading },
@@ -55,10 +57,16 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Manufacture Year', value: this.data.oldMeter.meterYearOfManufacture },
       ];
       this.oldMeterSpareParts = this.mapMeterItems(this.data.oldMeter.materialDetails);
+      if (this.data.oldMeter) {
+        this.oldMeterSpareParts = this.mapMeterItems(this.data.oldMeter.materialDetails) ?? [];
+      }
     }
 
     if (this.data.newMeter) {
+      this.data.newMeter.image = this.data.newMeter.image || 'src/assets/images/noImage.jpg';
+
       this.newMeterDetails = [
+        { label: 'Meter Serial', value: this.data.newMeter.meterSerial },
         { label: 'Meter Type', value: this.data.newMeter.meterType },
         { label: 'Installation Type', value: this.data.newMeter.type },
         { label: 'Meter Make', value: this.data.newMeter.meterMake },
@@ -67,6 +75,9 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Location', value: this.data.newMeter.location },
       ];
       this.newMeterSpareParts = this.mapMeterItems(this.data.newMeter.materialDetails);
+      if (this.data.newMeter) {
+        this.newMeterSpareParts = this.mapMeterItems(this.data.newMeter.materialDetails) ?? [];
+      }
     }
   }
 

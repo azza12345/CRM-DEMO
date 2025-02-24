@@ -3,29 +3,38 @@
 <div class="meter-details-container">
   @if (data.showTabs) {
     <mat-tab-group color="accent">
-      <mat-tab label="Old Meter">
+      <mat-tab label="New Meter">
         <div class="tab-container border px-3">
+
           <div>
-            <app-meter-info [details]="oldMeterDetails"></app-meter-info>
-            <app-spare-parts-table [spareParts]="oldMeterSpareParts"></app-spare-parts-table>
-          </div>
-          @if (data.oldMeter.image) {
+            <app-meter-info [details]="newMeterDetails"></app-meter-info>
+            @if (newMeterSpareParts.length > 0) {
+              <app-spare-parts-table [spareParts]="newMeterSpareParts"></app-spare-parts-table>
+            }
+
+            </div>
+          @if (data.newMeter.image) {
             <div class="meter-image">
-              <img [src]="getImageUrl(data.oldMeter.image)" alt="Old Meter Image" />
+
+              <img [src]="getImageUrl(data.newMeter.image)" alt="New Meter Image" />
             </div>
           }
         </div>
       </mat-tab>
 
-      <mat-tab label="New Meter">
+      <mat-tab label="Old Meter">
         <div class="tab-container border px-3">
           <div>
-            <app-meter-info [details]="newMeterDetails"></app-meter-info>
-            <app-spare-parts-table [spareParts]="newMeterSpareParts"></app-spare-parts-table>
+            <app-meter-info [details]="oldMeterDetails"></app-meter-info>
+            @if (oldMeterSpareParts.length > 0) {
+              <app-spare-parts-table [spareParts]="oldMeterSpareParts"></app-spare-parts-table>
+            }
+
+
           </div>
-          @if (data.newMeter.image) {
+          @if (data.oldMeter.image) {
             <div class="meter-image">
-              <img [src]="getImageUrl(data.newMeter.image)" alt="New Meter Image" />
+              <img [src]="getImageUrl(data.oldMeter.image)" alt="Old Meter Image" />
             </div>
           }
         </div>
@@ -37,7 +46,10 @@
     <div class="tab-container border px-3">
       <div>
         <app-meter-info [details]="newMeterDetails"></app-meter-info>
-        <app-spare-parts-table [spareParts]="newMeterSpareParts"> </app-spare-parts-table>
+        @if(newMeterSpareParts.length > 0){
+          <app-spare-parts-table [spareParts]="newMeterSpareParts"> </app-spare-parts-table>
+
+        }
       </div>
       <div class="meter-image">
         <img [src]="data.newMeter.image" alt="new meter image" />
