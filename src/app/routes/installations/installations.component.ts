@@ -189,6 +189,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       >(EndPoint.ASSIGN_METER_TO_AGENT, HttpVerb.POST, null, assignMeterToContractorRequest)
       .subscribe({
         next: () => {
+          this.filters = { ...this.filters };
           this.toastr.success('meter assigned to contractor successfully');
         },
         error: () => {},
