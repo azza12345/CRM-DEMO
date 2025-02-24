@@ -55,6 +55,8 @@ export class UserComponent implements OnInit {
       .pipe(
         tap(user => {
           this.user = user;
+
+          if (!user.avatar) user.avatar = './assets/images/avatar.png';
           this.user.userName = this.tokenService.getUsername();
         }),
         debounceTime(10)

@@ -25,7 +25,11 @@ export class LoginService {
         userName,
         password,
       })
-      .pipe(map((response: any) => response.data.accessToken));
+      .pipe(
+        map((response: any) => {
+          return response.data.accessToken;
+        })
+      );
   }
 
   refresh(params: Record<string, any>) {
