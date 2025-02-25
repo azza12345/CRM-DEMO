@@ -8,10 +8,11 @@
         </p>
       </div>
     }
-    @if (detail.label === 'Location') {
+    @if (detail.label === 'Location'  && detail.value) {
       <div class="meter-location">
         <a [href]="detail.value" target="_blank">View on Map</a>
       </div>
     }
+
   }
 </div>
