@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 export interface MeterDetail {
@@ -7,7 +8,7 @@ export interface MeterDetail {
 @Component({
   selector: 'app-meter-info',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './meter-info.component.html',
   styleUrl: './meter-info.component.scss',
 })

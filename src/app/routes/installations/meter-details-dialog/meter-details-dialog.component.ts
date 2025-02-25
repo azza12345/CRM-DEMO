@@ -5,6 +5,8 @@ import { MeterInfoComponent } from './meter-info/meter-info.component';
 import { SparePartsTableComponent } from './spare-parts-table/spare-parts-table.component';
 import { BaseMeter, MeterItem } from '@shared/interfaces/meter-info.model';
 import { environment } from '@env/environment';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface MeterDetail {
   label: string;
@@ -13,13 +15,14 @@ interface MeterDetail {
 @Component({
   selector: 'app-meter-details-dialog',
   standalone: true,
-  imports: [MatTabsModule, MeterInfoComponent, SparePartsTableComponent],
+  imports: [MatTabsModule, MeterInfoComponent, SparePartsTableComponent, TranslateModule],
   templateUrl: './meter-details-dialog.component.html',
   styleUrl: './meter-details-dialog.component.scss',
 })
 export class MeterDetailsDialogComponent implements OnInit {
+  sanitizer: any;
   getImageUrl(imagePath: string | null): string {
-    return imagePath ? `${environment.ImageUrl}${imagePath}` : 'assets/images/avatar.png';
+    return imagePath ? `${environment.ImageUrl}${imagePath}` : 'src/assets/images/noImage.jpg';
   }
 
   oldMeterDetails: MeterDetail[] = [];
@@ -35,6 +38,7 @@ export class MeterDetailsDialogComponent implements OnInit {
       showTabs: boolean;
       oldMeter: BaseMeter;
       newMeter: BaseMeter;
+      sanitizer: DomSanitizer;
     }
   ) {}
 
@@ -44,6 +48,8 @@ export class MeterDetailsDialogComponent implements OnInit {
 
   private prepareMeterDetails(): void {
     if (this.data.oldMeter) {
+      this.data.oldMeter.image = this.data.oldMeter.image || 'assets/images/noImage.jpg';
+
       this.oldMeterDetails = [
         { label: 'Meter Serial', value: this.data.oldMeter.meterSerial },
         { label: 'Final Reading', value: this.data.oldMeter.lastReading },
@@ -55,10 +61,16 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Manufacture Year', value: this.data.oldMeter.meterYearOfManufacture },
       ];
       this.oldMeterSpareParts = this.mapMeterItems(this.data.oldMeter.materialDetails);
+      if (this.data.oldMeter) {
+        this.oldMeterSpareParts = this.mapMeterItems(this.data.oldMeter.materialDetails) ?? [];
+      }
     }
 
     if (this.data.newMeter) {
+      this.data.newMeter.image = this.data.newMeter.image || 'assets/images/noImage.jpg';
+
       this.newMeterDetails = [
+        { label: 'Meter Serial', value: this.data.newMeter.meterSerial },
         { label: 'Meter Type', value: this.data.newMeter.meterType },
         { label: 'Installation Type', value: this.data.newMeter.type },
         { label: 'Meter Make', value: this.data.newMeter.meterMake },
@@ -67,6 +79,9 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Location', value: this.data.newMeter.location },
       ];
       this.newMeterSpareParts = this.mapMeterItems(this.data.newMeter.materialDetails);
+      if (this.data.newMeter) {
+        this.newMeterSpareParts = this.mapMeterItems(this.data.newMeter.materialDetails) ?? [];
+      }
     }
   }
 
@@ -76,5 +91,13 @@ export class MeterDetailsDialogComponent implements OnInit {
       materialTypeName,
       materialQuantity: materialQuantity || 'N/A',
     }));
+  }
+  getSanitizedLocation(): SafeHtml {
+    if (this.data?.newMeter?.location) {
+      return this.sanitizer.bypassSecurityTrustHtml(
+        `<a [href]="detail.value" target="_blank">{{ 'view_on_map' | translate }}</a>`
+      );
+    }
+    return '';
   }
 }
