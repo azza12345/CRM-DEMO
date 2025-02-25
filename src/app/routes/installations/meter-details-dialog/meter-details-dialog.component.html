@@ -5,23 +5,23 @@
     <mat-tab-group color="accent">
       <mat-tab label="New Meter">
         <div class="tab-container border px-3">
-
           <div>
             <app-meter-info [details]="newMeterDetails"></app-meter-info>
             @if (newMeterSpareParts.length > 0) {
               <app-spare-parts-table [spareParts]="newMeterSpareParts"></app-spare-parts-table>
             }
-
-            </div>
+          </div>
           @if (data.newMeter.image) {
             <div class="meter-image">
-
               <img [src]="getImageUrl(data.newMeter.image)" alt="New Meter Image" />
             </div>
           }
+          @if (data.newMeter.location) {
+            <div class="meter-location" [innerHTML]="getSanitizedLocation()"></div>
+          }
+
         </div>
       </mat-tab>
-
       <mat-tab label="Old Meter">
         <div class="tab-container border px-3">
           <div>
@@ -29,30 +29,30 @@
             @if (oldMeterSpareParts.length > 0) {
               <app-spare-parts-table [spareParts]="oldMeterSpareParts"></app-spare-parts-table>
             }
-
-
           </div>
           @if (data.oldMeter.image) {
             <div class="meter-image">
               <img [src]="getImageUrl(data.oldMeter.image)" alt="Old Meter Image" />
             </div>
           }
+          @if (data.oldMeter.location) {
+            <div class="meter-location" [innerHTML]="getSanitizedLocation()"></div>
+          }
+
         </div>
       </mat-tab>
     </mat-tab-group>
   }
-
   @if (!data.showTabs) {
     <div class="tab-container border px-3">
       <div>
         <app-meter-info [details]="newMeterDetails"></app-meter-info>
         @if(newMeterSpareParts.length > 0){
-          <app-spare-parts-table [spareParts]="newMeterSpareParts"> </app-spare-parts-table>
-
+          <app-spare-parts-table [spareParts]="newMeterSpareParts"></app-spare-parts-table>
         }
       </div>
       <div class="meter-image">
-        <img [src]="data.newMeter.image" alt="new meter image" />
+        <img [src]="data.newMeter.image" alt="New Meter Image" />
       </div>
     </div>
   }

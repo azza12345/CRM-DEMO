@@ -5,6 +5,7 @@ import { MeterInfoComponent } from './meter-info/meter-info.component';
 import { SparePartsTableComponent } from './spare-parts-table/spare-parts-table.component';
 import { BaseMeter, MeterItem } from '@shared/interfaces/meter-info.model';
 import { environment } from '@env/environment';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface MeterDetail {
   label: string;
@@ -18,6 +19,7 @@ interface MeterDetail {
   styleUrl: './meter-details-dialog.component.scss',
 })
 export class MeterDetailsDialogComponent implements OnInit {
+  sanitizer: any;
   getImageUrl(imagePath: string | null): string {
     return imagePath ? `${environment.ImageUrl}${imagePath}` : 'src/assets/images/noImage.jpg';
   }
@@ -35,6 +37,7 @@ export class MeterDetailsDialogComponent implements OnInit {
       showTabs: boolean;
       oldMeter: BaseMeter;
       newMeter: BaseMeter;
+      sanitizer: DomSanitizer;
     }
   ) {}
 
@@ -55,6 +58,7 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Meter Display', value: this.data.oldMeter.meterDisplayNotes },
         { label: 'Meter Make', value: this.data.oldMeter.meterMake },
         { label: 'Manufacture Year', value: this.data.oldMeter.meterYearOfManufacture },
+        { label: 'Location', value: this.data.newMeter.location },
       ];
       this.oldMeterSpareParts = this.mapMeterItems(this.data.oldMeter.materialDetails);
       if (this.data.oldMeter) {
@@ -87,5 +91,13 @@ export class MeterDetailsDialogComponent implements OnInit {
       materialTypeName,
       materialQuantity: materialQuantity || 'N/A',
     }));
+  }
+  getSanitizedLocation(): SafeHtml {
+    if (this.data?.newMeter?.location) {
+      return this.sanitizer.bypassSecurityTrustHtml(
+        `<a href="${this.data.newMeter.location}" target="_blank">View on Map</a>`
+      );
+    }
+    return '';
   }
 }
