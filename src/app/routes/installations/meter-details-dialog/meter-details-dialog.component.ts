@@ -58,7 +58,6 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Meter Display', value: this.data.oldMeter.meterDisplayNotes },
         { label: 'Meter Make', value: this.data.oldMeter.meterMake },
         { label: 'Manufacture Year', value: this.data.oldMeter.meterYearOfManufacture },
-        { label: 'Location', value: this.data.newMeter.location },
       ];
       this.oldMeterSpareParts = this.mapMeterItems(this.data.oldMeter.materialDetails);
       if (this.data.oldMeter) {

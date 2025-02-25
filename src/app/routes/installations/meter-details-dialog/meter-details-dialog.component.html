@@ -17,7 +17,9 @@
             </div>
           }
           @if (data.newMeter.location) {
-            <div class="meter-location" [innerHTML]="getSanitizedLocation()"></div>
+            <div class="meter-location" >
+              <!-- <a href="xxxxx" target="_blank">View on Map</a> -->
+            </div>
           }
 
         </div>
@@ -34,9 +36,6 @@
             <div class="meter-image">
               <img [src]="getImageUrl(data.oldMeter.image)" alt="Old Meter Image" />
             </div>
-          }
-          @if (data.oldMeter.location) {
-            <div class="meter-location" [innerHTML]="getSanitizedLocation()"></div>
           }
 
         </div>
