@@ -124,5 +124,8 @@
   "email_invalid": "Email is Invalid",
   "selected_districts": "Selected Districts",
   "active": "Active",
-  "inactive": "Inactive"
+  "inactive": "Inactive",
+  "new_meter": "New Meter",
+  "old_meter": "Old Meter",
+  "view_on_map":"View on Map"
 }

@@ -3,7 +3,7 @@
 <div class="meter-details-container">
   @if (data.showTabs) {
     <mat-tab-group color="accent">
-      <mat-tab label="New Meter">
+      <mat-tab label='{{ "new_meter" | translate }}'>
         <div class="tab-container border px-3">
           <div>
             <app-meter-info [details]="newMeterDetails"></app-meter-info>
@@ -16,15 +16,9 @@
               <img [src]="getImageUrl(data.newMeter.image)" alt="New Meter Image" />
             </div>
           }
-          @if (data.newMeter.location) {
-            <div class="meter-location" >
-              <!-- <a href="xxxxx" target="_blank">View on Map</a> -->
-            </div>
-          }
-
         </div>
       </mat-tab>
-      <mat-tab label="Old Meter">
+      <mat-tab label='{{"old_meter" | translate }}'>
         <div class="tab-container border px-3">
           <div>
             <app-meter-info [details]="oldMeterDetails"></app-meter-info>

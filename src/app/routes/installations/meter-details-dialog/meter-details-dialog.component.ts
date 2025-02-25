@@ -6,6 +6,7 @@ import { SparePartsTableComponent } from './spare-parts-table/spare-parts-table.
 import { BaseMeter, MeterItem } from '@shared/interfaces/meter-info.model';
 import { environment } from '@env/environment';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface MeterDetail {
   label: string;
@@ -14,7 +15,7 @@ interface MeterDetail {
 @Component({
   selector: 'app-meter-details-dialog',
   standalone: true,
-  imports: [MatTabsModule, MeterInfoComponent, SparePartsTableComponent],
+  imports: [MatTabsModule, MeterInfoComponent, SparePartsTableComponent, TranslateModule],
   templateUrl: './meter-details-dialog.component.html',
   styleUrl: './meter-details-dialog.component.scss',
 })
@@ -94,7 +95,7 @@ export class MeterDetailsDialogComponent implements OnInit {
   getSanitizedLocation(): SafeHtml {
     if (this.data?.newMeter?.location) {
       return this.sanitizer.bypassSecurityTrustHtml(
-        `<a href="${this.data.newMeter.location}" target="_blank">View on Map</a>`
+        `<a [href]="detail.value" target="_blank">{{ 'view_on_map' | translate }}</a>`
       );
     }
     return '';
