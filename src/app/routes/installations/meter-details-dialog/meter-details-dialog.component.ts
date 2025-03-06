@@ -21,6 +21,8 @@ interface MeterDetail {
 })
 export class MeterDetailsDialogComponent implements OnInit {
   sanitizer: any;
+  imagePath = environment.ImageUrl;
+
   getImageUrl(imagePath: string | null): string {
     return imagePath ? `${environment.ImageUrl}${imagePath}` : 'src/assets/images/noImage.jpg';
   }

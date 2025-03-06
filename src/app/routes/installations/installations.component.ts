@@ -28,6 +28,10 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   columns: MtxGridColumn<InstalledMeter>[] = [
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
     { header: 'Status', field: 'status', sortable: true },
+    { header: 'Meter model', field: 'meterModel', sortable: true },
+    { header: 'Meter type', field: 'meterType', sortable: true },
+    { header: 'Meter make', field: 'meterMake', sortable: true },
+    { header: 'Installation Date', field: 'installationDate', sortable: true },
     { header: 'Assigned To', field: 'contractorName', sortable: true },
     {
       header: 'Actions',
