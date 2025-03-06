@@ -18,6 +18,9 @@ export class RetiredMetersComponent {
   columns: MtxGridColumn<RetiredMeter>[] = [
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
     { header: 'Status', field: 'status', sortable: true },
+    { header: 'Meter model', field: 'meterModel', sortable: true },
+    { header: 'Meter type', field: 'meterType', sortable: true },
+    { header: 'Meter make', field: 'meterMake', sortable: true },
     { header: 'Retired By', field: 'agentName', sortable: true },
     // { header: 'Is Received', field: 'isReceived', sortable: true },
     // { header: 'old Meter Serial', field: 'oldMeterSerial', sortable: true },

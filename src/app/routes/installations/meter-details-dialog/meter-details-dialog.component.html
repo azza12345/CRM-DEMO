@@ -3,7 +3,7 @@
 <div class="meter-details-container">
   @if (data.showTabs) {
     <mat-tab-group color="accent">
-      <mat-tab label='{{ "new_meter" | translate }}'>
+      <mat-tab label="{{ 'new_meter' | translate }}">
         <div class="tab-container border px-3">
           <div>
             <app-meter-info [details]="newMeterDetails"></app-meter-info>
@@ -18,7 +18,7 @@
           }
         </div>
       </mat-tab>
-      <mat-tab label='{{"old_meter" | translate }}'>
+      <mat-tab label="{{ 'old_meter' | translate }}">
         <div class="tab-container border px-3">
           <div>
             <app-meter-info [details]="oldMeterDetails"></app-meter-info>
@@ -31,7 +31,6 @@
               <img [src]="getImageUrl(data.oldMeter.image)" alt="Old Meter Image" />
             </div>
           }
-
         </div>
       </mat-tab>
     </mat-tab-group>
@@ -40,12 +39,12 @@
     <div class="tab-container border px-3">
       <div>
         <app-meter-info [details]="newMeterDetails"></app-meter-info>
-        @if(newMeterSpareParts.length > 0){
+        @if (newMeterSpareParts.length > 0) {
           <app-spare-parts-table [spareParts]="newMeterSpareParts"></app-spare-parts-table>
         }
       </div>
       <div class="meter-image">
-        <img [src]="data.newMeter.image" alt="New Meter Image" />
+        <img [src]="imagePath + data.newMeter.image" alt="New Meter Image" />
       </div>
     </div>
   }
