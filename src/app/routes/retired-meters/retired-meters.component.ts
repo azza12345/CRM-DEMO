@@ -19,7 +19,7 @@ export class RetiredMetersComponent {
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
     { header: 'Status', field: 'status', sortable: true },
     { header: 'Meter model', field: 'meterModel', sortable: true },
-    { header: 'Meter type', field: 'meterType', sortable: true },
+    { header: 'Meter type', field: 'type', sortable: true },
     { header: 'Meter make', field: 'meterMake', sortable: true },
     { header: 'Retired By', field: 'agentName', sortable: true },
     // { header: 'Is Received', field: 'isReceived', sortable: true },
