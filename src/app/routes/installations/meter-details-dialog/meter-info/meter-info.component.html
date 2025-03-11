@@ -8,7 +8,7 @@
         </p>
       </div>
     }
-    @if (detail.label === 'Location'  && detail.value) {
+    @if (detail.label === 'Location'  && detail.value && detail.value != 'OnStock') {
       <div class="meter-location">
         <a [href]="detail.value" target="_blank">View on Map</a>
       </div>
