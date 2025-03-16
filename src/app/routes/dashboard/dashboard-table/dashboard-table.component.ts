@@ -55,7 +55,7 @@ export class DashboardTableComponent implements OnInit, OnChanges, AfterViewInit
 
   constructor(private dashboardService: DashboardService) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.districtId || changes.isFilterApplied) {
+    if (changes.districtId || changes.isToggleApplied) {
       this.applyFilter(this.districtId);
     }
   }

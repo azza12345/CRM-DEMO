@@ -47,10 +47,6 @@ export class MeterDetailsDialogComponent implements OnInit {
   ngOnInit(): void {
     this.prepareMeterDetails();
   }
-  onImageError() {
-    this.data.newMeter.image = 'assets/images/noImage.jpg';
-    this.data.oldMeter.image = 'assets/images/noImage.jpg';
-  }
 
   private prepareMeterDetails(): void {
     if (this.data.oldMeter) {
