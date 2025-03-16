@@ -26,6 +26,7 @@ import { ContractorOperationData } from '@shared/interfaces/dashboard';
 })
 export class DashboardTableComponent implements OnInit, OnChanges, AfterViewInit {
   dataSource = new MatTableDataSource<ContractorOperationData>();
+  @Input() isToggleApplied!: boolean;
   displayedColumns: string[] = [
     'contractorName',
     'onAssignCount',
@@ -54,8 +55,8 @@ export class DashboardTableComponent implements OnInit, OnChanges, AfterViewInit
 
   constructor(private dashboardService: DashboardService) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.districtId) {
-      this.applyFilter(changes.districtId.currentValue);
+    if (changes.districtId || changes.isFilterApplied) {
+      this.applyFilter(this.districtId);
     }
   }
 
