@@ -50,7 +50,7 @@ export class MeterDetailsDialogComponent implements OnInit {
 
   private prepareMeterDetails(): void {
     if (this.data.oldMeter) {
-      this.data.oldMeter.image = this.data.oldMeter.image || 'assets/images/noImage.jpg';
+      this.data.oldMeter.image = this.getImageUrl(this.data.oldMeter.image);
 
       this.oldMeterDetails = [
         { label: 'Meter Serial', value: this.data.oldMeter.meterSerial },
@@ -69,8 +69,7 @@ export class MeterDetailsDialogComponent implements OnInit {
     }
 
     if (this.data.newMeter) {
-      this.data.newMeter.image = this.data.newMeter.image || 'assets/images/noImage.jpg';
-
+      this.data.newMeter.image = this.getImageUrl(this.data.newMeter.image);
       this.newMeterDetails = [
         { label: 'Meter Serial', value: this.data.newMeter.meterSerial },
         { label: 'Meter Type', value: this.data.newMeter.meterType },

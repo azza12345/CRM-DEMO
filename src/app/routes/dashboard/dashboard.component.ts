@@ -41,7 +41,7 @@ import { AsyncPipe } from '@angular/common';
 })
 export class DashboardComponent implements OnInit {
   private apiService = inject(ApiService);
-
+  isToggleApplied = false;
   meters$!: Observable<{
     stats: { key: keyof MeterStatusDto; label: string; color: string }[];
     total: number;
@@ -67,6 +67,7 @@ export class DashboardComponent implements OnInit {
 
   onDistrictChanged(districtId: number): void {
     this.districtSubject.next(districtId);
+    this.isToggleApplied = !this.isToggleApplied;
 
     this.selectedDistrict = districtId;
   }
