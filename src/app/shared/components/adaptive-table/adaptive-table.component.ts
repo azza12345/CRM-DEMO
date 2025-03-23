@@ -48,6 +48,8 @@ export class AdaptiveTableComponent implements OnInit, OnChanges, AfterViewInit 
   pageIndex = 0;
   pageSize = 10;
   totalRecords = 0;
+  orderByField = '';
+  sortOrder = '';
   data$!: Observable<any[]>;
   private fetchSubject = new BehaviorSubject<void>(undefined);
 
@@ -67,6 +69,11 @@ export class AdaptiveTableComponent implements OnInit, OnChanges, AfterViewInit 
     }
   }
 
+  sortChange(sortedColumns: any) {
+    this.orderByField = sortedColumns.active;
+    this.sortOrder = sortedColumns.direction;
+    this.fetchSubject.next();
+  }
   resetPagination(): void {
     this.pageIndex = 0;
     this.pageSize = 10;
@@ -77,6 +84,8 @@ export class AdaptiveTableComponent implements OnInit, OnChanges, AfterViewInit 
     return {
       limit: this.pageSize,
       skip: this.pageIndex * this.pageSize,
+      sortColumn: this.orderByField,
+      sortOrder: this.sortOrder,
       ...this.additionalParams,
       ...this.filters,
     };

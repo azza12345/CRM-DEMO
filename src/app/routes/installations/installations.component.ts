@@ -25,14 +25,16 @@ import { HelperService } from '@shared/services/helper.service';
 })
 export class InstallationsComponent implements OnInit, OnDestroy {
   filters: any = {};
+  sortField: string = 'meterSerial';
+  sortDirection: 'asc' | 'desc' = 'asc';
   columns: MtxGridColumn<InstalledMeter>[] = [
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
-    { header: 'Status', field: 'status', sortable: true },
-    { header: 'Meter model', field: 'meterModel', sortable: true },
-    { header: 'Meter type', field: 'meterType', sortable: true },
-    { header: 'Meter make', field: 'meterMake', sortable: true },
+    { header: 'Status', field: 'status' },
+    { header: 'Meter model', field: 'meterModel' },
+    { header: 'Meter type', field: 'meterType' },
+    { header: 'Meter make', field: 'meterMake' },
     { header: 'Installation Date', field: 'installationDate', sortable: true },
-    { header: 'Assigned To', field: 'contractorName', sortable: true },
+    { header: 'Assigned To', field: 'contractorName' },
     {
       header: 'Actions',
       field: 'action' as keyof InstalledMeter,
