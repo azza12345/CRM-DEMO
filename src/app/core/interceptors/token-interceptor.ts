@@ -11,6 +11,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { TokenService } from '@core/authentication';
 import { BASE_URL } from './base-url-interceptor';
+import { log } from 'console';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -33,12 +34,11 @@ export class TokenInterceptor implements HttpInterceptor {
       }
     };
 
-    if (this.tokenService.valid() && this.shouldAppendToken(request.url)) {
+    if (this.tokenService.valid()) {
       return next
         .handle(
           request.clone({
             headers: request.headers.append('Authorization', this.tokenService.getBearerToken()),
-            withCredentials: true,
           })
         )
         .pipe(
