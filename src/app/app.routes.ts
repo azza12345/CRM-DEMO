@@ -13,6 +13,7 @@ import { Error404Component } from './routes/sessions/404.component';
 import { Error500Component } from './routes/sessions/500.component';
 import { LoginComponent } from './routes/sessions/login/login.component';
 import { RegisterComponent } from './routes/sessions/register/register.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -43,6 +44,11 @@ export const routes: Routes = [
           import('./routes/installations/installations.component').then(
             c => c.InstallationsComponent
           ),
+      },
+      {
+        path: 'audits',
+        loadComponent: () =>
+          import('./routes/audits/audits.component').then(c => c.AuditsComponent),
       },
       {
         path: 'meter-operations',
