@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
@@ -7,6 +7,7 @@ import { FilterComponent } from '@shared/components/filter/filter.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-audits',
@@ -19,12 +20,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule,
   ],
   templateUrl: './audits.component.html',
-  styleUrl: './audits.component.scss',
+  styleUrls: ['./audits.component.scss'],
+  providers: [DatePipe],
 })
 export class AuditsComponent {
   filters: any = {};
   endpoint: EndPoint = EndPoint.GET_AUDITS;
   httpVerb: HttpVerb = HttpVerb.GET;
+
+  constructor(private datePipe: DatePipe) {}
 
   columns: MtxGridColumn[] = [
     { header: 'Description', field: 'description' },
@@ -37,7 +41,7 @@ export class AuditsComponent {
     { header: 'Record Id', field: 'recordId' },
     { header: 'UserId', field: 'userId' },
     { header: 'User', field: 'user' },
-    { header: 'Aduit Type', field: 'auditType' },
+    { header: 'Audit Type', field: 'auditType' },
     { header: 'Device Id', field: 'deviceId' },
     { header: 'Machine Name', field: 'machineName' },
     { header: 'Creation Date', field: 'creationDate' },
@@ -57,6 +61,22 @@ export class AuditsComponent {
   ];
 
   onFilterChanged(filterValues: any): void {
-    this.filters = filterValues;
+    const startDateValid =
+      filterValues.startDate && !isNaN(new Date(filterValues.startDate).getTime());
+    const endDateValid = filterValues.endDate && !isNaN(new Date(filterValues.endDate).getTime());
+
+    if (startDateValid && endDateValid) {
+      const formattedStartDate = this.datePipe.transform(
+        filterValues.startDate,
+        'yyyy-MM-ddTHH:mm:ss'
+      );
+      const formattedEndDate = this.datePipe.transform(filterValues.endDate, 'yyyy-MM-ddTHH:mm:ss');
+
+      this.filters = {
+        ...filterValues,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+      };
+    }
   }
 }
