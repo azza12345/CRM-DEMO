@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
+import { ApiService } from '@shared/services/api.service';
 
 @Component({
   selector: 'app-audits',
@@ -28,7 +29,10 @@ export class AuditsComponent {
   endpoint: EndPoint = EndPoint.GET_AUDITS;
   httpVerb: HttpVerb = HttpVerb.GET;
 
-  constructor(private datePipe: DatePipe) {}
+  constructor(
+    private datePipe: DatePipe,
+    private apiService: ApiService
+  ) {}
 
   columns: MtxGridColumn[] = [
     { header: 'Description', field: 'description' },
@@ -58,6 +62,13 @@ export class AuditsComponent {
       label: 'End Date',
       type: 'date',
     },
+    {
+      formControlName: 'userSearch',
+      label: 'User',
+      type: 'autocomplete',
+      isFirstValueDynamic: true,
+      apiEndpoint: EndPoint.Get_USERS,
+    },
   ];
 
   onFilterChanged(filterValues: any): void {
@@ -77,6 +88,8 @@ export class AuditsComponent {
         startDate: formattedStartDate,
         endDate: formattedEndDate,
       };
+    } else {
+      this.filters = filterValues;
     }
   }
 }
