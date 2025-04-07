@@ -76,20 +76,23 @@ export class AuditsComponent {
       filterValues.startDate && !isNaN(new Date(filterValues.startDate).getTime());
     const endDateValid = filterValues.endDate && !isNaN(new Date(filterValues.endDate).getTime());
 
+    const transformedFilters: any = { ...filterValues };
+
+    if (transformedFilters.userSearch) {
+      transformedFilters.userId = transformedFilters.userSearch;
+      delete transformedFilters.userSearch;
+    }
+
     if (startDateValid && endDateValid) {
-      const formattedStartDate = this.datePipe.transform(
+      transformedFilters.startDate = this.datePipe.transform(
         filterValues.startDate,
         'yyyy-MM-ddTHH:mm:ss'
       );
-      const formattedEndDate = this.datePipe.transform(filterValues.endDate, 'yyyy-MM-ddTHH:mm:ss');
-
-      this.filters = {
-        ...filterValues,
-        startDate: formattedStartDate,
-        endDate: formattedEndDate,
-      };
-    } else {
-      this.filters = filterValues;
+      transformedFilters.endDate = this.datePipe.transform(
+        filterValues.endDate,
+        'yyyy-MM-ddTHH:mm:ss'
+      );
     }
+    this.filters = transformedFilters;
   }
 }
