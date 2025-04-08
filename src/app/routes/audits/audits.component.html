@@ -1,32 +1,36 @@
-<div class="d-flex justify-content-between mb-4 align-items-center">
-  <div class="d-flex align-items-center gap-3">
+<div class="audit-toolbar">
+  <div class="audit-controls">
     <h1 class="title">Audits</h1>
 
-    <mat-form-field appearance="outline" class="me-2" style="width: 150px;">
-      <mat-label>Export As</mat-label>
-      <mat-select [(value)]="selectedExportFormat">
-        <mat-option *ngFor="let format of exportFormats" [value]="format.value">
-          {{ format.label }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="export-group">
+      <mat-form-field appearance="outline" class="export-dropdown">
+        <mat-label>Export As</mat-label>
+        <mat-select [(value)]="selectedExportFormat">
+          <mat-option *ngFor="let format of exportFormats" [value]="format.value">
+            {{ format.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="exportData()"
-      [disabled]="!selectedExportFormat"
-    >
-      Export
-    </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="exportData()"
+        [disabled]="!selectedExportFormat"
+      >
+        Export
+      </button>
+    </div>
   </div>
 
-  <app-filter
-    [isPrimary]="true"
-    [controls]="filterControls"
-    [showAllOption]="true"
-    (filterChanged)="onFilterChanged($event)"
-  ></app-filter>
+  <div class="filter-wrapper">
+    <app-filter
+      [isPrimary]="true"
+      [controls]="filterControls"
+      [showAllOption]="true"
+      (filterChanged)="onFilterChanged($event)"
+    ></app-filter>
+  </div>
 </div>
 
 <app-adaptive-table
