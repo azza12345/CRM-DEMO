@@ -7,8 +7,11 @@ import { FilterComponent } from '@shared/components/filter/filter.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { ApiService } from '@shared/services/api.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-audits',
@@ -19,6 +22,10 @@ import { ApiService } from '@shared/services/api.service';
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    NgFor,
+    NgIf,
   ],
   templateUrl: './audits.component.html',
   styleUrls: ['./audits.component.scss'],
@@ -28,6 +35,14 @@ export class AuditsComponent {
   filters: any = {};
   endpoint: EndPoint = EndPoint.GET_AUDITS;
   httpVerb: HttpVerb = HttpVerb.GET;
+
+  exportFormats = [
+    { label: 'PDF', value: 'pdf' },
+    { label: 'Excel', value: 'excel' },
+    { label: 'CSV', value: 'csv' },
+  ];
+
+  selectedExportFormat: string | null = null;
 
   constructor(
     private datePipe: DatePipe,
@@ -93,6 +108,23 @@ export class AuditsComponent {
         'yyyy-MM-ddTHH:mm:ss'
       );
     }
+
     this.filters = transformedFilters;
+  }
+
+  exportData(): void {
+    if (this.selectedExportFormat) {
+      this.export(this.selectedExportFormat);
+    }
+  }
+
+  export(format: string): void {
+    const queryParams = new URLSearchParams({
+      ...this.filters,
+      export: format,
+    });
+
+    const url = `${environment.ApiUrl}/${EndPoint.GET_AUDITS}?${queryParams.toString()}`;
+    window.open(url, '_blank');
   }
 }
