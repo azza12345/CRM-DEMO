@@ -1,6 +1,7 @@
 <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="filter">
+  <div class="row">
   @for (control of controls; track control.label) {
-    <div>
+    <div class="col-3">
       <ng-container>
         @switch (control.type) {
           @case ('text') {
@@ -81,7 +82,7 @@
     </div>
   }
 
-  <div class="buttons">
+  <div class="buttons col-3">
     <button mat-raised-button [color]="isPrimary ? 'primary' : 'accent'" type="submit">
       Filter
     </button>
@@ -91,4 +92,6 @@
       </button>
     }
   </div>
+</div>
+
 </form>
