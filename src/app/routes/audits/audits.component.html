@@ -1,6 +1,15 @@
 <div class="audit-toolbar">
   <div class="audit-controls">
     <h1 class="title">Audits</h1>
+  </div>
+
+  <div class="filter-wrapper">
+    <app-filter
+      [isPrimary]="true"
+      [controls]="filterControls"
+      [showAllOption]="true"
+      (filterChanged)="onFilterChanged($event)"
+    >
 
     <div class="export-group">
       <mat-form-field appearance="outline" class="export-dropdown">
@@ -22,16 +31,7 @@
       </button>
     </div>
 
-
-  </div>
-
-  <div class="filter-wrapper">
-    <app-filter
-      [isPrimary]="true"
-      [controls]="filterControls"
-      [showAllOption]="true"
-      (filterChanged)="onFilterChanged($event)"
-    ></app-filter>
+  </app-filter>
   </div>
 </div>
 

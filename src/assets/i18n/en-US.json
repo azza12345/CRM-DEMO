@@ -128,5 +128,6 @@
   "inactive": "Inactive",
   "new_meter": "New Meter",
   "old_meter": "Old Meter",
-  "view_on_map":"View on Map"
+  "view_on_map":"View on Map",
+  "Export":" Export"
 }
