@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router'; // Added RouterLink here
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
@@ -14,6 +14,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-contractors',
@@ -31,6 +33,7 @@ import { MatOptionModule } from '@angular/material/core';
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule,
+    MatInputModule,
   ],
 })
 export class ContractorsComponent {
@@ -115,24 +118,55 @@ export class ContractorsComponent {
     const districtId = this.filters?.districtID ?? '';
     const fileType = this.selectedFormat;
 
-    const params = new HttpParams()
-      .set('name', name)
-      .set('districtId', districtId)
-      .set('fileType', fileType);
-
+    const apiUrl = `${environment.ApiUrl}/${EndPoint.EXPORT_CONTRACTORS}?fileType=${fileType}&name=${encodeURIComponent(name)}&districtId=${districtId}`;
     this.http
-      .get('api/contractors/export', {
-        params,
+      .get(apiUrl, {
         responseType: 'blob',
+        observe: 'response',
       })
-      .subscribe((response: Blob) => {
-        const blob = new Blob([response]);
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `contractors.${fileType}`;
-        a.click();
-        window.URL.revokeObjectURL(url);
+      .subscribe({
+        next: response => {
+          const contentDisposition = response.headers.get('content-disposition');
+          let filename = `contractors_${new Date().toISOString().slice(0, 10)}.${fileType}`;
+
+          if (contentDisposition) {
+            const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
+            if (filenameMatch && filenameMatch[1]) {
+              filename = filenameMatch[1];
+            }
+          }
+
+          const blob = new Blob([response.body!], {
+            type: response.headers.get('content-type') || this.getMimeType(fileType),
+          });
+          const url = window.URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+        },
+        error: err => {
+          console.error('Export failed:', err);
+        },
       });
+  }
+  private getMimeType(fileType: string): string {
+    switch (fileType) {
+      case 'pdf':
+        return 'application/pdf';
+      case 'excel':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      case 'csv':
+        return 'text/csv';
+      default:
+        return 'application/octet-stream';
+    }
   }
 }

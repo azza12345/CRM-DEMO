@@ -15,15 +15,31 @@
 
 .export-field {
   width: 200px;
+  min-width: 200px;
 
-  ::ng-deep .mat-form-field-wrapper {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-  }
-
-  ::ng-deep .mat-select-trigger {
+  .mat-mdc-form-field-infix {
+    min-height: 48px;
     display: flex;
     align-items: center;
-    height: 36px;
   }
+
+  .mat-mdc-select-trigger {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+}
+
+.success-snackbar {
+  background-color: #4caf50;
+  color: white;
+}
+
+.error-snackbar {
+  background-color: #f44336;
+  color: white;
 }
