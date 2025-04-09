@@ -2,6 +2,25 @@
   <div>
     <div class="d-flex align-items-center">
       <h1 class="title">Agents</h1>
+      <div class="export-controls d-flex align-items-center ms-3">
+        <mat-form-field appearance="fill" class="me-2">
+          <mat-select [(ngModel)]="selectedFormat" placeholder="Select format">
+            @for (format of fileFormats; track format.value) {
+              <mat-option [value]="format.value">
+                {{ format.label }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="exportAgents()"
+          [disabled]="!selectedFormat"
+        >
+          Export
+        </button>
+      </div>
       <a
         mat-mini-fab
         color="primary"
@@ -25,6 +44,7 @@
   ></app-filter>
 </div>
 
+
 <app-adaptive-table
   [apiUrl]="endpoint"
   [httpMethod]="httpVerb"
@@ -34,14 +54,6 @@
   [isLoading]="false"
 >
   <ng-template #actionBtns let-row let-index="index" let-col="colDef">
-    <!-- <a
-      mat-icon-button
-      color="primary"
-      (click)="openViewDetailsDialog(row.id)"
-      matTooltip="View Details"
-    >
-      <mat-icon color="primary"> visibility</mat-icon>
-    </a> -->
     <button
       color="primary"
       mat-icon-button

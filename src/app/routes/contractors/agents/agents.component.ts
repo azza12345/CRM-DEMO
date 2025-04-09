@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Agent } from '@shared/interfaces/agent.model';
-import { of, Subscription, switchMap, takeUntil, takeWhile } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,8 +24,12 @@ import { HelperService } from '@shared/services/helper.service';
 import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
 import { BaseResponse } from '@shared/interfaces/base-response';
-import { AgentDetailsDialogComponent } from './agent-details-dialog/agent-details-dialog.component';
 import { Contractor } from '@shared/interfaces/contractor.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '@env/environment';
+import { FormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-agents',
@@ -37,6 +41,9 @@ import { Contractor } from '@shared/interfaces/contractor.model';
     MatButtonModule,
     RouterLink,
     MatTooltipModule,
+    FormsModule,
+    MatSelectModule,
+    MatOptionModule,
   ],
   templateUrl: './agents.component.html',
   styleUrl: './agents.component.scss',
@@ -45,12 +52,21 @@ export class AgentsComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
+  private apiService = inject(ApiService);
+  private toastr = inject(ToastrService);
+  private http = inject(HttpClient);
+
   contractorId!: string;
+  contractorName?: string;
   filters: any = {};
   alive = false;
-  viewDetailsSub!: Subscription;
-  contractorsSub!: Subscription;
-  contractorName?: string;
+  selectedFormat: string | null = null;
+
+  fileFormats = [
+    { label: 'Excel', value: 'excel' },
+    { label: 'CSV', value: 'csv' },
+    { label: 'PDF', value: 'pdf' },
+  ];
 
   rowClassFormatter: MtxGridRowClassFormatter = {
     'disabled-state': (data, index) => data.state === 'disabled',
@@ -65,9 +81,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     {
       header: 'State',
       field: 'isActive',
-      class: data => {
-        return data?.isActive === true ? 'text-success' : '';
-      },
+      class: data => (data?.isActive ? 'text-success' : ''),
       sortable: true,
       formatter: (rowData: Agent) => (rowData.isActive ? ' Enabled' : 'Disabled'),
     },
@@ -83,19 +97,11 @@ export class AgentsComponent implements OnInit, OnDestroy {
     },
   ];
   httpVerb: HttpVerb = HttpVerb.GET;
-
-  constructor() {}
-  onFilterChanged(filterValues: any): void {
-    this.filters = filterValues;
-  }
+  endpoint!: EndPoint;
 
   private routeSub!: Subscription;
-
-  endpoint!: EndPoint;
-  url!: string;
-
-  private apiService = inject(ApiService);
-  private toastr = inject(ToastrService);
+  private viewDetailsSub!: Subscription;
+  private contractorsSub!: Subscription;
 
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.subscribe(params => {
@@ -111,35 +117,26 @@ export class AgentsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.routeSub) {
-      this.routeSub.unsubscribe();
-    }
-    if (this.viewDetailsSub) {
-      this.viewDetailsSub.unsubscribe();
-    }
+    this.routeSub?.unsubscribe();
+    this.viewDetailsSub?.unsubscribe();
   }
 
-  // openViewDetailsDialog(id: number): void {
-  //   this.viewDetailsSub = this.apiService
-  //     .triggerApiRequest<BaseResponse<Agent>>(EndPoint.GET_AGENT_BY_ID, HttpVerb.GET, { id })
-  //     .pipe(
-  //       switchMap(response => {
-  //         const agent: Agent = response.data;
-  //         return of(agent);
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: agent => {
-  //         this.dialog.open<AgentDetailsDialogComponent>(AgentDetailsDialogComponent, {
-  //           width: '744px',
-  //           data: {
-  //             title: 'Agent Details',
-  //             agent,
-  //           },
-  //         });
-  //       },
-  //     });
-  // }
+  onFilterChanged(filterValues: any): void {
+    this.filters = filterValues;
+  }
+
+  fetchContractorDetails(): void {
+    this.contractorsSub = this.apiService
+      .triggerApiRequest<BaseResponse<Contractor>>(EndPoint.GET_CONTRACTOR_BY_ID, HttpVerb.GET, {
+        id: this.contractorId,
+      })
+      .subscribe({
+        next: res => {
+          this.contractorName = res.data.name;
+        },
+      });
+  }
+
   toggleAgentState(agent: Agent): void {
     const dialogRef = this.dialog.open<AdaptiveDialogComponent>(AdaptiveDialogComponent, {
       width: '400px',
@@ -173,15 +170,60 @@ export class AgentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  fetchContractorDetails(): void {
-    this.contractorsSub = this.apiService
-      .triggerApiRequest<
-        BaseResponse<Contractor>
-      >(EndPoint.GET_CONTRACTOR_BY_ID, HttpVerb.GET, { id: this.contractorId })
+  exportAgents(): void {
+    if (!this.selectedFormat) return;
+
+    const name = this.filters?.Name ?? '';
+    const fileType = this.selectedFormat;
+
+    const apiUrl = `${environment.ApiUrl}/${EndPoint.EXPORT_AGENTS}?fileType=${fileType}&contractorId=${this.contractorId}&&name=${encodeURIComponent(name)}`;
+
+    this.http
+      .get(apiUrl, {
+        responseType: 'blob',
+        observe: 'response',
+      })
       .subscribe({
-        next: res => {
-          this.contractorName = res.data.name;
+        next: response => {
+          const contentDisposition = response.headers.get('content-disposition');
+          let filename = `agents_${new Date().toISOString().slice(0, 10)}.${fileType}`;
+
+          if (contentDisposition) {
+            const match = contentDisposition.match(/filename="?(.+)"?/);
+            if (match && match[1]) filename = match[1];
+          }
+
+          const blob = new Blob([response.body!], {
+            type: response.headers.get('content-type') || this.getMimeType(fileType),
+          });
+
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+        },
+        error: err => {
+          console.error('Export failed:', err);
         },
       });
+  }
+
+  private getMimeType(fileType: string): string {
+    switch (fileType) {
+      case 'pdf':
+        return 'application/pdf';
+      case 'excel':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      case 'csv':
+        return 'text/csv';
+      default:
+        return 'application/octet-stream';
+    }
   }
 }
