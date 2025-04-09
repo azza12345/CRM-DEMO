@@ -7,7 +7,7 @@ import { FilterComponent } from '@shared/components/filter/filter.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ApiService } from '@shared/services/api.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -24,8 +24,6 @@ import { environment } from '@env/environment';
     MatTooltipModule,
     MatFormFieldModule,
     MatSelectModule,
-    NgFor,
-    NgIf,
   ],
   templateUrl: './audits.component.html',
   styleUrls: ['./audits.component.scss'],

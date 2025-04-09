@@ -11,27 +11,29 @@
       (filterChanged)="onFilterChanged($event)"
     >
 
-    <div class="export-group">
-      <mat-form-field appearance="outline" class="export-dropdown">
-        <mat-label>Export As</mat-label>
-        <mat-select [(value)]="selectedExportFormat">
-          <mat-option *ngFor="let format of exportFormats" [value]="format.value">
-            {{ format.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div class="export-group">
+        <mat-form-field appearance="outline" class="export-dropdown">
+          <mat-label>Export As</mat-label>
+          <mat-select [(value)]="selectedExportFormat">
+            @for (format of exportFormats; track format.value) {
+              <mat-option [value]="format.value">
+                {{ format.label }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="exportData()"
-        [disabled]="!selectedExportFormat"
-      >
-        Export
-      </button>
-    </div>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="exportData()"
+          [disabled]="!selectedExportFormat"
+        >
+          Export
+        </button>
+      </div>
 
-  </app-filter>
+    </app-filter>
   </div>
 </div>
 
