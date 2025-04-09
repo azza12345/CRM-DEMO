@@ -1,11 +1,29 @@
 .title {
-  margin-bottom: 0;
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
 }
 
 .add-icon {
   width: 35px;
   height: 35px;
+
   &:hover {
     color: #fff;
+  }
+}
+
+.export-field {
+  width: 200px;
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  ::ng-deep .mat-select-trigger {
+    display: flex;
+    align-items: center;
+    height: 36px;
   }
 }
