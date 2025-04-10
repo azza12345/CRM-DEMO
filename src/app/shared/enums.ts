@@ -29,4 +29,6 @@ export enum EndPoint {
   ADD_CONTRACTOR = 'contractors/add',
   INSTALLED_METERS_DETAILS = 'meters/{meterId}/details',
   ASSIGN_METER_TO_AGENT = 'meters/assign-to-contractor',
+  GET_AUDITS = 'audits/get_audits',
+  Get_USERS = 'User/search-users',
 }

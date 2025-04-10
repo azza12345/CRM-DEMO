@@ -17,9 +17,11 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { HttpVerb } from '@shared/enums';
+import { EndPoint, HttpVerb } from '@shared/enums';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
 import { ApiService } from '@shared/services/api.service';
+import { Observable, of } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-filter',
@@ -36,7 +38,7 @@ import { ApiService } from '@shared/services/api.service';
     MatSelectModule,
   ],
   templateUrl: './filter.component.html',
-  styleUrl: './filter.component.scss',
+  styleUrls: ['./filter.component.scss'],
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class FilterComponent implements OnInit {
@@ -47,6 +49,7 @@ export class FilterComponent implements OnInit {
   @Output() filterChanged: EventEmitter<any> = new EventEmitter<any>();
 
   filterForm!: FormGroup;
+  userSearchResults$: Observable<any[]> = of([]);
 
   constructor(
     private fb: FormBuilder,
@@ -60,7 +63,25 @@ export class FilterComponent implements OnInit {
 
   fetchDynamicOptions(): void {
     this.controls.forEach(control => {
-      if (control.apiEndpoint) {
+      const controlInstance = this.filterForm.get(control.formControlName);
+      if (control.apiEndpoint && control.type === 'autocomplete') {
+        controlInstance?.valueChanges
+          .pipe(
+            debounceTime(1000),
+            switchMap((input: string) =>
+              this.apiService.triggerApiRequest(
+                `${control.apiEndpoint}?keyword=${input}` as EndPoint,
+                HttpVerb.GET
+              )
+            )
+          )
+          .subscribe((response: any) => {
+            control.options = (response ?? []).map((item: any) => ({
+              label: item?.userName,
+              value: item?.id,
+            }));
+          });
+      } else if (control.apiEndpoint) {
         this.apiService.triggerApiRequest(control.apiEndpoint, HttpVerb.GET).subscribe({
           next: (response: any) => {
             if (typeof response[0] === 'string' && Array.isArray(response)) {
@@ -113,5 +134,12 @@ export class FilterComponent implements OnInit {
 
   resetForm() {
     this.filterForm.reset();
+  }
+
+  displayFn(control: FilterControl): (value: any) => string {
+    return (value: any) => {
+      const found = control.options?.find(opt => opt.value === value);
+      return found?.label ?? '';
+    };
   }
 }

@@ -23,6 +23,12 @@
       "name": "contractors",
       "type": "link",
       "customIcon": "assets/images/svgs/menu/contractor.svg"
+    },
+    {
+      "route": "audits",
+      "name": "audits",
+      "type": "link",
+      "customIcon": "assets/images/svgs/menu/contractor.svg"
     }
   ]
 }
