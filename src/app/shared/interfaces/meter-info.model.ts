@@ -17,6 +17,7 @@ export interface BaseMeter {
   meterMake: string;
   meterModel: string;
   meterDisplayNotes: string;
+  meterStatus: string;
   materialDetails: MeterItem[];
 }
 

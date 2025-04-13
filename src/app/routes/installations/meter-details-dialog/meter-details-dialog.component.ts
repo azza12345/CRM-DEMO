@@ -31,7 +31,6 @@ export class MeterDetailsDialogComponent implements OnInit {
   newMeterDetails: MeterDetail[] = [];
   oldMeterSpareParts: MeterItem[] = [];
   newMeterSpareParts: MeterItem[] = [];
-
   constructor(
     public dialogRef: MatDialogRef<MeterDetailsDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
@@ -40,6 +39,7 @@ export class MeterDetailsDialogComponent implements OnInit {
       showTabs: boolean;
       oldMeter: BaseMeter;
       newMeter: BaseMeter;
+      meterStatus: string;
       sanitizer: DomSanitizer;
     }
   ) {}

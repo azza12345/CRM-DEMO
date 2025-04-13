@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 export interface MeterDetail {
   label: string;
@@ -14,4 +14,5 @@ export interface MeterDetail {
 })
 export class MeterInfoComponent {
   @Input() details: MeterDetail[] = [];
+  @Input() meterStatus: string = '';
 }
