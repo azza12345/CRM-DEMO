@@ -1,0 +1,46 @@
+<div class="audit-toolbar">
+  <div class="audit-controls">
+    <h1 class="title">Audits</h1>
+  </div>
+
+  <div class="filter-wrapper">
+    <app-filter
+      [isPrimary]="true"
+      [controls]="filterControls"
+      [showAllOption]="true"
+      (filterChanged)="onFilterChanged($event)"
+    >
+
+      <div class="export-group">
+        <mat-form-field appearance="outline" class="export-dropdown">
+          <mat-label>Export As</mat-label>
+          <mat-select [(value)]="selectedExportFormat">
+            @for (format of exportFormats; track format.value) {
+              <mat-option [value]="format.value">
+                {{ format.label }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="exportData()"
+          [disabled]="!selectedExportFormat"
+        >
+          Export
+        </button>
+      </div>
+
+    </app-filter>
+  </div>
+</div>
+
+<app-adaptive-table
+  [apiUrl]="endpoint"
+  [httpMethod]="httpVerb"
+  [filters]="filters"
+  [columns]="columns"
+  [isLoading]="false"
+></app-adaptive-table>
