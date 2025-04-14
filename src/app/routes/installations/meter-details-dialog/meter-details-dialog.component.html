@@ -6,7 +6,7 @@
       <mat-tab label="{{ 'new_meter' | translate }}">
         <div class="tab-container border px-3">
           <div>
-            <app-meter-info [details]="newMeterDetails"></app-meter-info>
+            <app-meter-info [details]="newMeterDetails" [meterStatus]="data.meterStatus"></app-meter-info>
             @if (newMeterSpareParts.length > 0) {
               <app-spare-parts-table [spareParts]="newMeterSpareParts"></app-spare-parts-table>
             }

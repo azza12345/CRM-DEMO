@@ -49,7 +49,8 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           icon: 'visibility',
           tooltip: 'View Details',
           //FIXME: gonna be changed based on API
-          click: (rowData: InstalledMeter) => this.openViewDetailsDialog(rowData.meterId),
+          click: (rowData: InstalledMeter) =>
+            this.openViewDetailsDialog(rowData.meterId, rowData.status),
         },
         {
           type: 'icon',
@@ -148,7 +149,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   }
 
   //FIXME: gonna be changed based on API
-  openViewDetailsDialog(meterId: number): void {
+  openViewDetailsDialog(meterId: number, meterStatus: string): void {
     const url = HelperService.formatEndpoint(EndPoint.INSTALLED_METERS_DETAILS, {
       meterId,
     }) as EndPoint;
@@ -180,6 +181,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
               showTabs,
               oldMeter,
               newMeter,
+              meterStatus,
             },
           });
         },
