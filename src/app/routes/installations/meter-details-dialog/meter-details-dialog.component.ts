@@ -5,7 +5,7 @@ import { MeterInfoComponent } from './meter-info/meter-info.component';
 import { SparePartsTableComponent } from './spare-parts-table/spare-parts-table.component';
 import { BaseMeter, MeterItem } from '@shared/interfaces/meter-info.model';
 import { environment } from '@env/environment';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml, SafeUrl } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 
 interface MeterDetail {
@@ -20,12 +20,7 @@ interface MeterDetail {
   styleUrl: './meter-details-dialog.component.scss',
 })
 export class MeterDetailsDialogComponent implements OnInit {
-  sanitizer: any;
-  imagePath = environment.ImageUrl;
-
-  getImageUrl(imagePath: string | null): string {
-    return imagePath ? `${environment.ImageUrl}${imagePath}` : 'src/assets/images/noImage.jpg';
-  }
+  imagePath = this.data.newMeter.image;
 
   oldMeterDetails: MeterDetail[] = [];
   newMeterDetails: MeterDetail[] = [];
@@ -40,17 +35,24 @@ export class MeterDetailsDialogComponent implements OnInit {
       oldMeter: BaseMeter;
       newMeter: BaseMeter;
       meterStatus: string;
-      sanitizer: DomSanitizer;
-    }
+    },
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
     this.prepareMeterDetails();
   }
+  getImageUrl(imagePath: string | null): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(
+      imagePath
+        ? `${environment.ImageUrl}/Images/Meters/${imagePath}`
+        : 'src/assets/images/noImage.jpg'
+    );
+  }
 
   private prepareMeterDetails(): void {
     if (this.data.oldMeter) {
-      this.data.oldMeter.image = this.getImageUrl(this.data.oldMeter.image);
+      // this.data.oldMeter.image = this.getImageUrl(this.data.oldMeter.image);
 
       this.oldMeterDetails = [
         { label: 'Meter Serial', value: this.data.oldMeter.meterSerial },
@@ -69,7 +71,7 @@ export class MeterDetailsDialogComponent implements OnInit {
     }
 
     if (this.data.newMeter) {
-      this.data.newMeter.image = this.getImageUrl(this.data.newMeter.image);
+      // this.data.newMeter.image = this.getImageUrl(this.data.newMeter.image);
       this.newMeterDetails = [
         { label: 'Meter Serial', value: this.data.newMeter.meterSerial },
         { label: 'Meter Type', value: this.data.newMeter.meterType },
