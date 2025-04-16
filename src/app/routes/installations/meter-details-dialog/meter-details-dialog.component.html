@@ -44,7 +44,7 @@
         }
       </div>
       <div class="meter-image">
-        <img [src]="imagePath + data.newMeter.image" alt="New Meter Image" />
+        <img [src]="getImageUrl(data.newMeter.image)" alt="New Meter Image" />
       </div>
     </div>
   }
