@@ -48,7 +48,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           text: 'View',
           icon: 'visibility',
           tooltip: 'View Details',
-          //FIXME: gonna be changed based on API
+          class: 'clear-hover',
           click: (rowData: InstalledMeter) =>
             this.openViewDetailsDialog(rowData.meterId, rowData.status),
         },
@@ -57,6 +57,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           text: 'Assign to a Contractor',
           icon: 'person_add',
           tooltip: 'Assign to a Contractor',
+          class: 'clear-hover',
           click: (rowData: InstalledMeter) => this.openAssignDialog(rowData),
         },
       ],
