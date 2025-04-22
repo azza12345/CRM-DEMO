@@ -53,7 +53,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           },
         ];
 
-        if (rowData.status !== 'OnAgent' && rowData.status !== 'OnCustomer') {
+        if (rowData.status !== 'OnCustomer') {
           baseButtons.push({
             type: 'icon',
             text: 'Assign to a Contractor',
