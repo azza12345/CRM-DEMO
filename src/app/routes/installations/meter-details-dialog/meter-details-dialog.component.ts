@@ -51,6 +51,9 @@ export class MeterDetailsDialogComponent implements OnInit {
   }
 
   private prepareMeterDetails(): void {
+    const formatDate = (dateString: string | null): string =>
+      dateString ? new Date(dateString).toLocaleString() : 'N/A';
+
     if (this.data.oldMeter) {
       // this.data.oldMeter.image = this.getImageUrl(this.data.oldMeter.image);
 
@@ -77,7 +80,7 @@ export class MeterDetailsDialogComponent implements OnInit {
         { label: 'Meter Type', value: this.data.newMeter.meterType },
         { label: 'Installation Type', value: this.data.newMeter.type },
         { label: 'Meter Make', value: this.data.newMeter.meterMake },
-        { label: 'Installation Date', value: this.data.newMeter.installationDate },
+        { label: 'Installation Date', value: formatDate(this.data.newMeter.installationDate) },
         { label: 'Meter Model', value: this.data.newMeter.meterModel },
         { label: 'Location', value: this.data.newMeter.location },
       ];
