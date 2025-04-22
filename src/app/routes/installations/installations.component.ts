@@ -205,7 +205,6 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           this.toastr.success('meter assigned to contractor successfully');
         },
         error: err => {
-          console.error('Error assigning meter:', err);
           this.toastr.error('Failed to assign meter to contractor');
         },
       });
