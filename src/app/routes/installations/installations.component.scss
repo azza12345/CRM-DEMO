@@ -20,6 +20,12 @@
         z-index: -1;
       }
     }
+
+    .no-row-active {
+
+      background-color: transparent !important;
+    }
+
     .mat-mdc-button-touch-target {
       pointer-events: none;
     }

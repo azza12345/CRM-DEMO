@@ -42,6 +42,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       pinned: 'right',
       right: '0px',
       type: 'button',
+      excludeFromRowState: true,
       buttons: [
         {
           type: 'icon',
@@ -49,8 +50,10 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           icon: 'visibility',
           tooltip: 'View Details',
           class: 'clear-hover',
-          click: (rowData: InstalledMeter) =>
-            this.openViewDetailsDialog(rowData.meterId, rowData.status),
+          click: (rowData: InstalledMeter, event?: MouseEvent) => {
+            event?.stopPropagation();
+            this.openViewDetailsDialog(rowData.meterId, rowData.status);
+          },
         },
         {
           type: 'icon',
@@ -58,7 +61,10 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           icon: 'person_add',
           tooltip: 'Assign to a Contractor',
           class: 'clear-hover',
-          click: (rowData: InstalledMeter) => this.openAssignDialog(rowData),
+          click: (rowData: InstalledMeter, event?: MouseEvent) => {
+            event?.stopPropagation();
+            this.openAssignDialog(rowData);
+          },
         },
       ],
     },
