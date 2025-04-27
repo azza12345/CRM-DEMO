@@ -38,6 +38,8 @@ export class AdaptiveTableComponent implements OnInit, OnChanges, AfterViewInit 
   @Input() additionalParams: any = {};
   @Input() httpMethod: HttpVerb = HttpVerb.GET;
   @Input() rowClassFormatter: MtxGridRowClassFormatter = {};
+  @Input() rowSelectable: boolean = true;
+  @Input() rowHover: boolean = true;
   destroyRef = inject(DestroyRef);
 
   @Output() actionTriggered: EventEmitter<{ action: string; rowData: any }> = new EventEmitter<{
