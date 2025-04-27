@@ -42,18 +42,15 @@ export class MeterDetailsDialogComponent implements OnInit {
   ngOnInit(): void {
     this.prepareMeterDetails();
   }
-  getImageUrl(imagePath: string | null): SafeUrl {
-    return this.sanitizer.bypassSecurityTrustUrl(
-      imagePath
-        ? `${environment.ImageUrl}/Images/Meters/${imagePath}`
-        : 'src/assets/images/noImage.jpg'
-    );
-  }
 
   private prepareMeterDetails(): void {
-    if (this.data.oldMeter) {
-      // this.data.oldMeter.image = this.getImageUrl(this.data.oldMeter.image);
+    const formatDate = (dateString: string | null): string =>
+      dateString ? new Date(dateString).toLocaleString() : 'N/A';
 
+    if (this.data.oldMeter) {
+      this.data.oldMeter.image = this.data.oldMeter.image
+        ? `data:image/jpeg;base64,${this.data.oldMeter.image}`
+        : 'assets/images/noImage.jpg';
       this.oldMeterDetails = [
         { label: 'Meter Serial', value: this.data.oldMeter.meterSerial },
         { label: 'Final Reading', value: this.data.oldMeter.lastReading },
@@ -71,13 +68,15 @@ export class MeterDetailsDialogComponent implements OnInit {
     }
 
     if (this.data.newMeter) {
-      // this.data.newMeter.image = this.getImageUrl(this.data.newMeter.image);
+      this.data.newMeter.image = this.data.newMeter.image
+        ? `data:image/jpeg;base64,${this.data.newMeter.image}`
+        : 'assets/images/noImage.jpg';
       this.newMeterDetails = [
         { label: 'Meter Serial', value: this.data.newMeter.meterSerial },
         { label: 'Meter Type', value: this.data.newMeter.meterType },
         { label: 'Installation Type', value: this.data.newMeter.type },
         { label: 'Meter Make', value: this.data.newMeter.meterMake },
-        { label: 'Installation Date', value: this.data.newMeter.installationDate },
+        { label: 'Installation Date', value: formatDate(this.data.newMeter.installationDate) },
         { label: 'Meter Model', value: this.data.newMeter.meterModel },
         { label: 'Location', value: this.data.newMeter.location },
       ];

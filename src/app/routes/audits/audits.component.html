@@ -9,31 +9,30 @@
       [controls]="filterControls"
       [showAllOption]="true"
       (filterChanged)="onFilterChanged($event)"
-    >
+    ></app-filter>
 
-      <div class="export-group">
-        <mat-form-field appearance="outline" class="export-dropdown">
-          <mat-label>Export As</mat-label>
-          <mat-select [(value)]="selectedExportFormat">
-            @for (format of exportFormats; track format.value) {
+
+    <div class="export-group">
+      <mat-form-field appearance="outline" class="export-dropdown">
+        <mat-label>Export As</mat-label>
+        <mat-select [(value)]="selectedExportFormat">
+          @for (format of exportFormats; track format.value) {
               <mat-option [value]="format.value">
                 {{ format.label }}
               </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+          }
+        </mat-select>
+      </mat-form-field>
 
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="exportData()"
-          [disabled]="!selectedExportFormat"
-        >
-          Export
-        </button>
-      </div>
-
-    </app-filter>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="exportData()"
+        [disabled]="!selectedExportFormat"
+      >
+        Export
+      </button>
+    </div>
   </div>
 </div>
 
