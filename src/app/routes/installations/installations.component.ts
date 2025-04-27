@@ -3,7 +3,7 @@ import { FilterComponent } from '../../shared/components/filter/filter.component
 import { AdaptiveTableComponent } from '../../shared/components/adaptive-table/adaptive-table.component';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
-import { MtxGridColumn } from '@ng-matero/extensions/grid';
+import { MtxGridColumn, MtxGridColumnButton } from '@ng-matero/extensions/grid';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
 import { ApiService } from '@shared/services/api.service';
@@ -42,24 +42,29 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       pinned: 'right',
       right: '0px',
       type: 'button',
-      buttons: [
-        {
-          type: 'icon',
-          text: 'View',
-          icon: 'visibility',
-          tooltip: 'View Details',
-          //FIXME: gonna be changed based on API
-          click: (rowData: InstalledMeter) =>
-            this.openViewDetailsDialog(rowData.meterId, rowData.status),
-        },
-        {
-          type: 'icon',
-          text: 'Assign to a Contractor',
-          icon: 'person_add',
-          tooltip: 'Assign to a Contractor',
-          click: (rowData: InstalledMeter) => this.openAssignDialog(rowData),
-        },
-      ],
+      buttons: (rowData: InstalledMeter) => {
+        const baseButtons: MtxGridColumnButton<InstalledMeter>[] = [
+          {
+            type: 'icon',
+            text: 'View',
+            icon: 'visibility',
+            tooltip: 'View Details',
+            click: () => this.openViewDetailsDialog(rowData.meterId, rowData.status),
+          },
+        ];
+
+        if (rowData.status !== 'OnCustomer') {
+          baseButtons.push({
+            type: 'icon',
+            text: 'Assign to a Contractor',
+            icon: 'person_add',
+            tooltip: 'Assign to a Contractor',
+            click: () => this.openAssignDialog(rowData),
+          });
+        }
+
+        return baseButtons;
+      },
     },
   ];
   filterControls: FilterControl[] = [
@@ -68,7 +73,6 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       label: 'District',
       type: 'select',
       apiEndpoint: EndPoint.DISTRICTS_LIST,
-      // isFirstValueDynamic: true,
       optionLabel: 'name',
       optionVal: 'id',
     },
@@ -110,7 +114,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
         .triggerApiRequest<
           BaseResponse<Contractor[]>
         >(EndPoint.GET_Contractors_BY_DISTRICT_ID, HttpVerb.GET, { districtId: meterDistrictId })
-        .toPromise(); // Convert Observable to Promise
+        .toPromise();
 
       this.contractors = (response as BaseResponse<Contractor[]>).data;
     } catch (error) {
@@ -123,7 +127,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   }
 
   async openAssignDialog(rowData: InstalledMeter): Promise<void> {
-    await this.loadContractors(rowData.meterDistrictId); // Ensure contractors are loaded before opening the dialog
+    await this.loadContractors(rowData.meterDistrictId);
 
     const dialogRef = this.dialog.open<AdaptiveDialogComponent>(AdaptiveDialogComponent, {
       width: '400px',
@@ -148,7 +152,6 @@ export class InstallationsComponent implements OnInit, OnDestroy {
     });
   }
 
-  //FIXME: gonna be changed based on API
   openViewDetailsDialog(meterId: number, meterStatus: string): void {
     const url = HelperService.formatEndpoint(EndPoint.INSTALLED_METERS_DETAILS, {
       meterId,
@@ -162,11 +165,9 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       )
       .pipe(
         switchMap(response => {
-          console.log(response);
           if (!response?.data) {
             throw new Error('Response data is null or undefined.');
           }
-
           const { oldMeter, newMeter } = response.data;
           return of({ oldMeter, newMeter });
         })
@@ -185,13 +186,16 @@ export class InstallationsComponent implements OnInit, OnDestroy {
             },
           });
         },
+        error: err => {
+          console.error('Error loading meter details:', err);
+        },
       });
   }
 
   assignToContractor(meter: InstalledMeter, contractorId: number): void {
     const assignMeterToContractorRequest = { contractorId, meterId: meter.meterId };
 
-    const response = this.apiService
+    this.apiService
       .triggerApiRequest<
         BaseResponse<boolean>
       >(EndPoint.ASSIGN_METER_TO_AGENT, HttpVerb.POST, null, assignMeterToContractorRequest)
@@ -200,7 +204,9 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           this.filters = { ...this.filters };
           this.toastr.success('meter assigned to contractor successfully');
         },
-        error: () => {},
+        error: err => {
+          this.toastr.error('Failed to assign meter to contractor');
+        },
       });
   }
 }

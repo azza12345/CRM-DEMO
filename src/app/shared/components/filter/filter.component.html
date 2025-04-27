@@ -1,27 +1,24 @@
 <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="filter">
   <div class="row">
-  @for (control of controls; track control.label) {
-    <div class="col-3">
-      <ng-container>
-        @switch (control.type) {
-          @case ('text') {
-            <div>
+    @for (control of controls; track control.label) {
+      <div class="col-3">
+        <ng-container>
+          @switch (control.type) {
+
+            @case ('text') {
               <mat-form-field class="input-text" appearance="outline">
                 <mat-label>{{ control.label }}</mat-label>
                 <input matInput [formControlName]="control.formControlName" />
               </mat-form-field>
-            </div>
-          }
+            }
 
-          @case ('select') {
-            <div>
+            @case ('select') {
               <mat-form-field
                 appearance="outline"
                 class="select"
                 [color]="isPrimary ? 'primary' : 'accent'"
               >
                 <mat-label>{{ control.label }}</mat-label>
-
                 <mat-select [formControlName]="control.formControlName">
                   <mat-option *ngIf="showAllOption" value="0">All</mat-option>
                   @for (option of control.options; track option.value) {
@@ -31,11 +28,9 @@
                   }
                 </mat-select>
               </mat-form-field>
-            </div>
-          }
+            }
 
-          @case ('autocomplete') {
-            <div>
+            @case ('autocomplete') {
               <mat-form-field appearance="outline">
                 <mat-label>{{ control.label }}</mat-label>
                 <input
@@ -44,7 +39,10 @@
                   [matAutocomplete]="auto"
                   [formControlName]="control.formControlName"
                 />
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn(control)">
+                <mat-autocomplete
+                  #auto="matAutocomplete"
+                  [displayWith]="displayFn(control)"
+                >
                   @for (option of control.options; track option.value) {
                     <mat-option [value]="option.value">
                       {{ option.label }}
@@ -52,11 +50,9 @@
                   }
                 </mat-autocomplete>
               </mat-form-field>
-            </div>
-          }
+            }
 
-          @case ('date') {
-            <div>
+            @case ('date') {
               <mat-form-field appearance="outline">
                 <mat-label>{{ control.label }}</mat-label>
                 <input
@@ -67,32 +63,33 @@
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
-            </div>
-          }
+            }
 
-          @case ('checkbox') {
-            <div>
+            @case ('checkbox') {
               <mat-checkbox [formControlName]="control.formControlName">
                 {{ control.label }}
               </mat-checkbox>
-            </div>
+            }
           }
-        }
-      </ng-container>
-    </div>
-  }
-
-  <div class="buttons col-3">
-    <button mat-raised-button [color]="isPrimary ? 'primary' : 'accent'" type="submit">
-      Filter
-    </button>
-    @if (resetBtn) {
-      <button mat-flat-button [color]="isPrimary ? 'primary' : 'accent'" (click)="resetForm()">
-        Reset
-      </button>
+        </ng-container>
+      </div>
     }
+
+    <div class="buttons col-3">
+    <button mat-raised-button [color]="isPrimary ? 'primary' : 'accent'" type="submit">
+        Filter
+      </button>
+      @if (resetBtn) {
+        <button
+          mat-flat-button
+          [color]="isPrimary ? 'primary' : 'accent'"
+          (click)="resetForm()"
+        >
+          Reset
+        </button>
+      }
+    </div>
   </div>
-</div>
 
 </form>
 
