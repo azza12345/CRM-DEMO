@@ -42,7 +42,6 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       pinned: 'right',
       right: '0px',
       type: 'button',
-      excludeFromRowState: true,
       buttons: [
         {
           type: 'icon',
