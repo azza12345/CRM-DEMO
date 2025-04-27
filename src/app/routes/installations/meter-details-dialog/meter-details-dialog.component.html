@@ -13,8 +13,10 @@
           </div>
           @if (data.newMeter.image) {
             <div class="meter-image">
-              <img [src]="getImageUrl(data.newMeter.image)" alt="New Meter Image" />
-            </div>
+              <img
+              [src]="data.newMeter.image"
+              alt="New Meter Image"
+            />  </div>
           }
         </div>
       </mat-tab>
@@ -28,7 +30,11 @@
           </div>
           @if (data.oldMeter.image) {
             <div class="meter-image">
-              <img [src]="getImageUrl(data.oldMeter.image)" alt="Old Meter Image" />
+              <img
+              [src]="data.oldMeter.image"
+              alt="Old Meter Image"
+              class="meter-img"
+            />
             </div>
           }
         </div>
@@ -44,7 +50,7 @@
         }
       </div>
       <div class="meter-image">
-        <img [src]="getImageUrl(data.newMeter.image)" alt="New Meter Image" />
+        <img [src]="data.newMeter.image" alt="New Meter Image" />
       </div>
     </div>
   }
