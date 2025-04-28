@@ -48,6 +48,13 @@
         @if (newMeterSpareParts.length > 0) {
           <app-spare-parts-table [spareParts]="newMeterSpareParts"></app-spare-parts-table>
         }
+        @if (data.newMeter.location) {
+          <div class="meter-location mt-2">
+            <a [href]="data.newMeter.location" target="_blank">
+              View on Map
+            </a>
+          </div>
+        }
       </div>
       <div class="meter-image">
         <img [src]="data.newMeter.image" alt="New Meter Image" />
