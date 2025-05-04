@@ -1,9 +1,6 @@
 <div class="row row-cols-2">
   @for (detail of details; track detail.label) {
-    @if (
-      detail.label !== 'Location' ||
-      (detail.label === 'Location' && meterStatus === 'OnCustomer')
-    ) {
+    @if (detail.label !== 'Location') {
       <div class="col">
         <p>
           <strong>{{ detail.label }}</strong>
@@ -16,6 +13,5 @@
         <a [href]="detail.value" target="_blank">View on Map</a>
       </div>
     }
-
   }
 </div>
