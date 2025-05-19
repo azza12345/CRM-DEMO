@@ -1,18 +1,33 @@
-.matero-page-header {
-  display: block;
-  padding: 16px;
-  margin: -16px -16px 16px;
-  color: #fff;
-  background-color: #3f51b5;
+@use '../../../../styles/helpers/variables' as *;
 
+.matero-page-header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  margin-bottom: 20px;
+  line-height: 1;
+  font-size: 1.25rem;
   .matero-breadcrumb {
     margin-top: 8px;
     margin-bottom: 0;
   }
-}
+  .add-icon {
+    width: 35px;
+    height: 35px;
 
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+.left {
+  display: flex;
+  align-items: center;
+}
 .matero-page-title {
   margin: 0;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 400;
+  color: $primary-color;
 }

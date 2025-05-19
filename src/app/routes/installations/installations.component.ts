@@ -7,7 +7,7 @@ import { MtxGridColumn, MtxGridColumnButton } from '@ng-matero/extensions/grid';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
 import { ApiService } from '@shared/services/api.service';
-import { delay, of, Subscription, switchMap } from 'rxjs';
+import { of, Subscription, switchMap } from 'rxjs';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { Contractor } from '@shared/interfaces/contractor.model';
 import { InstalledMeter } from '@shared/interfaces/Installed-meter.model';
@@ -15,15 +15,26 @@ import { MeterDetailsDialogComponent } from './meter-details-dialog/meter-detail
 import { BaseMeter } from '@shared/interfaces/meter-info.model';
 import { ToastrService } from 'ngx-toastr';
 import { HelperService } from '@shared/services/helper.service';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { ListActionsComponent } from '../../shared/components/list-actions/list-actions.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-installations',
   standalone: true,
-  imports: [FilterComponent, AdaptiveTableComponent, MatDialogModule],
+  imports: [
+    FilterComponent,
+    AdaptiveTableComponent,
+    MatDialogModule,
+    PageHeaderComponent,
+    ListActionsComponent,
+    MatIconModule,
+  ],
   templateUrl: './installations.component.html',
   styleUrl: './installations.component.scss',
 })
 export class InstallationsComponent implements OnInit, OnDestroy {
+  filterVisible = false;
   filters: any = {};
   sortField: string = 'meterSerial';
   sortDirection: 'asc' | 'desc' = 'asc';
@@ -208,5 +219,8 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           this.toastr.error('Failed to assign meter to contractor');
         },
       });
+  }
+  toggleFilter() {
+    this.filterVisible = !this.filterVisible;
   }
 }
