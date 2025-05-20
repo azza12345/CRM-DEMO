@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
   // ApiUrl: 'assets',
-  //ApiUrl: 'http://192.168.5.48:8070/api/v1',
-  ApiUrl: 'http://localhost:5218/api/v1',
+  ApiUrl: 'http://192.168.5.48:8070/api/v1',
+  // ApiUrl: 'http://localhost:5218/api/v1',
   baseUrl: '',
   useHash: false,
   releaseDate: '2025',
@@ -10,6 +10,6 @@ export const environment = {
   maxImageSize: 5 * 1024 * 1024,
   Key: 'CgkiYpej4VYacsKnFom7ZQ==',
   IV: 'kTo2ADtsGEYKtrzxFjFk5A==',
-  ImageUrl: 'http://localhost:5218',
+  // ImageUrl: 'http://localhost:5218',
   //ImageUrl: 'http://192.168.5.48:8070',
 };

@@ -1,5 +1,7 @@
-<div class="d-flex justify-content-between mb-4">
-  <h1 class="title">Installations</h1>
+<page-header [title]="'Installations'">
+  <app-list-actions [showFilter]="true" (filterToggled)="toggleFilter()"> </app-list-actions>
+</page-header>
+<div class="filter-container" [class.active]="filterVisible">
   <app-filter
     [isPrimary]="true"
     [controls]="filterControls"
@@ -7,7 +9,6 @@
     (filterChanged)="onFilterChanged($event)"
   ></app-filter>
 </div>
-
 <app-adaptive-table
   [apiUrl]="endpoint"
   [httpMethod]="httpVerb"

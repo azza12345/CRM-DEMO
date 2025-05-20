@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router'; // Added RouterLink here
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { EndPoint, HttpVerb } from '@shared/enums';
@@ -16,6 +16,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { environment } from '@env/environment';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { ListActionsComponent } from '../../shared/components/list-actions/list-actions.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-contractors',
@@ -23,7 +26,6 @@ import { environment } from '@env/environment';
   templateUrl: './contractors.component.html',
   styleUrls: ['./contractors.component.scss'],
   imports: [
-    RouterLink,
     FormsModule,
     AdaptiveTableComponent,
     FilterComponent,
@@ -34,10 +36,19 @@ import { environment } from '@env/environment';
     MatSelectModule,
     MatOptionModule,
     MatInputModule,
+    PageHeaderComponent,
+    ListActionsComponent,
+    MatMenuModule,
   ],
 })
 export class ContractorsComponent {
+  filterVisible = false;
+  toggleFilter() {
+    this.filterVisible = !this.filterVisible;
+  }
   private router = inject(Router);
+  //TODO
+  // not recommended to inject the httpClient inside the component
   private http = inject(HttpClient);
 
   filters: any = {};
@@ -46,6 +57,9 @@ export class ContractorsComponent {
   endpoint: EndPoint = EndPoint.GET_Contractors_BY_DISTRICT_ID;
   httpVerb: HttpVerb = HttpVerb.GET;
 
+  // TODO
+  // preferred using of enum or method in a utility class of function
+  // to avoid duplication (DRY Principle)
   fileFormats = [
     { label: 'Excel', value: 'excel' },
     { label: 'CSV', value: 'csv' },
@@ -119,6 +133,12 @@ export class ContractorsComponent {
     const fileType = this.selectedFormat;
 
     const apiUrl = `${environment.ApiUrl}/${EndPoint.EXPORT_CONTRACTORS}?fileType=${fileType}&name=${encodeURIComponent(name)}&districtId=${districtId}`;
+    //TODO
+    /* 
+    1- not recommended to use the httpClient inside the component
+    2- use generic api service instead. 
+    3- use take until destroyed  
+    */
     this.http
       .get(apiUrl, {
         responseType: 'blob',
@@ -157,6 +177,11 @@ export class ContractorsComponent {
         },
       });
   }
+
+  //TODO
+  // since this method is used at another components
+  // consider to add a shared utility class for this function to stick with the
+  // DRY Principle as it
   private getMimeType(fileType: string): string {
     switch (fileType) {
       case 'pdf':
@@ -168,5 +193,9 @@ export class ContractorsComponent {
       default:
         return 'application/octet-stream';
     }
+  }
+  selectExportFormat(format: string): void {
+    this.selectedFormat = format;
+    this.exportContractors();
   }
 }

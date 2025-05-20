@@ -146,3 +146,44 @@ html.cdk-global-scrollblock {
   width: 100% !important;
   overflow: hidden !important;
 }
+
+/* 
+global btn custom action style
+this can be used in the page header 
+for the export btn or any other btn 
+of any component 
+*/
+.btn-custom-action {
+  border-radius: 25px;
+  padding: 12px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 7px;
+}
+
+/*
+global style of the filter container class in case 
+we used the filter icon in the page header of any 
+component.
+
+*/
+
+.filter-container {
+  max-height: 0;
+  opacity: 0;
+  transition:
+    max-height 0.5s ease,
+    opacity 0.5s ease;
+  border: 1px solid grey;
+  app-filter {
+    padding: 20px;
+    display: block;
+  }
+  background-color: #fff;
+}
+
+.filter-container.active {
+  max-height: 500px;
+  opacity: 1;
+}
