@@ -19,6 +19,7 @@ import { environment } from '@env/environment';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { ListActionsComponent } from '../../shared/components/list-actions/list-actions.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { getMimeType } from '@shared/utils/file-utils';
 
 @Component({
   selector: 'app-contractors',
@@ -134,10 +135,10 @@ export class ContractorsComponent {
 
     const apiUrl = `${environment.ApiUrl}/${EndPoint.EXPORT_CONTRACTORS}?fileType=${fileType}&name=${encodeURIComponent(name)}&districtId=${districtId}`;
     //TODO
-    /* 
+    /*
     1- not recommended to use the httpClient inside the component
-    2- use generic api service instead. 
-    3- use take until destroyed  
+    2- use generic api service instead.
+    3- use take until destroyed
     */
     this.http
       .get(apiUrl, {
@@ -157,8 +158,9 @@ export class ContractorsComponent {
           }
 
           const blob = new Blob([response.body!], {
-            type: response.headers.get('content-type') || this.getMimeType(fileType),
+            type: response.headers.get('content-type') || getMimeType(fileType),
           });
+
           const url = window.URL.createObjectURL(blob);
 
           const a = document.createElement('a');
@@ -178,22 +180,6 @@ export class ContractorsComponent {
       });
   }
 
-  //TODO
-  // since this method is used at another components
-  // consider to add a shared utility class for this function to stick with the
-  // DRY Principle as it
-  private getMimeType(fileType: string): string {
-    switch (fileType) {
-      case 'pdf':
-        return 'application/pdf';
-      case 'excel':
-        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      case 'csv':
-        return 'text/csv';
-      default:
-        return 'application/octet-stream';
-    }
-  }
   selectExportFormat(format: string): void {
     this.selectedFormat = format;
     this.exportContractors();
