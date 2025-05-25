@@ -48,20 +48,22 @@ export class AuditsComponent {
   ) {}
 
   columns: MtxGridColumn[] = [
-    { header: 'Description', field: 'description' },
-    { header: 'Table Name', field: 'tableName' },
     { header: 'Field', field: 'field' },
     { header: 'Old Value', field: 'oldValue' },
     { header: 'New Value', field: 'newValue' },
     { header: 'Operation', field: 'operation' },
     { header: 'IP Address', field: 'ipAddress' },
-    { header: 'Record Id', field: 'recordId' },
     { header: 'UserId', field: 'userId' },
-    { header: 'User', field: 'user' },
-    { header: 'Audit Type', field: 'auditType' },
-    { header: 'Device Id', field: 'deviceId' },
+    { header: 'UserName', field: 'userName' },
     { header: 'Machine Name', field: 'machineName' },
-    { header: 'Creation Date', field: 'creationDate' },
+    {
+      header: 'Creation Date',
+      field: 'creationDate',
+      formatter: (data: any) => {
+        if (!data.creationDate) return '';
+        return this.datePipe.transform(data.creationDate, 'MMM d, yyyy h:mm a');
+      },
+    },
   ];
 
   filterControls: FilterControl[] = [
