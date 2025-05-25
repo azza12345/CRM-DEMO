@@ -11,7 +11,7 @@ export enum EndPoint {
   DISTRICTS_LIST = 'Districts/ActiveDistrics/list',
   INSTALLED_METERS = 'meters/installed',
   GET_CONTRACTORS = 'contractors/all',
-  GET_Contractors_BY_DISTRICT_ID = 'Districts/Contractors',
+  GET_Contractors_BY_DISTRICT_ID = 'Districts/All-Contractors',
   RETIRED_METERS = 'Meters/retired',
   DISTRICTS = 'Districts/all',
   METERS_STATISTICS = 'meters/statistics',
