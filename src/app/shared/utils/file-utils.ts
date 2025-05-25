@@ -11,3 +11,16 @@ export function getMimeType(fileType: string): string {
       return 'application/octet-stream';
   }
 }
+
+export function getFileExtension(fileType: string): string {
+  switch (fileType) {
+    case 'pdf':
+      return 'pdf';
+    case 'excel':
+      return 'xlsx';
+    case 'csv':
+      return 'csv';
+    default:
+      return '';
+  }
+}

@@ -19,7 +19,7 @@ import { environment } from '@env/environment';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { ListActionsComponent } from '../../shared/components/list-actions/list-actions.component';
 import { MatMenuModule } from '@angular/material/menu';
-import { getMimeType } from '@shared/utils/file-utils';
+import { getFileExtension, getMimeType } from '@shared/utils/file-utils';
 
 @Component({
   selector: 'app-contractors',
@@ -148,7 +148,8 @@ export class ContractorsComponent {
       .subscribe({
         next: response => {
           const contentDisposition = response.headers.get('content-disposition');
-          let filename = `contractors_${new Date().toISOString().slice(0, 10)}.${fileType}`;
+          const extension = getFileExtension(fileType);
+          let filename = `contractors_${new Date().toISOString().slice(0, 10)}.${extension}`;
 
           if (contentDisposition) {
             const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
