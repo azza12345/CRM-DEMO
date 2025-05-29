@@ -1,40 +1,31 @@
-<div class="audit-toolbar">
-  <div class="audit-controls">
-    <h1 class="title">Audits</h1>
-  </div>
-
-  <div class="filter-wrapper">
-    <app-filter
-      [isPrimary]="true"
-      [controls]="filterControls"
-      [showAllOption]="true"
-      (filterChanged)="onFilterChanged($event)"
-    ></app-filter>
-
-
-    <div class="export-group">
-      <mat-form-field appearance="outline" class="export-dropdown">
-        <mat-label>Export As</mat-label>
-        <mat-select [(value)]="selectedExportFormat">
-          @for (format of exportFormats; track format.value) {
-              <mat-option [value]="format.value">
-                {{ format.label }}
-              </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="exportData()"
-        [disabled]="!selectedExportFormat"
-      >
-        Export
-      </button>
-    </div>
-  </div>
+<page-header [title]="'Audits'">
+  <app-list-actions [showFilter]="true" (filterToggled)="toggleFilter()">
+    <button
+      custom-action
+      [matMenuTriggerFor]="exportMenu"
+      class="btn-custom-action btn btn-success"
+    >
+      <mat-icon>save</mat-icon>
+      <span>Export</span>
+    </button>
+  </app-list-actions>
+</page-header>
+<div class="filter-container" [class.active]="filterVisible">
+  <app-filter
+    [isPrimary]="true"
+    [controls]="filterControls"
+    [showAllOption]="true"
+    (filterChanged)="onFilterChanged($event)"
+  ></app-filter>
 </div>
+
+<mat-menu #exportMenu>
+  @for (format of fileFormats; track format.value) {
+    <button mat-menu-item (click)="export(format.value)">
+      {{ format.label }}
+    </button>
+  }
+</mat-menu>
 
 <app-adaptive-table
   [apiUrl]="endpoint"

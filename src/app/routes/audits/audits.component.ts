@@ -12,6 +12,10 @@ import { ApiService } from '@shared/services/api.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { environment } from '@env/environment';
+import { MatMenuModule } from '@angular/material/menu';
+import { PageHeaderComponent } from '@shared';
+import { ListActionsComponent } from '@shared/components/list-actions/list-actions.component';
+import { FileFormats } from '@shared/utils/file-utils';
 
 @Component({
   selector: 'app-audits',
@@ -24,24 +28,24 @@ import { environment } from '@env/environment';
     MatTooltipModule,
     MatFormFieldModule,
     MatSelectModule,
+    PageHeaderComponent,
+    ListActionsComponent,
+    MatMenuModule,
   ],
   templateUrl: './audits.component.html',
   styleUrls: ['./audits.component.scss'],
   providers: [DatePipe],
 })
 export class AuditsComponent {
+  filterVisible = false;
+  toggleFilter() {
+    this.filterVisible = !this.filterVisible;
+  }
   filters: any = {};
   endpoint: EndPoint = EndPoint.GET_AUDITS;
   httpVerb: HttpVerb = HttpVerb.GET;
 
-  exportFormats = [
-    { label: 'PDF', value: 'pdf' },
-    { label: 'Excel', value: 'excel' },
-    { label: 'CSV', value: 'csv' },
-  ];
-
-  selectedExportFormat: string | null = null;
-
+  fileFormats = FileFormats;
   constructor(
     private datePipe: DatePipe,
     private apiService: ApiService
@@ -110,12 +114,6 @@ export class AuditsComponent {
     }
 
     this.filters = transformedFilters;
-  }
-
-  exportData(): void {
-    if (this.selectedExportFormat) {
-      this.export(this.selectedExportFormat);
-    }
   }
 
   export(format: string): void {
