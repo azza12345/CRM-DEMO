@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, DestroyRef } from '@angular/core';
 import { FilterComponent } from '../../shared/components/filter/filter.component';
 import { AdaptiveTableComponent } from '../../shared/components/adaptive-table/adaptive-table.component';
 import { EndPoint, HttpVerb } from '@shared/enums';
@@ -18,6 +18,11 @@ import { HelperService } from '@shared/services/helper.service';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { ListActionsComponent } from '../../shared/components/list-actions/list-actions.component';
 import { MatIconModule } from '@angular/material/icon';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FileFormats, getFileExtension, getMimeType } from '@shared/utils/file-utils';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-installations',
@@ -29,6 +34,7 @@ import { MatIconModule } from '@angular/material/icon';
     PageHeaderComponent,
     ListActionsComponent,
     MatIconModule,
+    MatMenuModule,
   ],
   templateUrl: './installations.component.html',
   styleUrl: './installations.component.scss',
@@ -38,6 +44,8 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   filters: any = {};
   sortField: string = 'meterSerial';
   sortDirection: 'asc' | 'desc' = 'asc';
+  fileFormats = FileFormats;
+  private destroyRef = inject(DestroyRef);
   columns: MtxGridColumn<InstalledMeter>[] = [
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
     { header: 'Status', field: 'status' },
@@ -102,6 +110,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   private meterDetailsSub!: Subscription;
 
   private toastr = inject(ToastrService);
+  selectedFormat: any;
 
   constructor(
     private dialog: MatDialog,
@@ -222,5 +231,64 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   }
   toggleFilter() {
     this.filterVisible = !this.filterVisible;
+  }
+
+  exportMeters(format: string): void {
+    if (!format) return;
+
+    const meterSerial = this.filters?.MeterSerial ?? '';
+    const districtId = this.filters?.district ?? '';
+
+    const fileType = format;
+
+    this.apiService
+      .triggerApiRequest(
+        EndPoint.EXPORT_INSTALLED_METERS,
+        HttpVerb.GET,
+        {
+          fileType: format,
+          meterSerial: encodeURIComponent(meterSerial),
+          districtId,
+        },
+        null,
+        { responseType: 'blob', observe: 'response' }
+      )
+      .pipe(
+        map(response => response as HttpResponse<Blob>),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: response => {
+          const contentDisposition = response.headers.get('content-disposition');
+          const extension = getFileExtension(fileType);
+          let filename = `meters_${new Date().toISOString().slice(0, 10)}.${extension}`;
+
+          if (contentDisposition) {
+            const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
+            if (filenameMatch && filenameMatch[1]) {
+              filename = filenameMatch[1];
+            }
+          }
+
+          const blob = new Blob([response.body!], {
+            type: response.headers.get('content-type') || getMimeType(fileType),
+          });
+
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+        },
+        error: err => {
+          console.error('Export failed:', err);
+        },
+      });
   }
 }

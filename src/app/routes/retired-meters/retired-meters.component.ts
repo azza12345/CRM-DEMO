@@ -5,15 +5,22 @@ import { EndPoint, HttpVerb } from '@shared/enums';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { RetiredMeter } from '@shared/interfaces/retired-meter.model';
+import { PageHeaderComponent } from '@shared';
+import { ListActionsComponent } from '@shared/components/list-actions/list-actions.component';
 
 @Component({
   selector: 'app-retired-meters',
   standalone: true,
-  imports: [FilterComponent, AdaptiveTableComponent],
+  imports: [FilterComponent, AdaptiveTableComponent, PageHeaderComponent, ListActionsComponent],
   templateUrl: './retired-meters.component.html',
   styleUrl: './retired-meters.component.scss',
 })
 export class RetiredMetersComponent {
+  filterVisible = false;
+  toggleFilter() {
+    this.filterVisible = !this.filterVisible;
+  }
+
   filters: any = {};
   columns: MtxGridColumn<RetiredMeter>[] = [
     { header: 'Meter Serial', field: 'meterSerial', sortable: true },
@@ -22,8 +29,6 @@ export class RetiredMetersComponent {
     { header: 'Meter type', field: 'type', sortable: true },
     { header: 'Meter make', field: 'meterMake', sortable: true },
     { header: 'Retired By', field: 'agentName', sortable: true },
-    // { header: 'Is Received', field: 'isReceived', sortable: true },
-    // { header: 'old Meter Serial', field: 'oldMeterSerial', sortable: true },
   ];
   filterControls: FilterControl[] = [
     {

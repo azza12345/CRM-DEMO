@@ -33,4 +33,5 @@ export enum EndPoint {
   EXPORT_AGENTS = 'agents/export',
   GET_AUDITS = 'audits/get_audits',
   Get_USERS = 'User/search-users',
+  EXPORT_INSTALLED_METERS = 'meters/installed/export',
 }

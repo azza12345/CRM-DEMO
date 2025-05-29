@@ -12,6 +12,15 @@ import { ApiService } from '@shared/services/api.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { environment } from '@env/environment';
+import { MatMenuModule } from '@angular/material/menu';
+import { PageHeaderComponent } from '@shared';
+import { ListActionsComponent } from '@shared/components/list-actions/list-actions.component';
+import { FileFormats } from '@shared/utils/file-utils';
+import { HttpResponse } from '@angular/common/http';
+import { map } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { getFileExtension, getMimeType } from '@shared/utils/file-utils';
+import { DestroyRef, inject } from '@angular/core';
 
 @Component({
   selector: 'app-audits',
@@ -24,44 +33,49 @@ import { environment } from '@env/environment';
     MatTooltipModule,
     MatFormFieldModule,
     MatSelectModule,
+    PageHeaderComponent,
+    ListActionsComponent,
+    MatMenuModule,
   ],
   templateUrl: './audits.component.html',
   styleUrls: ['./audits.component.scss'],
   providers: [DatePipe],
 })
 export class AuditsComponent {
+  filterVisible = false;
+  toggleFilter() {
+    this.filterVisible = !this.filterVisible;
+  }
+
+  private destroyRef = inject(DestroyRef);
+
   filters: any = {};
   endpoint: EndPoint = EndPoint.GET_AUDITS;
   httpVerb: HttpVerb = HttpVerb.GET;
 
-  exportFormats = [
-    { label: 'PDF', value: 'pdf' },
-    { label: 'Excel', value: 'excel' },
-    { label: 'CSV', value: 'csv' },
-  ];
-
-  selectedExportFormat: string | null = null;
-
+  fileFormats = FileFormats;
   constructor(
     private datePipe: DatePipe,
     private apiService: ApiService
   ) {}
 
   columns: MtxGridColumn[] = [
-    { header: 'Description', field: 'description' },
-    { header: 'Table Name', field: 'tableName' },
     { header: 'Field', field: 'field' },
     { header: 'Old Value', field: 'oldValue' },
     { header: 'New Value', field: 'newValue' },
     { header: 'Operation', field: 'operation' },
     { header: 'IP Address', field: 'ipAddress' },
-    { header: 'Record Id', field: 'recordId' },
     { header: 'UserId', field: 'userId' },
-    { header: 'User', field: 'user' },
-    { header: 'Audit Type', field: 'auditType' },
-    { header: 'Device Id', field: 'deviceId' },
+    { header: 'UserName', field: 'userName' },
     { header: 'Machine Name', field: 'machineName' },
-    { header: 'Creation Date', field: 'creationDate' },
+    {
+      header: 'Creation Date',
+      field: 'creationDate',
+      formatter: (data: any) => {
+        if (!data.creationDate) return '';
+        return this.datePipe.transform(data.creationDate, 'MMM d, yyyy h:mm a');
+      },
+    },
   ];
 
   filterControls: FilterControl[] = [
@@ -110,19 +124,51 @@ export class AuditsComponent {
     this.filters = transformedFilters;
   }
 
-  exportData(): void {
-    if (this.selectedExportFormat) {
-      this.export(this.selectedExportFormat);
-    }
-  }
-
   export(format: string): void {
-    const queryParams = new URLSearchParams({
-      ...this.filters,
-      export: format,
-    });
+    if (!format) return;
 
-    const url = `${environment.ApiUrl}/${EndPoint.GET_AUDITS}?${queryParams.toString()}`;
-    window.open(url, '_blank');
+    this.apiService
+      .triggerApiRequest(
+        EndPoint.GET_AUDITS,
+        HttpVerb.GET,
+        { ...this.filters, export: format },
+        null,
+        { responseType: 'blob', observe: 'response' }
+      )
+      .pipe(
+        map(response => response as HttpResponse<Blob>),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: response => {
+          const contentDisposition = response.headers.get('content-disposition');
+          const extension = getFileExtension(format);
+          let filename = `audits_${new Date().toISOString().slice(0, 10)}.${extension}`;
+
+          if (contentDisposition) {
+            const match = contentDisposition.match(/filename="?(.+)"?/);
+            if (match && match[1]) filename = match[1];
+          }
+
+          const blob = new Blob([response.body!], {
+            type: response.headers.get('content-type') || getMimeType(format),
+          });
+
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+        },
+        error: err => {
+          console.error('Audit export failed:', err);
+        },
+      });
   }
 }
