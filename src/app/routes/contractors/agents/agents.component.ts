@@ -33,7 +33,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { PageHeaderComponent } from '@shared';
 import { ListActionsComponent } from '@shared/components/list-actions/list-actions.component';
-import { FileFormats, getFileExtension, getMimeType } from '@shared/utils/file-utils';
+import { downloadFile, FileFormats, getFileExtension, getMimeType } from '@shared/utils/file-utils';
 
 @Component({
   selector: 'app-agents',
@@ -197,30 +197,9 @@ export class AgentsComponent implements OnInit, OnDestroy {
       .pipe(map(response => response as HttpResponse<Blob>))
       .subscribe({
         next: response => {
-          const contentDisposition = response.headers.get('content-disposition');
-          const extension = getFileExtension(fileType);
-          let filename = `agents_${new Date().toISOString().slice(0, 10)}.${extension}`;
-
-          if (contentDisposition) {
-            const match = contentDisposition.match(/filename="?(.+)"?/);
-            if (match && match[1]) filename = match[1];
-          }
-
-          const blob = new Blob([response.body!], {
-            type: response.headers.get('content-type') || getMimeType(fileType),
-          });
-
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-
-          setTimeout(() => {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-          }, 100);
+          const extension = getFileExtension(format);
+          const defaultFilename = `agents_${new Date().toISOString().slice(0, 10)}.${extension}`;
+          downloadFile(response, defaultFilename, format);
         },
         error: err => {
           console.error('Export failed:', err);
