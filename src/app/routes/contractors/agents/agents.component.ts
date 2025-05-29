@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Agent } from '@shared/interfaces/agent.model';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdaptiveDialogComponent } from '@shared/components/adaptive-dialog/adaptive-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,11 +25,15 @@ import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { Contractor } from '@shared/interfaces/contractor.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { MatMenuModule } from '@angular/material/menu';
+import { PageHeaderComponent } from '@shared';
+import { ListActionsComponent } from '@shared/components/list-actions/list-actions.component';
+import { FileFormats, getFileExtension, getMimeType } from '@shared/utils/file-utils';
 
 @Component({
   selector: 'app-agents',
@@ -44,6 +48,9 @@ import { MatOptionModule } from '@angular/material/core';
     FormsModule,
     MatSelectModule,
     MatOptionModule,
+    PageHeaderComponent,
+    ListActionsComponent,
+    MatMenuModule,
   ],
   templateUrl: './agents.component.html',
   styleUrl: './agents.component.scss',
@@ -55,18 +62,17 @@ export class AgentsComponent implements OnInit, OnDestroy {
   private apiService = inject(ApiService);
   private toastr = inject(ToastrService);
   private http = inject(HttpClient);
+  filterVisible = false;
+  toggleFilter() {
+    this.filterVisible = !this.filterVisible;
+  }
 
   contractorId!: string;
   contractorName?: string;
   filters: any = {};
   alive = false;
   selectedFormat: string | null = null;
-
-  fileFormats = [
-    { label: 'Excel', value: 'excel' },
-    { label: 'CSV', value: 'csv' },
-    { label: 'PDF', value: 'pdf' },
-  ];
+  fileFormats = FileFormats;
 
   rowClassFormatter: MtxGridRowClassFormatter = {
     'disabled-state': (data, index) => data.state === 'disabled',
@@ -170,23 +176,30 @@ export class AgentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  exportAgents(): void {
-    if (!this.selectedFormat) return;
+  exportAgents(format: string): void {
+    if (!format) return;
 
     const name = this.filters?.Name ?? '';
-    const fileType = this.selectedFormat;
+    const fileType = format;
 
-    const apiUrl = `${environment.ApiUrl}/${EndPoint.EXPORT_AGENTS}?fileType=${fileType}&contractorId=${this.contractorId}&&name=${encodeURIComponent(name)}`;
-
-    this.http
-      .get(apiUrl, {
-        responseType: 'blob',
-        observe: 'response',
-      })
+    this.apiService
+      .triggerApiRequest(
+        EndPoint.EXPORT_AGENTS,
+        HttpVerb.GET,
+        {
+          fileType: format,
+          contractorId: this.contractorId,
+          name: encodeURIComponent(name),
+        },
+        null,
+        { responseType: 'blob', observe: 'response' }
+      )
+      .pipe(map(response => response as HttpResponse<Blob>))
       .subscribe({
         next: response => {
           const contentDisposition = response.headers.get('content-disposition');
-          let filename = `agents_${new Date().toISOString().slice(0, 10)}.${fileType}`;
+          const extension = getFileExtension(fileType);
+          let filename = `agents_${new Date().toISOString().slice(0, 10)}.${extension}`;
 
           if (contentDisposition) {
             const match = contentDisposition.match(/filename="?(.+)"?/);
@@ -194,7 +207,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
           }
 
           const blob = new Blob([response.body!], {
-            type: response.headers.get('content-type') || this.getMimeType(fileType),
+            type: response.headers.get('content-type') || getMimeType(fileType),
           });
 
           const url = window.URL.createObjectURL(blob);
@@ -203,6 +216,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
           a.download = filename;
           document.body.appendChild(a);
           a.click();
+
           setTimeout(() => {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
@@ -212,18 +226,5 @@ export class AgentsComponent implements OnInit, OnDestroy {
           console.error('Export failed:', err);
         },
       });
-  }
-
-  private getMimeType(fileType: string): string {
-    switch (fileType) {
-      case 'pdf':
-        return 'application/pdf';
-      case 'excel':
-        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      case 'csv':
-        return 'text/csv';
-      default:
-        return 'application/octet-stream';
-    }
   }
 }

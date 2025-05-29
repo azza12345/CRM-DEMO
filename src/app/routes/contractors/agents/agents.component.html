@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-between mb-4">
+<!-- <div class="d-flex justify-content-between mb-4">
   <div>
     <div class="d-flex align-items-center">
       <h1 class="title">Agents</h1>
@@ -42,9 +42,36 @@
     [controls]="filterControls"
     (filterChanged)="onFilterChanged($event)"
   ></app-filter>
+</div> -->
+
+<page-header [title]="'Agents'" [addLink]="'add'" addTooltip="Add Agent">
+  <app-list-actions [showFilter]="true" (filterToggled)="toggleFilter()">
+    <button
+      custom-action
+      [matMenuTriggerFor]="exportMenu"
+      class="btn-custom-action btn btn-success"
+    >
+      <mat-icon>save</mat-icon>
+      <span>Export</span>
+    </button>
+  </app-list-actions>
+</page-header>
+<div class="filter-container" [class.active]="filterVisible">
+  <app-filter
+    [isPrimary]="true"
+    [controls]="filterControls"
+    [showAllOption]="true"
+    (filterChanged)="onFilterChanged($event)"
+  ></app-filter>
 </div>
 
-
+<mat-menu #exportMenu>
+  @for (format of fileFormats; track format.value) {
+    <button mat-menu-item (click)="exportAgents(format.value)">
+      {{ format.label }}
+    </button>
+  }
+</mat-menu>
 <app-adaptive-table
   [apiUrl]="endpoint"
   [httpMethod]="httpVerb"
