@@ -6,59 +6,19 @@ form {
   gap: 15px;
   align-items: center;
   justify-content: space-between;
+
   .controls {
     display: flex;
     gap: 12px;
   }
+
   .buttons {
     display: flex;
     gap: 10px;
+
     button {
       width: 108px;
       height: 32px;
     }
   }
-}
-
-::ng-deep .filter mat-form-field {
-  font-size: $body-large-font;
-  height: 32px;
-  .mat-mdc-form-field-infix {
-    padding: 4px 0 !important;
-    min-height: 32px;
-    width: fit-content;
-    min-width: 100px;
-  }
-  .mat-mdc-select-value-text {
-    margin-right: 16px;
-    min-width: 95px;
-  }
-}
-
-::ng-deep .filter .mat-mdc-option {
-  padding: 0 8px !important;
-}
-::ng-deep
-  .filter
-  .select
-  .mat-mdc-text-field-wrapper
-  .mat-mdc-form-field-flex
-  .mdc-floating-label:not(.mdc-floating-label--float-above) {
-  top: 14px !important;
-}
-::ng-deep
-  .filter
-  .input-text
-  .mat-mdc-text-field-wrapper
-  .mat-mdc-form-field-flex
-  .mdc-floating-label:not(.mdc-floating-label--float-above) {
-  top: 14px !important;
-}
-::ng-deep
-  .filter
-  .select
-  .mat-mdc-text-field-wrapper
-  .mat-mdc-form-field-flex
-  .mdc-floating-label:not(.mdc-floating-label--float-above) {
-  top: 14px !important;
 }
