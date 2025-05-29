@@ -24,3 +24,9 @@ export function getFileExtension(fileType: string): string {
       return '';
   }
 }
+
+export const FileFormats = [
+  { label: 'Excel', value: 'excel' },
+  { label: 'CSV', value: 'csv' },
+  { label: 'PDF', value: 'pdf' },
+];
