@@ -16,6 +16,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { PageHeaderComponent } from '@shared';
 import { ListActionsComponent } from '@shared/components/list-actions/list-actions.component';
 import { FileFormats } from '@shared/utils/file-utils';
+import { HttpResponse } from '@angular/common/http';
+import { map } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { getFileExtension, getMimeType } from '@shared/utils/file-utils';
+import { DestroyRef, inject } from '@angular/core';
 
 @Component({
   selector: 'app-audits',
@@ -41,6 +46,9 @@ export class AuditsComponent {
   toggleFilter() {
     this.filterVisible = !this.filterVisible;
   }
+
+  private destroyRef = inject(DestroyRef);
+
   filters: any = {};
   endpoint: EndPoint = EndPoint.GET_AUDITS;
   httpVerb: HttpVerb = HttpVerb.GET;
@@ -117,12 +125,50 @@ export class AuditsComponent {
   }
 
   export(format: string): void {
-    const queryParams = new URLSearchParams({
-      ...this.filters,
-      export: format,
-    });
+    if (!format) return;
 
-    const url = `${environment.ApiUrl}/${EndPoint.GET_AUDITS}?${queryParams.toString()}`;
-    window.open(url, '_blank');
+    this.apiService
+      .triggerApiRequest(
+        EndPoint.GET_AUDITS,
+        HttpVerb.GET,
+        { ...this.filters, export: format },
+        null,
+        { responseType: 'blob', observe: 'response' }
+      )
+      .pipe(
+        map(response => response as HttpResponse<Blob>),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: response => {
+          const contentDisposition = response.headers.get('content-disposition');
+          const extension = getFileExtension(format);
+          let filename = `audits_${new Date().toISOString().slice(0, 10)}.${extension}`;
+
+          if (contentDisposition) {
+            const match = contentDisposition.match(/filename="?(.+)"?/);
+            if (match && match[1]) filename = match[1];
+          }
+
+          const blob = new Blob([response.body!], {
+            type: response.headers.get('content-type') || getMimeType(format),
+          });
+
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+        },
+        error: err => {
+          console.error('Audit export failed:', err);
+        },
+      });
   }
 }
