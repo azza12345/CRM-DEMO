@@ -21,7 +21,7 @@
 
 <mat-menu #exportMenu>
   @for (format of fileFormats; track format.value) {
-    <button mat-menu-item (click)="selectExportFormat(format.value)">
+    <button mat-menu-item (click)="exportContractors(format.value)">
       {{ format.label }}
     </button>
   }

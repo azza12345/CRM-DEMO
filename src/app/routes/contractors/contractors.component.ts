@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { EndPoint, HttpVerb } from '@shared/enums';
@@ -15,11 +15,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { environment } from '@env/environment';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { ListActionsComponent } from '../../shared/components/list-actions/list-actions.component';
 import { MatMenuModule } from '@angular/material/menu';
-import { getFileExtension, getMimeType } from '@shared/utils/file-utils';
+import { FileFormats, getFileExtension, getMimeType } from '@shared/utils/file-utils';
+import { ApiService } from '@shared/services/api.service';
+import { map } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-contractors',
@@ -48,24 +50,15 @@ export class ContractorsComponent {
     this.filterVisible = !this.filterVisible;
   }
   private router = inject(Router);
-  //TODO
-  // not recommended to inject the httpClient inside the component
-  private http = inject(HttpClient);
+  private apiService = inject(ApiService);
+  private destroyRef = inject(DestroyRef);
 
   filters: any = {};
-  selectedFormat: string | null = null;
 
   endpoint: EndPoint = EndPoint.GET_Contractors_BY_DISTRICT_ID;
   httpVerb: HttpVerb = HttpVerb.GET;
 
-  // TODO
-  // preferred using of enum or method in a utility class of function
-  // to avoid duplication (DRY Principle)
-  fileFormats = [
-    { label: 'Excel', value: 'excel' },
-    { label: 'CSV', value: 'csv' },
-    { label: 'PDF', value: 'pdf' },
-  ];
+  fileFormats = FileFormats;
 
   filterControls: FilterControl[] = [
     {
@@ -126,25 +119,29 @@ export class ContractorsComponent {
     this.router.navigate([`contractors/edit/${contractorId}`]);
   }
 
-  exportContractors(): void {
-    if (!this.selectedFormat) return;
+  exportContractors(format: string): void {
+    if (!format) return;
 
     const name = this.filters?.Name ?? '';
     const districtId = this.filters?.districtID ?? '';
-    const fileType = this.selectedFormat;
+    const fileType = format;
 
-    const apiUrl = `${environment.ApiUrl}/${EndPoint.EXPORT_CONTRACTORS}?fileType=${fileType}&name=${encodeURIComponent(name)}&districtId=${districtId}`;
-    //TODO
-    /*
-    1- not recommended to use the httpClient inside the component
-    2- use generic api service instead.
-    3- use take until destroyed
-    */
-    this.http
-      .get(apiUrl, {
-        responseType: 'blob',
-        observe: 'response',
-      })
+    this.apiService
+      .triggerApiRequest(
+        EndPoint.EXPORT_CONTRACTORS,
+        HttpVerb.GET,
+        {
+          fileType: format,
+          name: encodeURIComponent(name),
+          districtId,
+        },
+        null,
+        { responseType: 'blob', observe: 'response' }
+      )
+      .pipe(
+        map(response => response as HttpResponse<Blob>),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe({
         next: response => {
           const contentDisposition = response.headers.get('content-disposition');
@@ -179,10 +176,5 @@ export class ContractorsComponent {
           console.error('Export failed:', err);
         },
       });
-  }
-
-  selectExportFormat(format: string): void {
-    this.selectedFormat = format;
-    this.exportContractors();
   }
 }
