@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { EndPoint, HttpVerb } from '@shared/enums';
@@ -18,7 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { ListActionsComponent } from '../../shared/components/list-actions/list-actions.component';
 import { MatMenuModule } from '@angular/material/menu';
-import { FileFormats, getFileExtension, getMimeType } from '@shared/utils/file-utils';
+import { downloadFile, FileFormats, getFileExtension, getMimeType } from '@shared/utils/file-utils';
 import { ApiService } from '@shared/services/api.service';
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -144,33 +144,9 @@ export class ContractorsComponent {
       )
       .subscribe({
         next: response => {
-          const contentDisposition = response.headers.get('content-disposition');
-          const extension = getFileExtension(fileType);
-          let filename = `contractors_${new Date().toISOString().slice(0, 10)}.${extension}`;
-
-          if (contentDisposition) {
-            const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
-            if (filenameMatch && filenameMatch[1]) {
-              filename = filenameMatch[1];
-            }
-          }
-
-          const blob = new Blob([response.body!], {
-            type: response.headers.get('content-type') || getMimeType(fileType),
-          });
-
-          const url = window.URL.createObjectURL(blob);
-
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-
-          setTimeout(() => {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-          }, 100);
+          const extension = getFileExtension(format);
+          const defaultFilename = `contractors_${new Date().toISOString().slice(0, 10)}.${extension}`;
+          downloadFile(response, defaultFilename, format);
         },
         error: err => {
           console.error('Export failed:', err);

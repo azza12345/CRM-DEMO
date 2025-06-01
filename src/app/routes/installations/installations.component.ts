@@ -21,7 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FileFormats, getFileExtension, getMimeType } from '@shared/utils/file-utils';
+import { downloadFile, FileFormats, getFileExtension, getMimeType } from '@shared/utils/file-utils';
 import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
@@ -78,7 +78,9 @@ export class InstallationsComponent implements OnInit, OnDestroy {
             text: 'Assign to a Contractor',
             icon: 'person_add',
             tooltip: 'Assign to a Contractor',
-            click: () => this.openAssignDialog(rowData),
+            click: () => {
+              this.openAssignDialog(rowData);
+            },
           });
         }
 
@@ -259,32 +261,9 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: response => {
-          const contentDisposition = response.headers.get('content-disposition');
-          const extension = getFileExtension(fileType);
-          let filename = `meters_${new Date().toISOString().slice(0, 10)}.${extension}`;
-
-          if (contentDisposition) {
-            const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
-            if (filenameMatch && filenameMatch[1]) {
-              filename = filenameMatch[1];
-            }
-          }
-
-          const blob = new Blob([response.body!], {
-            type: response.headers.get('content-type') || getMimeType(fileType),
-          });
-
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-
-          setTimeout(() => {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-          }, 100);
+          const extension = getFileExtension(format);
+          const defaultFilename = `meters_${new Date().toISOString().slice(0, 10)}.${extension}`;
+          downloadFile(response, defaultFilename, format);
         },
         error: err => {
           console.error('Export failed:', err);

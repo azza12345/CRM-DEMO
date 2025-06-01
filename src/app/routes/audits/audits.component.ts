@@ -11,15 +11,14 @@ import { DatePipe } from '@angular/common';
 import { ApiService } from '@shared/services/api.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { environment } from '@env/environment';
 import { MatMenuModule } from '@angular/material/menu';
 import { PageHeaderComponent } from '@shared';
 import { ListActionsComponent } from '@shared/components/list-actions/list-actions.component';
-import { FileFormats } from '@shared/utils/file-utils';
+import { downloadFile, FileFormats } from '@shared/utils/file-utils';
 import { HttpResponse } from '@angular/common/http';
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { getFileExtension, getMimeType } from '@shared/utils/file-utils';
+import { getFileExtension } from '@shared/utils/file-utils';
 import { DestroyRef, inject } from '@angular/core';
 
 @Component({
@@ -141,30 +140,9 @@ export class AuditsComponent {
       )
       .subscribe({
         next: response => {
-          const contentDisposition = response.headers.get('content-disposition');
           const extension = getFileExtension(format);
-          let filename = `audits_${new Date().toISOString().slice(0, 10)}.${extension}`;
-
-          if (contentDisposition) {
-            const match = contentDisposition.match(/filename="?(.+)"?/);
-            if (match && match[1]) filename = match[1];
-          }
-
-          const blob = new Blob([response.body!], {
-            type: response.headers.get('content-type') || getMimeType(format),
-          });
-
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-
-          setTimeout(() => {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-          }, 100);
+          const defaultFilename = `audits_${new Date().toISOString().slice(0, 10)}.${extension}`;
+          downloadFile(response, defaultFilename, format);
         },
         error: err => {
           console.error('Audit export failed:', err);
