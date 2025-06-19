@@ -80,7 +80,7 @@ export class ContractorsComponent {
     { header: 'Code', field: 'code', sortable: true },
     { header: 'Name', field: 'name', sortable: true },
     { header: 'Office Address', field: 'officeAddress' },
-    { header: 'Ghana Post Address', field: 'postalAddress' },
+    { header: 'Ghana Post Address', field: 'ghanaPostAddress' },
     { header: 'Contact Person', field: 'contactPersonName' },
     { header: 'Phone', field: 'phone' },
     {
