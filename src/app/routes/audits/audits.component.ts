@@ -63,10 +63,8 @@ export class AuditsComponent {
     { header: 'Old Value', field: 'oldValue' },
     { header: 'New Value', field: 'newValue' },
     { header: 'Operation', field: 'operation' },
-    { header: 'IP Address', field: 'ipAddress' },
-    { header: 'UserId', field: 'userId' },
     { header: 'UserName', field: 'userName' },
-    { header: 'Machine Name', field: 'machineName' },
+    { header: 'UserId', field: 'userId' },
     {
       header: 'Creation Date',
       field: 'creationDate',
@@ -75,6 +73,9 @@ export class AuditsComponent {
         return this.datePipe.transform(data.creationDate, 'MMM d, yyyy h:mm a');
       },
     },
+    { header: 'IP Address', field: 'ipAddress' },
+
+    { header: 'Machine Name', field: 'machineName' },
   ];
 
   filterControls: FilterControl[] = [
