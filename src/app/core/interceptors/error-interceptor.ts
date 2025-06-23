@@ -44,6 +44,12 @@ export class ErrorInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    const isAuditExport = request.url.includes('get_audits') && request.params.has('export');
+
+    if (isAuditExport) {
+      return next.handle(request);
+    }
+
     return next
       .handle(request)
       .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));

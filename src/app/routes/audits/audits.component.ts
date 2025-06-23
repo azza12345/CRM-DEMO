@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
@@ -14,12 +14,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { PageHeaderComponent } from '@shared';
 import { ListActionsComponent } from '@shared/components/list-actions/list-actions.component';
-import { downloadFile, FileFormats } from '@shared/utils/file-utils';
+import { downloadFile, FileFormats, getFileExtension } from '@shared/utils/file-utils';
 import { HttpResponse } from '@angular/common/http';
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { getFileExtension } from '@shared/utils/file-utils';
-import { DestroyRef, inject } from '@angular/core';
+import { DestroyRef } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-audits',
@@ -47,12 +47,14 @@ export class AuditsComponent {
   }
 
   private destroyRef = inject(DestroyRef);
+  private toastr = inject(ToastrService);
 
   filters: any = {};
   endpoint: EndPoint = EndPoint.GET_AUDITS;
   httpVerb: HttpVerb = HttpVerb.GET;
 
   fileFormats = FileFormats;
+
   constructor(
     private datePipe: DatePipe,
     private apiService: ApiService
@@ -74,7 +76,6 @@ export class AuditsComponent {
       },
     },
     { header: 'IP Address', field: 'ipAddress' },
-
     { header: 'Machine Name', field: 'machineName' },
   ];
 
@@ -146,7 +147,23 @@ export class AuditsComponent {
           downloadFile(response, defaultFilename, format);
         },
         error: err => {
-          console.error('Audit export failed:', err);
+          if (err.error instanceof Blob && err.error.type === 'application/json') {
+            err.error
+              .text()
+              .then((text: string) => {
+                try {
+                  const json = JSON.parse(text);
+                  this.toastr.error(json.message || 'Export failed.');
+                } catch {
+                  this.toastr.error('Export failed. Unexpected error format.');
+                }
+              })
+              .catch(() => {
+                this.toastr.error('Export failed. Unexpected error format.');
+              });
+          } else {
+            this.toastr.error('Export failed. Please check your filters.');
+          }
         },
       });
   }
