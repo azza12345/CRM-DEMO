@@ -48,10 +48,11 @@
         @if (newMeterSpareParts.length > 0) {
           <app-spare-parts-table [spareParts]="newMeterSpareParts"></app-spare-parts-table>
         }
-        @if (data.newMeter.location) {
+        @if (data.newMeter.location && data.meterStatus === 'OnCustomer') {
           <div class="meter-location mt-2">
             <a [href]="data.newMeter.location" target="_blank">
-              View on Map
+              View on
+
             </a>
           </div>
         }
