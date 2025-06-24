@@ -34,4 +34,7 @@ export enum EndPoint {
   GET_AUDITS = 'audits/get_audits',
   Get_USERS = 'User/search-users',
   EXPORT_INSTALLED_METERS = 'meters/installed/export',
+  CONTRACTORS = 'contractors/list',
+  METER_TYPES = 'Lockups/meter-types',
+  METER_MAKES = 'Lockups/meter-make',
 }
