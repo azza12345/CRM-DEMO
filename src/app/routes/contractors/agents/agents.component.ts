@@ -79,7 +79,6 @@ export class AgentsComponent implements OnInit, OnDestroy {
   };
   columns: MtxGridColumn<Agent>[] = [
     { header: 'Code', field: 'code', sortable: true },
-    { header: 'AMC Username', field: 'userName', sortable: true },
     { header: 'Name', field: 'name', sortable: true },
     { header: 'Email', field: 'email', sortable: true },
     { header: 'Ghana Card', field: 'ghanaCard' },
