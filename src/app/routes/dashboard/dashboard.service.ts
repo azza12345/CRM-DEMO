@@ -19,12 +19,25 @@ export class DashboardService {
   ) {}
 
   getContractorsOperations(
-    districtId: string = '0'
+    districtId: number = 0,
+    contractorId: number = 0,
+    meterTypeId: number = 0,
+    meterMakeId: number = 0,
+    startDate?: Date,
+    endDate?: Date
   ): Observable<BaseResponse<ContractorOperationData[]>> {
-    const url = districtId
-      ? `${environment.ApiUrl}/contractors/operations/statistics/?districtId=${districtId}`
-      : `${environment.ApiUrl}/contractors/operations/statistics/`;
+    const params: any = {};
 
-    return this.http.get<BaseResponse<ContractorOperationData[]>>(url);
+    if (districtId) params.districtId = districtId;
+    if (contractorId) params.contractorId = contractorId;
+    if (meterTypeId) params.meterTypeId = meterTypeId;
+    if (meterMakeId) params.meterMakeId = meterMakeId;
+    if (startDate) params.startDate = startDate.toISOString();
+    if (endDate) params.endDate = endDate.toISOString();
+
+    return this.http.get<BaseResponse<ContractorOperationData[]>>(
+      `${environment.ApiUrl}/contractors/operations/statistics`,
+      { params }
+    );
   }
 }

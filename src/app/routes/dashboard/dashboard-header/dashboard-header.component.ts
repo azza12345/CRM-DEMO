@@ -18,7 +18,7 @@ export class DashboardHeaderComponent {
   toggleFilter() {
     this.filterVisible = !this.filterVisible;
   }
-  @Output() districtChanged = new EventEmitter<number>();
+  @Output() filtersChanged = new EventEmitter<any>();
   currentDate = new Date();
   filterControls: FilterControl[] = [
     {
@@ -58,7 +58,6 @@ export class DashboardHeaderComponent {
   ];
 
   onFilterChanged(filterValues: any): void {
-    const selectedDistrict = filterValues.district;
-    this.districtChanged.emit(selectedDistrict);
+    this.filtersChanged.emit(filterValues); // send full filter object
   }
 }
