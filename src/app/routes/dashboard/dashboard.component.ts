@@ -142,8 +142,14 @@ export class DashboardComponent implements OnInit {
 
     this.retiredMeters$ = combineLatest([this.districtSubject, this.filtersSubject]).pipe(
       switchMap(([district, filters]) => {
-        const url = `${EndPoint.RETIRED_METER_STATISTICS}/${district}/${filters.contractorId}/${filters.meterMakeId}/${filters.meterTypeId}`;
-        const params: any = {};
+        const url = `${EndPoint.RETIRED_METER_STATISTICS}`;
+        const params: any = {
+          district,
+          contractorId: filters.contractorId,
+          meterMakeId: filters.meterMakeId,
+          meterTypeId: filters.meterTypeId,
+        };
+
         if (filters.startDate) params.startDate = filters.startDate.toISOString();
         if (filters.endDate) params.endDate = filters.endDate.toISOString();
 

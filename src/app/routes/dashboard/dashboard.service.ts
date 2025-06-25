@@ -36,7 +36,7 @@ export class DashboardService {
     if (endDate) params.endDate = endDate.toISOString();
 
     return this.http.get<BaseResponse<ContractorOperationData[]>>(
-      `${environment.ApiUrl}/contractors/operations/statistics`,
+      `${environment.ApiUrl}/Dashboard/operations/statistics`,
       { params }
     );
   }
