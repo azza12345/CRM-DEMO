@@ -2,12 +2,15 @@ export interface RetiredMeterStatusDto {
   totalCount: number;
   receivedCount: number;
   notReceivedCount: number;
+  stolen: number;
 }
 
 export interface MeterStatusDto {
   onCustomer: number;
   onStock: number;
   onAgent: number;
+  replaced: number;
+  newInstallation: number;
 }
 
 export interface ContractorOperationData {
