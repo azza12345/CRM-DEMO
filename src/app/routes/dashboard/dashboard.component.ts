@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -14,7 +14,7 @@ import { DashboardTableComponent } from './dashboard-table/dashboard-table.compo
 import { MeterStatusDto, RetiredMeterStatusDto } from '@shared/interfaces/dashboard';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { ApiService } from '@shared/services/api.service';
-import { BehaviorSubject, map, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, switchMap, map } from 'rxjs';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { AsyncPipe } from '@angular/common';
 
@@ -41,7 +41,23 @@ import { AsyncPipe } from '@angular/common';
 })
 export class DashboardComponent implements OnInit {
   private apiService = inject(ApiService);
+
   isToggleApplied = false;
+  selectedDistrict: number = 0;
+
+  private districtSubject = new BehaviorSubject<number>(1);
+  public filtersSubject = new BehaviorSubject<{
+    contractorId: number;
+    meterTypeId: number;
+    meterMakeId: number;
+    startDate?: Date;
+    endDate?: Date;
+  }>({
+    contractorId: 0,
+    meterTypeId: 0,
+    meterMakeId: 0,
+  });
+
   meters$!: Observable<{
     stats: { key: keyof MeterStatusDto; label: string; color: string }[];
     total: number;
@@ -58,44 +74,53 @@ export class DashboardComponent implements OnInit {
     chartOptions: any;
   }>;
 
-  private districtSubject = new BehaviorSubject<number>(1);
-  selectedDistrict: number = 0;
-
   ngOnInit(): void {
     this.fetchData();
   }
 
-  onDistrictChanged(districtId: number): void {
-    this.districtSubject.next(districtId);
+  onDashboardFilterChanged(filter: any): void {
+    this.selectedDistrict = filter.district || 0;
+    this.districtSubject.next(this.selectedDistrict);
+    this.filtersSubject.next({
+      contractorId: filter.contractor || 0,
+      meterMakeId: filter.meterMake || 0,
+      meterTypeId: filter.meterType || 0,
+      startDate: filter.startDate,
+      endDate: filter.endDate,
+    });
     this.isToggleApplied = !this.isToggleApplied;
-
-    this.selectedDistrict = districtId;
   }
 
   private fetchData(): void {
-    this.meters$ = this.districtSubject.pipe(
-      switchMap(districtId =>
-        this.apiService
+    this.meters$ = combineLatest([this.districtSubject, this.filtersSubject]).pipe(
+      switchMap(([districtId, filters]) => {
+        const params: any = { districtId };
+
+        if (filters.contractorId) params.contractorId = filters.contractorId;
+        if (filters.meterMakeId) params.meterMakeId = filters.meterMakeId;
+        if (filters.meterTypeId) params.meterTypeId = filters.meterTypeId;
+        if (filters.startDate) params.startDate = filters.startDate.toISOString();
+        if (filters.endDate) params.endDate = filters.endDate.toISOString();
+
+        return this.apiService
           .triggerApiRequest<
             BaseResponse<MeterStatusDto>
-          >(`${EndPoint.METERS_STATISTICS}` as EndPoint, HttpVerb.GET, { districtId })
+          >(`${EndPoint.METERS_STATISTICS}` as EndPoint, HttpVerb.GET, params)
           .pipe(
             map(response => {
-              const meterStructure = {
-                stats: [
-                  { key: 'onCustomer' as const, label: 'On Customer', color: '#A84E4E' },
-                  { key: 'onAgent' as const, label: 'On Agent', color: '#C7A6A6' },
-                  { key: 'onStock' as const, label: 'In Stock', color: '#6C1414' },
-                ],
-              };
+              const statsConfig = [
+                { key: 'onCustomer' as const, label: 'On Customer', color: '#A84E4E' },
+                { key: 'onAgent' as const, label: 'On Agent', color: '#C7A6A6' },
+                { key: 'onStock' as const, label: 'In Stock', color: '#6C1414' },
+              ];
 
               return {
-                ...meterStructure,
+                stats: statsConfig,
                 total:
-                  (response.data.onCustomer ?? 0) +
-                  (response.data.onStock ?? 0) +
-                  (response.data.onAgent ?? 0),
-                values: response.data,
+                  (response.data?.onCustomer ?? 0) +
+                  (response.data?.onStock ?? 0) +
+                  (response.data?.onAgent ?? 0),
+                values: response.data ?? {},
                 chartId: 'metersChart',
                 chartOptions: {
                   chart: {
@@ -103,43 +128,48 @@ export class DashboardComponent implements OnInit {
                     height: 180,
                     width: 150,
                   },
-                  labels: meterStructure.stats.map(stat => stat.label),
-                  series: meterStructure.stats.map(stat => response.data[stat.key] || 0),
-                  colors: meterStructure.stats.map(stat => stat.color),
-                  legend: {
-                    show: false,
-                  },
-                  stroke: {
-                    width: 0,
-                  },
+                  labels: statsConfig.map(s => s.label),
+                  series: statsConfig.map(s => response.data?.[s.key] ?? 0),
+                  colors: statsConfig.map(s => s.color),
+                  legend: { show: false },
+                  stroke: { width: 0 },
                 },
               };
             })
-          )
-      )
+          );
+      })
     );
 
-    this.retiredMeters$ = this.districtSubject.pipe(
-      switchMap(district =>
-        this.apiService
+    this.retiredMeters$ = combineLatest([this.districtSubject, this.filtersSubject]).pipe(
+      switchMap(([district, filters]) => {
+        const url = `${EndPoint.RETIRED_METER_STATISTICS}`;
+        const params: any = {
+          district,
+          contractorId: filters.contractorId,
+          meterMakeId: filters.meterMakeId,
+          meterTypeId: filters.meterTypeId,
+        };
+
+        if (filters.startDate) params.startDate = filters.startDate.toISOString();
+        if (filters.endDate) params.endDate = filters.endDate.toISOString();
+
+        return this.apiService
           .triggerApiRequest<
             BaseResponse<RetiredMeterStatusDto>
-          >(`${EndPoint.RETIRED_METER_STATISTICS}/${district}` as EndPoint, HttpVerb.GET)
+          >(url as EndPoint, HttpVerb.GET, params)
           .pipe(
             map(response => {
-              const retiredMeterStructure = {
-                stats: [
-                  { key: 'receivedCount' as const, label: 'Received', color: '#303f9f' },
-                  { key: 'notReceivedCount' as const, label: 'Not Received', color: '#7986cb' },
-                ],
-              };
+              const statsConfig = [
+                { key: 'receivedCount' as const, label: 'Received', color: '#303f9f' },
+                { key: 'notReceivedCount' as const, label: 'Not Received', color: '#7986cb' },
+              ];
 
               return {
-                ...retiredMeterStructure,
-                total: response.data.totalCount,
+                stats: statsConfig,
+                total: response.data.totalCount ?? 0,
                 values: {
-                  receivedCount: response.data.receivedCount,
-                  notReceivedCount: response.data.notReceivedCount,
+                  receivedCount: response.data.receivedCount ?? 0,
+                  notReceivedCount: response.data.notReceivedCount ?? 0,
                 },
                 chartId: 'retiredMetersChart',
                 chartOptions: {
@@ -148,20 +178,16 @@ export class DashboardComponent implements OnInit {
                     height: 180,
                     width: 150,
                   },
-                  labels: retiredMeterStructure.stats.map(stat => stat.label),
-                  series: retiredMeterStructure.stats.map(stat => response.data[stat.key] || 0),
-                  colors: retiredMeterStructure.stats.map(stat => stat.color),
-                  legend: {
-                    show: false,
-                  },
-                  stroke: {
-                    width: 0,
-                  },
+                  labels: statsConfig.map(s => s.label),
+                  series: statsConfig.map(s => response.data?.[s.key] ?? 0),
+                  colors: statsConfig.map(s => s.color),
+                  legend: { show: false },
+                  stroke: { width: 0 },
                 },
               };
             })
-          )
-      )
+          );
+      })
     );
   }
 }

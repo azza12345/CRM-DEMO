@@ -15,7 +15,7 @@ export enum EndPoint {
   RETIRED_METERS = 'Meters/retired',
   DISTRICTS = 'Districts/all',
   METERS_STATISTICS = 'meters/statistics',
-  RETIRED_METER_STATISTICS = 'meters/retired/status/district',
+  RETIRED_METER_STATISTICS = 'Dashboard/retired/status/district',
   AGENTS_OPERATIONS_STATISTICS = 'agents/operations/statistics',
   CHANGE_PASSWORD = 'account/ChangePassword',
   GET_AGENTS_BY_CONTRACTOR_ID = 'contractors/{contractorId}/agents',
@@ -34,4 +34,7 @@ export enum EndPoint {
   GET_AUDITS = 'audits/get_audits',
   Get_USERS = 'User/search-users',
   EXPORT_INSTALLED_METERS = 'meters/installed/export',
+  CONTRACTORS = 'contractors/list',
+  METER_TYPES = 'Lockups/meter-types',
+  METER_MAKES = 'Lockups/meter-make',
 }

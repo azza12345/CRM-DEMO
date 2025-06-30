@@ -51,12 +51,19 @@ export class DashboardTableComponent implements OnInit, OnChanges, AfterViewInit
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  @Input() districtId: number = 0;
+  @Input() fullFilters!: {
+    district: number;
+    contractorId: number;
+    meterMakeId: number;
+    meterTypeId: number;
+    startDate?: Date;
+    endDate?: Date;
+  };
 
   constructor(private dashboardService: DashboardService) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.districtId || changes.isToggleApplied) {
-      this.applyFilter(this.districtId);
+    if (changes.fullFilters || changes.isToggleApplied) {
+      this.applyFilter(this.fullFilters);
     }
   }
 
@@ -74,13 +81,18 @@ export class DashboardTableComponent implements OnInit, OnChanges, AfterViewInit
     this.dataSource.sort = this.sort;
   }
 
-  applyFilter(filterValue: any): void {
-    // const agentId = filterValue.agent || '';
-    this.dashboardService.getContractorsOperations(filterValue).subscribe(
-      response => {
+  applyFilter(filters: any): void {
+    this.dashboardService
+      .getContractorsOperations(
+        filters.district,
+        filters.contractorId,
+        filters.meterTypeId,
+        filters.meterMakeId,
+        filters.startDate,
+        filters.endDate
+      )
+      .subscribe(response => {
         this.dataSource.data = response.data;
-      },
-      err => {}
-    );
+      });
   }
 }
