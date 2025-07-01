@@ -108,8 +108,14 @@ export class AddEditAgentComponent implements OnInit, OnDestroy {
       .triggerApiRequest<BaseResponse<Agent>>(EndPoint.GET_AGENT_BY_ID, HttpVerb.GET, { id })
       .subscribe({
         next: response => {
-          this.agentForm.patchValue(response.data);
-
+          this.agentForm.patchValue({
+            name: response.data.name,
+            ghanaCard: response.data.ghanaCard,
+            mobile: response.data.mobile,
+            email: response.data.email,
+            status: response.data.isActive,
+            code: response.data.code,
+          });
           if (response.data.image) {
             this.imagePreview = `data:image/jpeg;base64,${response.data.image}`;
           }
