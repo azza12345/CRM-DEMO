@@ -19,7 +19,10 @@ export interface ContractorOperationData {
   onAssignCount: number;
   onAgentCount: number;
   onCustomerCount: number;
+  newInstallation: number;
+  replaced: number;
   totalRetireReceived: number;
   totalRetireNotReceived: number;
   totalCustomerReplacement: number;
+  stolen: number;
 }

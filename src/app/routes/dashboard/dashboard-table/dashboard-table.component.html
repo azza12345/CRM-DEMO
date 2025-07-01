@@ -40,9 +40,20 @@
       <td mat-cell *matCellDef="let element">{{ element.onAgentCount }}</td>
     </ng-container>
 
+
     <ng-container matColumnDef="onCustomerCount">
       <th mat-header-cell *matHeaderCellDef>On Customer</th>
       <td mat-cell *matCellDef="let element">{{ element.onCustomerCount }}</td>
+    </ng-container>
+
+     <ng-container matColumnDef="newInstallation">
+      <th mat-header-cell *matHeaderCellDef>newInstallation</th>
+      <td mat-cell *matCellDef="let element">{{ element.newInstallation }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="replaced">
+      <th mat-header-cell *matHeaderCellDef>Replaced</th>
+      <td mat-cell *matCellDef="let element">{{ element.replaced }}</td>
     </ng-container>
 
     <ng-container matColumnDef="totalCustomerReplacement">
@@ -59,11 +70,16 @@
       <th mat-header-cell *matHeaderCellDef>Not Received</th>
       <td mat-cell *matCellDef="let element">{{ element.totalRetireNotReceived }}</td>
     </ng-container>
+    <ng-container matColumnDef="stolen">
+      <th mat-header-cell *matHeaderCellDef>Stolen</th>
+      <td mat-cell *matCellDef="let element">{{ element.stolen }}</td>
+    </ng-container>
 
     <tr
       mat-header-row
       *matHeaderRowDef="['contractorName', 'header-row-installation', 'header-row-replacement']"
     ></tr>
+
     <tr
       mat-header-row
       *matHeaderRowDef="[
@@ -71,9 +87,12 @@
         'onAssignCount',
         'onAgentCount',
         'onCustomerCount',
+        'newInstallation',
+        'replaced',
         'totalCustomerReplacement',
         'totalRetireReceived',
-        'totalRetireNotReceived'
+        'totalRetireNotReceived',
+        'stolen'
       ]"
     ></tr>
 

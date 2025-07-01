@@ -32,9 +32,12 @@ export class DashboardTableComponent implements OnInit, OnChanges, AfterViewInit
     'onAssignCount',
     'onAgentCount',
     'onCustomerCount',
+    'newInstallation',
+    'replaced',
     'totalCustomerReplacement',
     'totalRetireReceived',
     'totalRetireNotReceived',
+    'stolen',
   ];
 
   filterControls: FilterControl[] = [
