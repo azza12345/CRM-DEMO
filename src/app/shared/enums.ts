@@ -37,4 +37,5 @@ export enum EndPoint {
   CONTRACTORS = 'contractors/list',
   METER_TYPES = 'Lockups/meter-types',
   METER_MAKES = 'Lockups/meter-make',
+  EXPORT_RETIRED_METERS = 'meters/retired/export',
 }
