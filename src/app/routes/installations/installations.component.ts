@@ -135,7 +135,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       const response = await this.apiService
         .triggerApiRequest<
           BaseResponse<Contractor[]>
-        >(EndPoint.GET_Contractors_BY_DISTRICT_ID, HttpVerb.GET, { districtId: meterDistrictId })
+        >(EndPoint.ASSIGN_METER_TO_CONTRACTOR, HttpVerb.GET, { districtId: meterDistrictId })
         .toPromise();
 
       this.contractors = (response as BaseResponse<Contractor[]>).data;
