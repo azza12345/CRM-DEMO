@@ -31,10 +31,11 @@ export class DashboardTableComponent implements OnInit, OnChanges, AfterViewInit
     'contractorName',
     'onAssignCount',
     'onAgentCount',
-    'onCustomerCount',
-    'totalCustomerReplacement',
+    'newInstallation',
+    'replaced',
     'totalRetireReceived',
     'totalRetireNotReceived',
+    'stolen',
   ];
 
   filterControls: FilterControl[] = [

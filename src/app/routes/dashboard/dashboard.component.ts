@@ -112,6 +112,8 @@ export class DashboardComponent implements OnInit {
                 { key: 'onCustomer' as const, label: 'On Customer', color: '#A84E4E' },
                 { key: 'onAgent' as const, label: 'On Agent', color: '#C7A6A6' },
                 { key: 'onStock' as const, label: 'In Stock', color: '#6C1414' },
+                { key: 'replaced' as const, label: 'Replacement', color: '#A84E4E' },
+                { key: 'newInstallation' as const, label: 'New Installation', color: '#dc143c' },
               ];
 
               return {
@@ -162,6 +164,7 @@ export class DashboardComponent implements OnInit {
               const statsConfig = [
                 { key: 'receivedCount' as const, label: 'Received', color: '#303f9f' },
                 { key: 'notReceivedCount' as const, label: 'Not Received', color: '#7986cb' },
+                { key: 'stolen' as const, label: 'Stolen', color: '#c5cae9' },
               ];
 
               return {
@@ -170,6 +173,7 @@ export class DashboardComponent implements OnInit {
                 values: {
                   receivedCount: response.data.receivedCount ?? 0,
                   notReceivedCount: response.data.notReceivedCount ?? 0,
+                  stolen: response.data.stolen,
                 },
                 chartId: 'retiredMetersChart',
                 chartOptions: {
