@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { FilterComponent } from '../../shared/components/filter/filter.component';
 import { AdaptiveTableComponent } from '../../shared/components/adaptive-table/adaptive-table.component';
 import { EndPoint, HttpVerb } from '@shared/enums';
@@ -7,16 +7,35 @@ import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { RetiredMeter } from '@shared/interfaces/retired-meter.model';
 import { PageHeaderComponent } from '@shared';
 import { ListActionsComponent } from '@shared/components/list-actions/list-actions.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { downloadFile, FileFormats, getFileExtension } from '@shared/utils/file-utils';
+import { HttpResponse } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { ApiService } from '@shared/services/api.service';
 
 @Component({
   selector: 'app-retired-meters',
   standalone: true,
-  imports: [FilterComponent, AdaptiveTableComponent, PageHeaderComponent, ListActionsComponent],
+  imports: [
+    FilterComponent,
+    AdaptiveTableComponent,
+    PageHeaderComponent,
+    ListActionsComponent,
+    ListActionsComponent,
+    MatIconModule,
+    MatMenuModule,
+  ],
   templateUrl: './retired-meters.component.html',
   styleUrl: './retired-meters.component.scss',
 })
 export class RetiredMetersComponent {
   filterVisible = false;
+  fileFormats = FileFormats;
+  private apiService = inject(ApiService);
+  private destroyRef = inject(DestroyRef);
   toggleFilter() {
     this.filterVisible = !this.filterVisible;
   }
@@ -52,5 +71,40 @@ export class RetiredMetersComponent {
 
   onFilterChanged(filterValues: any): void {
     this.filters = filterValues;
+  }
+
+  exportMeters(format: string): void {
+    if (!format) return;
+
+    const meterSerial = this.filters?.MeterSerial ?? '';
+    const districtId = this.filters?.districtID ?? '';
+    const fileType = format;
+
+    this.apiService
+      .triggerApiRequest(
+        EndPoint.EXPORT_RETIRED_METERS,
+        HttpVerb.GET,
+        {
+          fileType: format,
+          meterSerial: encodeURIComponent(meterSerial),
+          districtId,
+        },
+        null,
+        { responseType: 'blob', observe: 'response' }
+      )
+      .pipe(
+        map(response => response as HttpResponse<Blob>),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: response => {
+          const extension = getFileExtension(format);
+          const defaultFilename = `meters_${new Date().toISOString().slice(0, 10)}.${extension}`;
+          downloadFile(response, defaultFilename, format);
+        },
+        error: err => {
+          console.error('Export failed:', err);
+        },
+      });
   }
 }
