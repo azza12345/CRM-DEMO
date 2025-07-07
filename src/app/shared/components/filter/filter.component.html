@@ -1,5 +1,5 @@
 <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="filter">
-  <div class="controls">
+  <div class="controls row">
     @for (control of controls; track control.label) {
       @switch (control.type) {
         @case ('text') {

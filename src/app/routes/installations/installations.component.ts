@@ -104,6 +104,48 @@ export class InstallationsComponent implements OnInit, OnDestroy {
       optionLabel: 'meterSerial',
       optionVal: 'MeterSerial',
     },
+    {
+      formControlName: 'MeterTypeId',
+      label: 'Meter Type',
+      type: 'select',
+      apiEndpoint: EndPoint.METER_TYPES,
+      optionLabel: 'name',
+      optionVal: 'id',
+    },
+    {
+      formControlName: 'MeterMakeId',
+      label: 'Meter Make',
+      type: 'select',
+      apiEndpoint: EndPoint.METER_MAKES,
+      optionLabel: 'name',
+      optionVal: 'id',
+    },
+    {
+      formControlName: 'contractorId',
+      label: 'Contractor',
+      type: 'select',
+      apiEndpoint: EndPoint.CONTRACTORS,
+      optionLabel: 'name',
+      optionVal: 'id',
+    },
+    {
+      formControlName: 'startDate',
+      label: 'Start Date',
+      type: 'date',
+    },
+    {
+      formControlName: 'endDate',
+      label: 'End Date',
+      type: 'date',
+    },
+    {
+      formControlName: 'agentId',
+      label: 'Retired By',
+      type: 'select',
+      apiEndpoint: EndPoint.AGENTS_LIST,
+      optionLabel: 'name',
+      optionVal: 'id',
+    },
   ];
   endpoint: EndPoint = EndPoint.INSTALLED_METERS;
   httpVerb: HttpVerb = HttpVerb.GET;
@@ -145,7 +187,21 @@ export class InstallationsComponent implements OnInit, OnDestroy {
   }
 
   onFilterChanged(filterValues: any): void {
-    this.filters = filterValues;
+    const newFilters: any = { ...filterValues };
+
+    if (filterValues?.startDate) {
+      newFilters.startDate = new Date(filterValues.startDate).toISOString();
+    } else {
+      delete newFilters.startDate;
+    }
+
+    if (filterValues?.endDate) {
+      newFilters.endDate = new Date(filterValues.endDate).toISOString();
+    } else {
+      delete newFilters.endDate;
+    }
+
+    this.filters = newFilters;
   }
 
   async openAssignDialog(rowData: InstalledMeter): Promise<void> {
