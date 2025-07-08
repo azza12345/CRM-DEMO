@@ -111,15 +111,22 @@ export class AuditsComponent {
       delete transformedFilters.userSearch;
     }
 
-    if (startDateValid && endDateValid) {
+    if (startDateValid) {
       transformedFilters.startDate = this.datePipe.transform(
         filterValues.startDate,
         'yyyy-MM-ddTHH:mm:ss'
       );
+    } else {
+      delete transformedFilters.startDate;
+    }
+
+    if (endDateValid) {
       transformedFilters.endDate = this.datePipe.transform(
         filterValues.endDate,
         'yyyy-MM-ddTHH:mm:ss'
       );
+    } else {
+      delete transformedFilters.endDate;
     }
 
     this.filters = transformedFilters;
