@@ -146,7 +146,7 @@ export class DashboardComponent implements OnInit {
       switchMap(([district, filters]) => {
         const url = `${EndPoint.RETIRED_METER_STATISTICS}`;
         const params: any = {
-          district,
+          DistrictID: district,
           contractorId: filters.contractorId,
           meterMakeId: filters.meterMakeId,
           meterTypeId: filters.meterTypeId,
