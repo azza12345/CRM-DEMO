@@ -56,7 +56,7 @@
     "moment-timezone": "^0.5.41",
     "ngx-permissions": "^16.0.1",
     "ngx-progressbar": "^11.1.0",
-    "ngx-toastr": "^18.0.0",
+    "ngx-toastr": "^19.0.0",
     "photoviewer": "^3.9.2",
     "rxjs": "~7.8.0",
     "screenfull": "^6.0.2",
